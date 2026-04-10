@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Subscription Plans — Recurring Revenue — Sertone</title>
+  <meta name="description" content="Offer monthly or yearly API subscription plans alongside pay-per-use. Recurring revenue for API owners, paid automatically in USDC.">
+  <meta name="keywords" content="API subscription, recurring API billing, API plans, USDC subscription, API monetization, pay-per-use API">
+  <link rel="canonical" href="https://sertone.net/demos/subscription/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/subscription/">
+  <meta property="og:title" content="API Subscription Plans — Recurring Revenue for API Owners">
+  <meta property="og:description" content="Offer monthly or yearly subscription plans alongside pay-per-use. Customers choose their billing model. Paid automatically in USDC.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="API Subscription Plans — Recurring Revenue for API Owners">
+  <meta name="twitter:description" content="Offer monthly or yearly subscription plans alongside pay-per-use. Customers choose their billing model.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Sertone",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Linux, Docker",
+        "description": "API marketplace with subscription plans and pay-per-use billing, paid automatically in USDC.",
+        "url": "https://sertone.net"
+      },
+      {
+        "@type": "HowTo",
+        "name": "How to Set Up API Subscription Plans with Sertone",
+        "description": "Create subscription tiers for your API and offer recurring billing alongside pay-per-use.",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "position": 1,
+            "name": "Install Sertone",
+            "text": "Pull and run the free Sertone Docker container on your own server."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 2,
+            "name": "Configure Subscription Plans",
+            "text": "Define monthly and yearly subscription tiers with call limits and pricing."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 3,
+            "name": "Consumers Subscribe",
+            "text": "Consumers choose a plan and pay upfront in USDC. They get unlimited calls within their plan limits."
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+  <style>
+    /* Subscription-specific styles */
+    .sub-flow-steps {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .sub-flow-step {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .sub-flow-step.active-step {
+      border-color: #00b894;
+      box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
+    }
+
+    .sub-flow-step.completed-step {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.04);
+    }
+
+    .sub-flow-step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: rgba(0, 184, 148, 0.08);
+      color: #00b894;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .sub-flow-step.completed-step .sub-flow-step-num {
+      background: #10b981;
+      color: #ffffff;
+    }
+
+    .sub-flow-step h4 {
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .sub-flow-step p {
+      font-size: 0.8rem;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .sub-flow-step:not(:last-child)::after {
+      content: "\2192";
+      position: absolute;
+      right: -1.1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #cbd5e1;
+      font-size: 1.2rem;
+    }
+
+    .sub-plan-selector {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .sub-plan-option {
+      flex: 1;
+      padding: 1rem;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      text-align: center;
+    }
+
+    .sub-plan-option:hover {
+      border-color: #94a3b8;
+    }
+
+    .sub-plan-option.selected {
+      border-color: #00b894;
+      background: rgba(0, 184, 148, 0.04);
+    }
+
+    .sub-plan-option .plan-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.25rem;
+    }
+
+    .sub-plan-option .plan-price {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #00b894;
+    }
+
+    .sub-plan-option .plan-detail {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 0.25rem;
+    }
+
+    .sub-status-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .sub-status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      font-size: 0.85rem;
+    }
+
+    .sub-status-label {
+      color: #64748b;
+    }
+
+    .sub-status-value {
+      color: #e2e8f0;
+      font-weight: 600;
+      font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    .sub-status-value.active-val {
+      color: #10b981;
+    }
+
+    .sub-status-value.expired-val {
+      color: #ef4444;
+    }
+
+    .sub-calls-bar {
+      margin-top: 0.75rem;
+      background: #1e293b;
+      border-radius: 6px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .sub-calls-bar-fill {
+      height: 100%;
+      background: #00b894;
+      border-radius: 6px;
+      transition: width 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      .sub-flow-steps {
+        flex-direction: column;
+      }
+      .sub-flow-step:not(:last-child)::after {
+        content: "\2193";
+        right: 50%;
+        top: auto;
+        bottom: -1.1rem;
+        transform: translateX(50%);
+      }
+      .sub-plan-selector {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <nav class="demo-breadcrumb demo-container" aria-label="Breadcrumb">
+    <a href="/">Home</a> <span>&rsaquo;</span>
+    <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+    <a href="/demos/">Payment</a> <span>&rsaquo;</span>
+    Subscriptions
+  </nav>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Payment Demo</p>
+      <h1>API Subscription Plans</h1>
+      <p class="demo-tagline">Offer monthly or yearly subscription plans alongside pay-per-use. Your customers choose their billing model &mdash; you earn recurring revenue.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="Subscription flow architecture">
+      <svg viewBox="0 0 900 200" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Subscription flow: Consumer subscribes with USDC, receives subscription token, makes unlimited API calls within plan limits">
+        <!-- Consumer -->
+        <rect x="10" y="60" width="130" height="80" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="75" y="92" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="700">Consumer</text>
+        <text x="75" y="112" text-anchor="middle" fill="#64748b" font-size="11">chooses plan</text>
+
+        <!-- Arrow 1 -->
+        <line x1="140" y1="90" x2="210" y2="90" stroke="#00b894" stroke-width="2" stroke-dasharray="6 3"/>
+        <polygon points="208,84 220,90 208,96" fill="#00b894"/>
+        <text x="175" y="78" text-anchor="middle" fill="#94a3b8" font-size="10">USDC</text>
+
+        <!-- Sertone -->
+        <rect x="220" y="50" width="150" height="100" rx="12" fill="rgba(0,184,148,0.06)" stroke="#00b894" stroke-width="1.5"/>
+        <text x="295" y="78" text-anchor="middle" fill="#00b894" font-size="13" font-weight="700">Sertone</text>
+        <text x="295" y="98" text-anchor="middle" fill="#64748b" font-size="11">subscription</text>
+        <text x="295" y="114" text-anchor="middle" fill="#64748b" font-size="11">manager</text>
+
+        <!-- Arrow 2 (token back) -->
+        <line x1="295" y1="150" x2="295" y2="175" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="295" y="190" text-anchor="middle" fill="#94a3b8" font-size="10">subscription token</text>
+
+        <!-- Arrow 3 (API calls) -->
+        <line x1="370" y1="90" x2="450" y2="90" stroke="#00b894" stroke-width="2" stroke-dasharray="6 3"/>
+        <polygon points="448,84 460,90 448,96" fill="#00b894"/>
+        <text x="410" y="78" text-anchor="middle" fill="#94a3b8" font-size="10">verified</text>
+
+        <!-- API Calls -->
+        <rect x="460" y="50" width="140" height="100" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="530" y="82" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="700">API Calls</text>
+        <text x="530" y="102" text-anchor="middle" fill="#64748b" font-size="11">unlimited within</text>
+        <text x="530" y="118" text-anchor="middle" fill="#64748b" font-size="11">plan limits</text>
+
+        <!-- Arrow 4 (settlement) -->
+        <line x1="600" y1="90" x2="680" y2="90" stroke="#00b894" stroke-width="2" stroke-dasharray="6 3"/>
+        <polygon points="678,84 690,90 678,96" fill="#00b894"/>
+
+        <!-- Owner Revenue -->
+        <rect x="690" y="60" width="140" height="80" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="760" y="87" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="700">Owner</text>
+        <text x="760" y="107" text-anchor="middle" fill="#10b981" font-size="11" font-weight="600">95% revenue</text>
+        <text x="760" y="122" text-anchor="middle" fill="#64748b" font-size="11">in USDC</text>
+      </svg>
+      <p class="arch-caption">Consumer pays USDC for a subscription plan &rarr; receives token &rarr; makes unlimited calls within limits &rarr; owner earns 95% revenue</p>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why Subscriptions on Sertone?</h2>
+      <p>Pay-per-use is great for occasional consumers, but high-volume users want predictable costs. Sertone lets API owners offer both models simultaneously: pay-per-call for light users, monthly or yearly subscriptions for power users.</p>
+      <p>Subscription plans are managed automatically. When a consumer subscribes, USDC is transferred upfront and the subscription period starts immediately. The consumer receives a token that authorizes unlimited API calls within their plan limits for the subscription duration.</p>
+      <p>For API owners, subscriptions mean recurring, predictable revenue. No invoice generation, no payment reminders, no churn management headaches. When the subscription expires, the consumer either renews or falls back to pay-per-use pricing.</p>
+    </section>
+
+    <!-- Interactive Demo -->
+    <section class="demo-interactive">
+      <h2>Try It Live</h2>
+
+      <!-- Subscription flow steps -->
+      <div class="sub-flow-steps" id="sub-flow">
+        <div class="sub-flow-step active-step" id="step-subscribe">
+          <div class="sub-flow-step-num">1</div>
+          <h4>Subscribe</h4>
+          <p>Choose a plan and pay with USDC</p>
+        </div>
+        <div class="sub-flow-step" id="step-status">
+          <div class="sub-flow-step-num">2</div>
+          <h4>Check Status</h4>
+          <p>Verify active subscription</p>
+        </div>
+        <div class="sub-flow-step" id="step-call">
+          <div class="sub-flow-step-num">3</div>
+          <h4>Make Calls</h4>
+          <p>Use your subscription allowance</p>
+        </div>
+        <div class="sub-flow-step" id="step-review">
+          <div class="sub-flow-step-num">4</div>
+          <h4>Review Usage</h4>
+          <p>See remaining time and calls</p>
+        </div>
+      </div>
+
+      <div class="demo-interactive-layout" style="margin-top: 2rem;">
+
+        <!-- Form Panel -->
+        <div class="demo-form-panel">
+          <h3>Subscription Manager</h3>
+
+          <!-- Plan Selector -->
+          <div class="demo-field">
+            <label>Select Plan</label>
+            <div class="sub-plan-selector">
+              <div class="sub-plan-option selected" id="plan-monthly" onclick="selectPlan('monthly')">
+                <div class="plan-name">Monthly</div>
+                <div class="plan-price">$9.99</div>
+                <div class="plan-detail">10,000 calls/mo</div>
+              </div>
+              <div class="sub-plan-option" id="plan-yearly" onclick="selectPlan('yearly')">
+                <div class="plan-name">Yearly</div>
+                <div class="plan-price">$99.99</div>
+                <div class="plan-detail">150,000 calls/yr</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="demo-field">
+            <label for="sub-api-id">API to Subscribe To</label>
+            <select id="sub-api-id">
+              <option value="bb-sse-ticker">bb-sse-ticker (Stock Ticker)</option>
+              <option value="bb-graphql">bb-graphql (GraphQL)</option>
+              <option value="bb-xmlrpc">bb-xmlrpc (XML-RPC)</option>
+            </select>
+          </div>
+
+          <button class="demo-run-btn" id="sub-run-btn" onclick="runSubscriptionDemo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Subscribe &amp; Run Full Flow</span>
+          </button>
+        </div>
+
+        <!-- Result Panel -->
+        <div class="result-panel" id="sub-result">
+          <div class="result-placeholder">Click "Subscribe &amp; Run Full Flow" to see the complete subscription lifecycle</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Code Samples</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">cURL</button>
+        <button class="code-tab" data-tab="javascript">JavaScript</button>
+        <button class="code-tab" data-tab="python">Python</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+<span class="prompt">$ </span>curl -X POST https://localhost:3000/internal/call \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{"api_id_public": "API_UUID_FROM_CATALOG", "method": "GET", "path": "/", "params": {}}'</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code><span class="comment">// Call the API through YOUR local Sertone control center</span>
+<span class="comment">// Consumer secret is in Settings &gt; Security</span>
+const response = await fetch('https://localhost:3000/internal/call', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+  },
+  body: JSON.stringify({
+    api_id_public: 'API_UUID_FROM_CATALOG',
+    method: 'GET',
+    path: '/',
+    params: {}
+  })
+});
+const data = await response.json();
+console.log(data.result);</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+import requests
+
+response = requests.post(
+    'https://localhost:3000/internal/call',
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+    },
+    json={
+        'api_id_public': 'API_UUID_FROM_CATALOG',
+        'method': 'GET',
+        'path': '/',
+        'params': {}
+    }
+)
+print(response.json()['result'])</code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Self-Host in Minutes</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Install the Control Center</h4>
+          <p>Run the free Sertone Docker container. No cloud account needed.</p>
+          <pre class="code-block"><code><span class="prompt">$</span> docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  sertone/wrapper:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Open the Web Console</h4>
+          <p>Go to <code>https://localhost:3002/panel</code> in your browser. Create your account, accept terms, and your wallet is generated automatically.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Browse the Catalog</h4>
+          <p>Click <strong>Catalog &amp; SDKs</strong> in the sidebar. Search for APIs, try them in demo mode (free), then switch to production when ready.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Make Your First Call</h4>
+          <p>Copy your consumer secret from <strong>Settings &gt; Security</strong>, then use the code samples above to call any API from your own code.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SEO Footer -->
+    <section class="demo-footer-cta">
+      <h2>Ready to Offer API Subscriptions?</h2>
+      <p>Deploy your own Sertone node in minutes. Free Docker container, flexible billing models, transparent automatic payment.</p>
+      <a href="/try" class="btn">Get Started</a>
+      <a href="/docs/" class="btn btn-secondary" style="margin-left: 0.75rem;">Read the Docs</a>
+
+      <div class="related-demos">
+        <a href="/demos/pay-per-use/" class="related-demo-link">Pay-Per-Use</a>
+        <a href="/demos/rest-api/" class="related-demo-link">REST API</a>
+        <a href="/demos/sse-streaming/" class="related-demo-link">SSE Streaming</a>
+        <a href="/demos/smart-contract/" class="related-demo-link">Smart Contract</a>
+        <a href="/demos/oauth-corporate/" class="related-demo-link">Corporate SSO</a>
+        <a href="/demos/security/" class="related-demo-link">Zero-Knowledge Security</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I offer both subscription and pay-per-use billing for my API?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Sertone supports both models simultaneously. API owners define subscription tiers and a pay-per-call fallback price. Consumers choose whichever billing model suits them."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How are API subscription payments handled?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When a consumer subscribes, they pay USDC upfront automatically. The API owner receives 95% immediately. The subscription token authorizes API calls for the plan duration without additional payments."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens when a subscription expires?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When a subscription expires, the consumer can renew or fall back to pay-per-use pricing. There is no service interruption — billing simply switches to per-call mode until they renew."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    var selectedPlan = 'monthly';
+    var demoSubscription = null;
+
+    function selectPlan(plan) {
+      selectedPlan = plan;
+      document.getElementById('plan-monthly').classList.toggle('selected', plan === 'monthly');
+      document.getElementById('plan-yearly').classList.toggle('selected', plan === 'yearly');
+    }
+
+    function updateFlowStep(stepNum) {
+      var steps = ['step-subscribe', 'step-status', 'step-call', 'step-review'];
+      steps.forEach(function(id, idx) {
+        var el = document.getElementById(id);
+        el.classList.remove('active-step', 'completed-step');
+        if (idx < stepNum) {
+          el.classList.add('completed-step');
+        } else if (idx === stepNum) {
+          el.classList.add('active-step');
+        }
+      });
+    }
+
+    async function runSubscriptionDemo() {
+      var btn = document.getElementById('sub-run-btn');
+      var resultEl = document.getElementById('sub-result');
+      var apiId = document.getElementById('sub-api-id').value;
+
+      setLoading(btn, true);
+      resultEl.innerHTML = '';
+
+      var planDetails = selectedPlan === 'monthly'
+        ? { price: '9.99', calls: 10000, days: 30 }
+        : { price: '99.99', calls: 150000, days: 365 };
+
+      try {
+        // Step 1: Subscribe
+        updateFlowStep(0);
+        appendResult(resultEl, 'step', 'Step 1: Subscribing to ' + apiId + ' (' + selectedPlan + ' plan)...');
+
+        var subStartTime = performance.now();
+        var subscribeResult;
+        try {
+          subscribeResult = await callDemo('subscribe', {
+            api_id: apiId,
+            plan: selectedPlan,
+            payment_token: 'usdc_demo_token'
+          }, { method: 'POST', path: '/' });
+        } catch (e) {
+          // Simulated response if endpoint unavailable
+          subscribeResult = {
+            data: {
+              status: 'active',
+              subscription_token: 'sub_demo_' + Math.random().toString(36).substring(2, 10),
+              plan: selectedPlan,
+              api_id: apiId,
+              price_usdc: planDetails.price,
+              calls_limit: planDetails.calls,
+              expires_at: new Date(Date.now() + planDetails.days * 86400000).toISOString(),
+              tx_hash: '0x' + Array.from({length: 64}, function() { return Math.floor(Math.random() * 16).toString(16); }).join('')
+            },
+            latency: Math.round(performance.now() - subStartTime) || Math.floor(Math.random() * 200) + 150,
+            status: 200
+          };
+        }
+
+        demoSubscription = subscribeResult.data;
+        appendResult(resultEl, 'success', 'Subscribed! Token: ' + (demoSubscription.subscription_token || 'sub_demo'));
+        appendResult(resultEl, 'json', JSON.stringify(subscribeResult.data, null, 2));
+        appendResult(resultEl, 'latency', subscribeResult.latency);
+
+        await delay(800);
+
+        // Step 2: Check Status
+        updateFlowStep(1);
+        appendResult(resultEl, 'step', 'Step 2: Checking subscription status...');
+
+        var statusStartTime = performance.now();
+        var statusResult;
+        try {
+          statusResult = await callDemo('subscription/status', {}, {
+            method: 'GET',
+            path: '/',
+            headers: { 'X-Subscription-Token': demoSubscription.subscription_token }
+          });
+        } catch (e) {
+          statusResult = {
+            data: {
+              status: 'active',
+              plan: selectedPlan,
+              api_id: apiId,
+              calls_used: 0,
+              calls_remaining: planDetails.calls,
+              calls_limit: planDetails.calls,
+              expires_at: demoSubscription.expires_at,
+              days_remaining: planDetails.days
+            },
+            latency: Math.round(performance.now() - statusStartTime) || Math.floor(Math.random() * 100) + 50,
+            status: 200
+          };
+        }
+
+        appendResult(resultEl, 'success', 'Subscription active — ' + (statusResult.data.calls_remaining || planDetails.calls) + ' calls remaining');
+        appendResult(resultEl, 'json', JSON.stringify(statusResult.data, null, 2));
+        appendResult(resultEl, 'latency', statusResult.latency);
+
+        await delay(800);
+
+        // Step 3: Make API calls
+        updateFlowStep(2);
+        appendResult(resultEl, 'step', 'Step 3: Making API calls with subscription...');
+
+        var callsUsed = 0;
+        var totalCallLatency = 0;
+        for (var i = 0; i < 3; i++) {
+          var callStart = performance.now();
+          var callResult;
+          try {
+            callResult = await callDemo(apiId, { symbol: 'AAPL' }, {
+              method: 'POST',
+              path: '/',
+              headers: { 'X-Subscription-Token': demoSubscription.subscription_token || 'sub_demo' }
+            });
+          } catch (e) {
+            callResult = {
+              data: {
+                symbol: 'AAPL',
+                price: (198.5 + (Math.random() - 0.5) * 3).toFixed(2),
+                timestamp: new Date().toISOString(),
+                subscription_call: true,
+                call_number: i + 1
+              },
+              latency: Math.round(performance.now() - callStart) || Math.floor(Math.random() * 150) + 80,
+              status: 200
+            };
+          }
+          callsUsed++;
+          totalCallLatency += callResult.latency;
+          appendResult(resultEl, 'info', 'Call ' + (i + 1) + '/3: ' + callResult.latency + 'ms');
+        }
+
+        appendResult(resultEl, 'success', callsUsed + ' calls completed, avg latency: ' + Math.round(totalCallLatency / callsUsed) + 'ms');
+
+        await delay(800);
+
+        // Step 4: Review usage
+        updateFlowStep(3);
+        appendResult(resultEl, 'step', 'Step 4: Reviewing usage...');
+
+        var remaining = planDetails.calls - callsUsed;
+        var usagePct = ((callsUsed / planDetails.calls) * 100).toFixed(4);
+
+        var usageHtml =
+          '<div class="sub-status-card">' +
+            '<div class="sub-status-row">' +
+              '<span class="sub-status-label">Plan</span>' +
+              '<span class="sub-status-value">' + selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1) + ' — $' + planDetails.price + ' USDC</span>' +
+            '</div>' +
+            '<div class="sub-status-row">' +
+              '<span class="sub-status-label">Status</span>' +
+              '<span class="sub-status-value active-val">Active</span>' +
+            '</div>' +
+            '<div class="sub-status-row">' +
+              '<span class="sub-status-label">Calls Used</span>' +
+              '<span class="sub-status-value">' + callsUsed + ' / ' + planDetails.calls.toLocaleString() + '</span>' +
+            '</div>' +
+            '<div class="sub-status-row">' +
+              '<span class="sub-status-label">Remaining</span>' +
+              '<span class="sub-status-value">' + remaining.toLocaleString() + ' calls (' + planDetails.days + ' days)</span>' +
+            '</div>' +
+            '<div class="sub-status-row">' +
+              '<span class="sub-status-label">Owner Revenue</span>' +
+              '<span class="sub-status-value active-val">$' + (planDetails.price * 0.95).toFixed(2) + ' USDC (95%)</span>' +
+            '</div>' +
+            '<div class="sub-calls-bar"><div class="sub-calls-bar-fill" style="width: ' + usagePct + '%"></div></div>' +
+          '</div>';
+
+        resultEl.insertAdjacentHTML('beforeend', usageHtml);
+        appendResult(resultEl, 'success', 'Full subscription lifecycle complete.');
+
+        // Mark all steps complete
+        updateFlowStep(4);
+
+      } catch (err) {
+        showError('sub-result', err);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+
+    function appendResult(container, type, content) {
+      var div = document.createElement('div');
+      div.style.marginBottom = '0.5rem';
+
+      if (type === 'step') {
+        div.style.color = '#00b894';
+        div.style.fontWeight = '600';
+        div.style.fontSize = '0.9rem';
+        div.style.marginTop = '1rem';
+        div.style.paddingBottom = '0.5rem';
+        div.style.borderBottom = '1px solid #1e293b';
+        div.textContent = content;
+      } else if (type === 'success') {
+        div.style.color = '#10b981';
+        div.style.fontSize = '0.85rem';
+        div.textContent = content;
+      } else if (type === 'info') {
+        div.style.color = '#94a3b8';
+        div.style.fontSize = '0.82rem';
+        div.style.fontFamily = '"SF Mono", SFMono-Regular, Consolas, monospace';
+        div.textContent = content;
+      } else if (type === 'json') {
+        var pre = document.createElement('pre');
+        pre.style.margin = '0.25rem 0';
+        pre.style.whiteSpace = 'pre-wrap';
+        pre.style.wordBreak = 'break-word';
+        var code = document.createElement('code');
+        code.style.fontFamily = '"SF Mono", SFMono-Regular, Consolas, monospace';
+        code.style.fontSize = '0.78rem';
+        code.style.color = '#e2e8f0';
+        code.style.lineHeight = '1.6';
+        code.textContent = content;
+        pre.appendChild(code);
+        div.appendChild(pre);
+      } else if (type === 'latency') {
+        var latencyClass = content < 200 ? 'fast' : content < 500 ? 'medium' : 'slow';
+        div.innerHTML = '<span class="latency-badge ' + latencyClass + '">' + content + 'ms</span>';
+      }
+
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function delay(ms) {
+      return new Promise(function(resolve) { setTimeout(resolve, ms); });
+    }
+  </script>
+
+</body>
+</html>

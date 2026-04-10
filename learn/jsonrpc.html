@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON-RPC — Sertone Learn</title>
+  <meta name="description" content="Learn about JSON-RPC 2.0, method calls, batch requests, and error codes. See how Sertone bridges JSON-RPC APIs into its marketplace.">
+  <meta name="keywords" content="JSON-RPC, JSON-RPC 2.0, remote procedure call, batch requests, sell JSON-RPC API, API monetization, API marketplace, Sertone">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/learn/jsonrpc">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/learn/jsonrpc">
+  <meta property="og:title" content="JSON-RPC — Sertone Learn | Monetize JSON-RPC APIs on Sertone">
+  <meta property="og:description" content="Learn about JSON-RPC 2.0, method calls, batch requests, and error codes. See how Sertone bridges JSON-RPC APIs into its marketplace.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="JSON-RPC — Sertone Learn">
+  <meta name="twitter:description" content="Monetize your JSON-RPC 2.0 API on the Sertone marketplace with per-call per-call billing.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "JSON-RPC — Sertone Learn",
+    "description": "Learn about JSON-RPC 2.0, method calls, batch requests, and error codes. See how Sertone bridges JSON-RPC APIs into its marketplace.",
+    "url": "https://sertone.net/learn/jsonrpc",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="/style.css?v=2">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/handler">Control Center</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/security">Security</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+
+      <nav class="breadcrumb">
+        <a href="/learn/owner">Owner</a>
+        <span class="sep">/</span>
+        <span class="current">JSON-RPC</span>
+      </nav>
+
+      <div class="page-header">
+        <span class="protocol-icon">{}</span>
+        <h1>JSON-RPC</h1>
+        <p class="lead">Simple JSON remote procedure calls — lightweight, transport-agnostic, and easy to implement.</p>
+      </div>
+
+      <!-- What is JSON-RPC -->
+      <section class="content-section">
+        <h2>What Is JSON-RPC?</h2>
+
+        <p>
+          <strong>JSON-RPC</strong> is a stateless, lightweight remote procedure call (RPC)
+          protocol that uses JSON as its data format. The current version, JSON-RPC 2.0,
+          defines a simple and elegant contract: a client sends a JSON object with a
+          <code>method</code> name, optional <code>params</code>, and a request <code>id</code>.
+          The server responds with a JSON object containing either a <code>result</code> or
+          an <code>error</code>, along with the matching <code>id</code>. That is the entire
+          protocol.
+        </p>
+
+        <p>
+          Unlike REST, which is resource-oriented (you operate on nouns), JSON-RPC is
+          <strong>action-oriented</strong> (you call named methods). There are no URL paths to
+          design, no HTTP verbs to choose, no status codes to interpret. You have one endpoint,
+          and every call specifies which method to run. This makes JSON-RPC ideal for APIs that
+          are naturally procedural — "calculate this," "convert that," "look up X" — rather
+          than CRUD-oriented.
+        </p>
+
+        <p>
+          One of JSON-RPC's most useful features is <strong>batch requests</strong>. A client
+          can send an array of request objects in a single HTTP call, and the server returns an
+          array of responses. Each request in the batch is independent — some may succeed while
+          others fail. This is valuable when you need to make multiple related calls and want to
+          minimize network round trips.
+        </p>
+
+        <p>
+          JSON-RPC is <strong>transport-agnostic</strong> — the spec says nothing about how
+          messages are delivered. While HTTP POST is the most common transport, JSON-RPC works
+          equally well over WebSocket, TCP, Unix sockets, or even message queues. Many infrastructure
+          services use JSON-RPC natively. It is also the protocol behind the Language Server Protocol
+          (LSP) used by every modern code editor.
+        </p>
+      </section>
+
+      <!-- How JSON-RPC works with Sertone -->
+      <section class="content-section">
+        <h2>How JSON-RPC Works with Sertone</h2>
+
+        <p>
+          JSON-RPC APIs are method-based rather than resource-based, so the control center maps each
+          method to an OpenAPI endpoint that consumers can call naturally.
+        </p>
+
+        <ol class="steps">
+          <li>
+            <strong>Owner provides a method list</strong> — a JSON file listing each method
+            name along with its parameter schemas and response schemas. Upload it via the
+            control center dashboard.
+          </li>
+          <li>
+            <strong>Control center constructs JSON-RPC requests.</strong> When a consumer calls the
+            generated OpenAPI endpoint, the control center builds a properly formatted JSON-RPC 2.0
+            request: <code>{ "jsonrpc": "2.0", "method": "...", "params": {...}, "id": 1 }</code>
+            and sends it to the owner's server.
+          </li>
+          <li>
+            <strong>Control center extracts the result.</strong> The JSON-RPC response contains either
+            a <code>result</code> field (success) or an <code>error</code> field (failure). The
+            control center extracts the relevant data and returns clean JSON to the consumer.
+          </li>
+        </ol>
+
+        <div class="info-box">
+          <p>
+            <strong>Your JSON-RPC server stays untouched.</strong> Keep your existing methods,
+            your existing endpoint. The control center speaks native JSON-RPC 2.0 to your server
+            and presents a REST-style OpenAPI interface to consumers.
+          </p>
+        </div>
+      </section>
+
+      <!-- Demo info -->
+      <section class="content-section">
+        <h2>Demo API: World Countries and Currencies</h2>
+
+        <p>
+          This demo uses a <strong>World Countries and Currencies dataset</strong> — 250
+          countries and territories with 180 currencies, including ISO codes, capitals,
+          regions, populations, languages, calling codes, and exchange rates. Methods include
+          lookups by country code, currency code, region, and full-text search. A practical
+          dataset that demonstrates JSON-RPC's strengths in procedural, lookup-style operations.
+        </p>
+
+        <div class="btn-group">
+          <a href="/learn/owner" class="btn btn-outline">
+            &#8592; Owner Guide
+          </a>
+        </div>
+      </section>
+
+      <!-- Code example -->
+      <section class="content-section">
+        <h2>Code Example</h2>
+
+        <p class="code-label">Look up a country by ISO code</p>
+        <div class="code-block"><code><span class="comment"># JSON-RPC 2.0 request to get country details</span>
+<span class="keyword">curl</span> <span class="url">http://localhost:4005/jsonrpc</span> \
+  <span class="string">-H</span> <span class="string">"Content-Type: application/json"</span> \
+  <span class="string">-d</span> <span class="string">'{
+    "jsonrpc": "2.0",
+    "method": "getCountryByCode",
+    "params": { "code": "JP" },
+    "id": 1
+  }'</span></code></div>
+
+        <p class="code-label">Response</p>
+        <div class="code-block"><code>{
+  <span class="string">"jsonrpc"</span>: <span class="string">"2.0"</span>,
+  <span class="string">"result"</span>: {
+    <span class="string">"code"</span>: <span class="string">"JP"</span>,
+    <span class="string">"name"</span>: <span class="string">"Japan"</span>,
+    <span class="string">"capital"</span>: <span class="string">"Tokyo"</span>,
+    <span class="string">"region"</span>: <span class="string">"Asia"</span>,
+    <span class="string">"population"</span>: 125836021,
+    <span class="string">"currency"</span>: { <span class="string">"code"</span>: <span class="string">"JPY"</span>, <span class="string">"name"</span>: <span class="string">"Japanese Yen"</span>, <span class="string">"symbol"</span>: <span class="string">"&yen;"</span> },
+    <span class="string">"languages"</span>: [<span class="string">"Japanese"</span>]
+  },
+  <span class="string">"id"</span>: 1
+}</code></div>
+
+        <p class="code-label">Batch request: look up three currencies at once</p>
+        <div class="code-block"><code><span class="comment"># JSON-RPC batch: multiple method calls in one HTTP request</span>
+<span class="keyword">curl</span> <span class="url">http://localhost:4005/jsonrpc</span> \
+  <span class="string">-H</span> <span class="string">"Content-Type: application/json"</span> \
+  <span class="string">-d</span> <span class="string">'[
+    { "jsonrpc": "2.0", "method": "getCurrency", "params": { "code": "USD" }, "id": 1 },
+    { "jsonrpc": "2.0", "method": "getCurrency", "params": { "code": "EUR" }, "id": 2 },
+    { "jsonrpc": "2.0", "method": "getCurrency", "params": { "code": "JPY" }, "id": 3 }
+  ]'</span></code></div>
+      </section>
+
+      <!-- JSON-RPC error codes -->
+      <section class="content-section">
+        <h2>Standard Error Codes</h2>
+
+        <p>
+          JSON-RPC 2.0 defines a set of standard error codes. Knowing these helps you debug
+          issues quickly:
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Message</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>-32700</code></td>
+              <td>Parse error</td>
+              <td>Invalid JSON received by the server</td>
+            </tr>
+            <tr>
+              <td><code>-32600</code></td>
+              <td>Invalid Request</td>
+              <td>JSON is valid but not a proper JSON-RPC request</td>
+            </tr>
+            <tr>
+              <td><code>-32601</code></td>
+              <td>Method not found</td>
+              <td>The requested method does not exist</td>
+            </tr>
+            <tr>
+              <td><code>-32602</code></td>
+              <td>Invalid params</td>
+              <td>Invalid method parameters</td>
+            </tr>
+            <tr>
+              <td><code>-32603</code></td>
+              <td>Internal error</td>
+              <td>Server-side error during execution</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Key concepts table -->
+      <section class="content-section">
+        <h2>JSON-RPC at a Glance</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Concept</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Transport</td>
+              <td>Any (HTTP, WebSocket, TCP, Unix socket)</td>
+            </tr>
+            <tr>
+              <td>Data format</td>
+              <td>JSON</td>
+            </tr>
+            <tr>
+              <td>Spec format</td>
+              <td>Method list with parameter/response schemas (JSON)</td>
+            </tr>
+            <tr>
+              <td>Request structure</td>
+              <td><code>{ jsonrpc, method, params, id }</code></td>
+            </tr>
+            <tr>
+              <td>Batch support</td>
+              <td>Yes — send array of requests, get array of responses</td>
+            </tr>
+            <tr>
+              <td>Best for</td>
+              <td>Blockchain nodes, procedural APIs, language servers, internal services</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms of Service</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy Policy</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+</body>
+</html>

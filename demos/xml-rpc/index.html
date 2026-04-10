@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XML-RPC API Monetization — Sertone</title>
+  <meta name="description" content="Monetize WordPress-style XML-RPC APIs through the Sertone marketplace. Auto-converts XML-RPC to JSON — consumers never touch XML.">
+  <meta name="keywords" content="XML-RPC API, WordPress API, API monetization, API marketplace, XML-RPC JSON, USDC payment">
+  <link rel="canonical" href="https://sertone.net/demos/xml-rpc/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/xml-rpc/">
+  <meta property="og:title" content="XML-RPC API Monetization — Sertone">
+  <meta property="og:description" content="Monetize WordPress-style XML-RPC APIs through a Sertone marketplace with automatic USDC payment.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="XML-RPC API Monetization — Sertone">
+  <meta name="twitter:description" content="Monetize WordPress-style XML-RPC APIs through a Sertone marketplace with automatic USDC payment.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Sertone",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Linux, Docker",
+        "description": "API marketplace with XML-RPC protocol support and automatic USDC payment.",
+        "url": "https://sertone.net"
+      },
+      {
+        "@type": "HowTo",
+        "name": "How to Monetize an XML-RPC API with Sertone",
+        "description": "Register your XML-RPC API on the Sertone marketplace and start earning USDC per call.",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "position": 1,
+            "name": "Install Sertone",
+            "text": "Pull and run the free Sertone Docker container on your own server."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 2,
+            "name": "Register Your XML-RPC API",
+            "text": "Add your XML-RPC endpoint URL and set per-call pricing in the control center."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 3,
+            "name": "Start Earning",
+            "text": "Consumers discover and call your API. Payments are made automatically in USDC."
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <nav class="demo-breadcrumb demo-container" aria-label="Breadcrumb">
+    <a href="/">Home</a> <span>&rsaquo;</span>
+    <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+    <a href="/demos/">Protocols</a> <span>&rsaquo;</span>
+    XML-RPC
+  </nav>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Protocol Demo</p>
+      <h1>XML-RPC API Monetization</h1>
+      <p class="demo-tagline">WordPress-style XML-RPC APIs work seamlessly through the Sertone marketplace — auto-converted to JSON, paid automatically.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="XML-RPC data flow architecture">
+      <svg viewBox="0 0 900 180" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Data flow: Consumer sends JSON, Sertone P2P converts to XML-RPC, Owner API responds, XML converted back to JSON">
+        <!-- Consumer -->
+        <rect x="10" y="50" width="140" height="80" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="80" y="82" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="700">Consumer</text>
+        <text x="80" y="102" text-anchor="middle" fill="#64748b" font-size="11">JSON request</text>
+
+        <!-- Arrow 1 -->
+        <line x1="150" y1="90" x2="230" y2="90" stroke="#00b894" stroke-width="2" stroke-dasharray="6 3"/>
+        <polygon points="228,84 240,90 228,96" fill="#00b894"/>
+        <text x="190" y="78" text-anchor="middle" fill="#94a3b8" font-size="10">P2P</text>
+
+        <!-- Sertone Wrapper -->
+        <rect x="240" y="40" width="160" height="100" rx="12" fill="rgba(0,184,148,0.06)" stroke="#00b894" stroke-width="1.5"/>
+        <text x="320" y="72" text-anchor="middle" fill="#00b894" font-size="13" font-weight="700">Sertone</text>
+        <text x="320" y="92" text-anchor="middle" fill="#64748b" font-size="11">JSON &rarr; XML-RPC</text>
+        <text x="320" y="108" text-anchor="middle" fill="#64748b" font-size="11">conversion</text>
+
+        <!-- Arrow 2 -->
+        <line x1="400" y1="90" x2="480" y2="90" stroke="#00b894" stroke-width="2" stroke-dasharray="6 3"/>
+        <polygon points="478,84 490,90 478,96" fill="#00b894"/>
+        <text x="440" y="78" text-anchor="middle" fill="#94a3b8" font-size="10">XML-RPC</text>
+
+        <!-- Owner API -->
+        <rect x="490" y="50" width="140" height="80" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="560" y="82" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="700">XML-RPC API</text>
+        <text x="560" y="102" text-anchor="middle" fill="#64748b" font-size="11">wp.getPost</text>
+
+        <!-- Arrow 3 (return) -->
+        <line x1="630" y1="90" x2="710" y2="90" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 3"/>
+        <polygon points="708,84 720,90 708,96" fill="#94a3b8"/>
+
+        <!-- Response -->
+        <rect x="720" y="50" width="160" height="80" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="800" y="77" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="700">JSON Response</text>
+        <text x="800" y="97" text-anchor="middle" fill="#64748b" font-size="11">Auto-converted</text>
+        <text x="800" y="112" text-anchor="middle" fill="#64748b" font-size="11">from XML</text>
+      </svg>
+      <p class="arch-caption">Consumer sends JSON &rarr; Sertone converts to XML-RPC &rarr; Owner API processes &rarr; XML response converted back to JSON</p>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why XML-RPC on Sertone?</h2>
+      <p>XML-RPC powers millions of WordPress sites, legacy enterprise systems, and embedded devices. These APIs are battle-tested but difficult to monetize directly. Sertone bridges that gap: register your XML-RPC endpoint, set a price per call, and the wrapper handles everything else.</p>
+      <p>Consumers interact using simple JSON — they never need to construct XML-RPC envelopes or parse XML responses. The Sertone wrapper auto-converts between JSON and XML-RPC in both directions, making legacy APIs as easy to consume as any modern REST endpoint.</p>
+      <p>Every call is paid automatically in USDC with a transparent 5% platform commission. No payment integration, no invoice chasing — just register and earn.</p>
+    </section>
+
+    <!-- Interactive Demo -->
+    <section class="demo-interactive">
+      <h2>Try It Live</h2>
+      <div class="demo-interactive-layout">
+
+        <!-- Form Panel -->
+        <div class="demo-form-panel">
+          <h3>XML-RPC Method Call</h3>
+          <div class="demo-field">
+            <label for="xmlrpc-method">Method Name</label>
+            <input type="text" id="xmlrpc-method" value="wp.getPost" placeholder="e.g. wp.getPost">
+          </div>
+          <div class="demo-field">
+            <label for="xmlrpc-params">Parameters (JSON)</label>
+            <textarea id="xmlrpc-params" rows="5">{
+  "blog_id": 1,
+  "post_id": 42,
+  "fields": ["post_title", "post_content", "post_date"]
+}</textarea>
+          </div>
+          <button class="demo-run-btn" id="xmlrpc-run-btn" onclick="runXmlRpcDemo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Run XML-RPC Call</span>
+          </button>
+        </div>
+
+        <!-- Result Panel -->
+        <div class="result-panel" id="xmlrpc-result">
+          <div class="result-placeholder">Click "Run XML-RPC Call" to see the live response</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Code Samples</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">cURL</button>
+        <button class="code-tab" data-tab="javascript">JavaScript</button>
+        <button class="code-tab" data-tab="python">Python</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+<span class="prompt">$ </span>curl -X POST https://localhost:3000/internal/call \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{"api_id_public": "API_UUID_FROM_CATALOG", "method": "POST", "path": "/", "params": {"method": "wp.getPost", "params": {"blog_id": 1, "post_id": 42, "fields": ["post_title", "post_content", "post_date"]}}}'</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code><span class="comment">// Call the API through YOUR local Sertone control center</span>
+<span class="comment">// Consumer secret is in Settings &gt; Security</span>
+const response = await fetch('https://localhost:3000/internal/call', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+  },
+  body: JSON.stringify({
+    api_id_public: 'API_UUID_FROM_CATALOG',
+    method: 'POST',
+    path: '/',
+    params: {
+      method: 'wp.getPost',
+      params: {
+        blog_id: 1,
+        post_id: 42,
+        fields: ['post_title', 'post_content', 'post_date']
+      }
+    }
+  })
+});
+const data = await response.json();
+console.log(data.result);</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+import requests
+
+response = requests.post(
+    'https://localhost:3000/internal/call',
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+    },
+    json={
+        'api_id_public': 'API_UUID_FROM_CATALOG',
+        'method': 'POST',
+        'path': '/',
+        'params': {
+            'method': 'wp.getPost',
+            'params': {
+                'blog_id': 1,
+                'post_id': 42,
+                'fields': ['post_title', 'post_content', 'post_date']
+            }
+        }
+    }
+)
+print(response.json()['result'])</code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Self-Host in Minutes</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Install the Control Center</h4>
+          <p>Run the free Sertone Docker container. No cloud account needed.</p>
+          <pre class="code-block"><code><span class="prompt">$</span> docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  sertone/wrapper:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Open the Web Console</h4>
+          <p>Go to <code>https://localhost:3002/panel</code> in your browser. Create your account, accept terms, and your wallet is generated automatically.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Browse the Catalog</h4>
+          <p>Click <strong>Catalog &amp; SDKs</strong> in the sidebar. Search for APIs, try them in demo mode (free), then switch to production when ready.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Make Your First Call</h4>
+          <p>Copy your consumer secret from <strong>Settings &gt; Security</strong>, then use the code samples above to call any API from your own code.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SEO Footer -->
+    <section class="demo-footer-cta">
+      <h2>Ready to Monetize Your XML-RPC API?</h2>
+      <p>Deploy your own Sertone node in minutes. Free Docker container, no vendor lock-in, transparent automatic payment.</p>
+      <a href="/try" class="btn">Get Started</a>
+      <a href="/docs/" class="btn btn-secondary" style="margin-left: 0.75rem;">Read the Docs</a>
+
+      <div class="related-demos">
+        <a href="/demos/rest-api/" class="related-demo-link">REST API</a>
+        <a href="/demos/graphql/" class="related-demo-link">GraphQL</a>
+        <a href="/demos/soap/" class="related-demo-link">SOAP</a>
+        <a href="/demos/sse-streaming/" class="related-demo-link">SSE Streaming</a>
+        <a href="/demos/multi-protocol/" class="related-demo-link">Multi-Protocol</a>
+        <a href="/demos/subscription/" class="related-demo-link">Subscriptions</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I monetize WordPress XML-RPC APIs with Sertone?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Sertone supports XML-RPC natively. Register your WordPress XML-RPC endpoint, set a price per call, and consumers interact using simple JSON — the wrapper auto-converts to XML-RPC and back."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do consumers need to send XML-RPC payloads?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Consumers send standard JSON requests. Sertone converts JSON to XML-RPC before forwarding to your API, and converts the XML response back to JSON for the consumer."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is payment handled for XML-RPC API calls?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Every call is paid automatically in USDC. The API owner sets the price per call, and Sertone takes a transparent 5% platform commission. No invoicing or payment integration needed."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    async function runXmlRpcDemo() {
+      var btn = document.getElementById('xmlrpc-run-btn');
+      var method = document.getElementById('xmlrpc-method').value.trim();
+      var paramsRaw = document.getElementById('xmlrpc-params').value.trim();
+
+      setLoading(btn, true);
+
+      try {
+        var params;
+        try {
+          params = JSON.parse(paramsRaw);
+        } catch (e) {
+          throw new Error('Invalid JSON in parameters field: ' + e.message);
+        }
+
+        var result = await callDemo('bb-xmlrpc', {
+          method: method,
+          params: params
+        }, { method: 'POST', path: '/' });
+
+        renderResult('xmlrpc-result', result);
+      } catch (err) {
+        showError('xmlrpc-result', err);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+  </script>
+
+</body>
+</html>

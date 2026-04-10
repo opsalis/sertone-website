@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REST API Demo — Sertone</title>
+  <meta name="description" content="Live demo: call a REST API through the Sertone Global Network. See request routing, latency, JSON response, and how to replicate this on a Raspberry Pi.">
+  <meta name="keywords" content="REST API demo, Sertone REST, encrypted network API call, earthquake API, API marketplace demo, Raspberry Pi API server">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/demos/rest-api">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/rest-api">
+  <meta property="og:title" content="REST API Demo — Sertone">
+  <meta property="og:description" content="Live demo: REST API data routed through the Sertone Global Network. JSON response with latency badge. Replicate on a Raspberry Pi in 5 minutes.">
+  <meta property="og:site_name" content="Sertone">
+
+  <link rel="stylesheet" href="/style.css?v=3">
+  <link rel="stylesheet" href="/demos/style.css?v=1">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/sell">Sell</a></li>
+        <li><a href="/buy">Buy</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/trust">Trust</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="demo-page">
+
+    <!-- Hero -->
+    <div class="demo-hero">
+      <div class="container">
+        <div class="demo-hero-breadcrumb">
+          <a href="/demos/">Demos</a> &rsaquo; REST API
+        </div>
+        <h1>REST API — Live Demo</h1>
+        <p class="value-prop">Pick a minimum magnitude, hit Run, and watch a live earthquake dataset come back through the Sertone Global Network in under 150ms. The same call, billed per-request, paid automatically.</p>
+      </div>
+    </div>
+
+    <!-- Architecture -->
+    <section>
+      <div class="container">
+        <span class="section-label">How This Works</span>
+        <h2 class="section-title" style="margin-bottom: 1.75rem;">The Call Path</h2>
+
+        <style>
+          /* ── Vertical architecture diagram ── */
+          .arch-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+            max-width: 680px;
+            margin: 0 auto;
+            font-family: inherit;
+          }
+
+          /* Consumer + Owner rows */
+          .arch-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.1rem 1.5rem 1rem;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+          }
+          .arch-row.arch-consumer {
+            border-radius: 14px 14px 0 0;
+            border-bottom: none;
+          }
+          .arch-row.arch-owner {
+            border-radius: 0 0 14px 14px;
+            border-top: none;
+          }
+
+          .arch-row-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: #94a3b8;
+          }
+          .arch-row-sublabel {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-style: italic;
+          }
+
+          /* Horizontal flow of boxes inside a row */
+          .arch-flow-h {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+          }
+          .arch-box {
+            background: #fff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 9px;
+            padding: 0.55rem 0.9rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #1e293b;
+            text-align: center;
+            line-height: 1.35;
+            white-space: nowrap;
+          }
+          /* User's own stuff — big, prominent, the star */
+          .arch-box-user {
+            background: #fff;
+            border: 2px solid #1e293b;
+            border-radius: 12px;
+            padding: 0.9rem 1.3rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            text-align: center;
+            line-height: 1.35;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          }
+          /* Sertone control centers — smaller, green, magic */
+          .arch-box-sertone {
+            background: linear-gradient(135deg, rgba(0,184,148,0.08), rgba(0,184,148,0.03));
+            border: 1.5px solid rgba(0,184,148,0.4);
+            border-radius: 9px;
+            padding: 0.5rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #047857;
+            text-align: center;
+            line-height: 1.35;
+          }
+          .arch-arrow-h {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            flex-shrink: 0;
+          }
+
+          /* Vertical arrow between rows */
+          .arch-arrow-v {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 0.15rem 0;
+            position: relative;
+            z-index: 2;
+          }
+          .arch-arrow-v .arrow-down,
+          .arch-arrow-v .arrow-up {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            padding: 0.18rem 0.65rem;
+            border-radius: 20px;
+          }
+          .arch-arrow-v .arrow-down {
+            color: #00b894;
+            background: #e6faf4;
+            border: 1px solid #b2edd8;
+          }
+          .arch-arrow-v .arrow-up {
+            color: #0ea5e9;
+            background: #e0f4fd;
+            border: 1px solid #b3e4f9;
+          }
+
+          /* ── Network row — the star ── */
+          .arch-network {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #00b894 0%, #00a381 55%, #007d65 100%);
+            border: none;
+            padding: 2rem 1.5rem;
+            min-height: 160px;
+            justify-content: center;
+            box-shadow: 0 4px 32px rgba(0,184,148,0.22), 0 1px 4px rgba(0,0,0,0.06);
+          }
+
+          /* Floating particles */
+          .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+            animation: floatUp 6s ease-in-out infinite;
+          }
+          .particle.p1 { width: 48px; height: 48px; left: 8%;  bottom: -20px; animation-duration: 7s; animation-delay: 0s;   }
+          .particle.p2 { width: 28px; height: 28px; left: 28%; bottom: -14px; animation-duration: 5s; animation-delay: 1.4s; }
+          .particle.p3 { width: 64px; height: 64px; left: 58%; bottom: -28px; animation-duration: 9s; animation-delay: 0.7s; }
+          .particle.p4 { width: 20px; height: 20px; left: 80%; bottom: -10px; animation-duration: 6s; animation-delay: 2.5s; }
+          .particle.p5 { width: 36px; height: 36px; left: 45%; bottom: -18px; animation-duration: 8s; animation-delay: 3.2s; }
+
+          @keyframes floatUp {
+            0%   { transform: translateY(0)    scale(1);    opacity: 0.10; }
+            40%  { transform: translateY(-70px) scale(1.08); opacity: 0.18; }
+            80%  { transform: translateY(-130px) scale(0.95); opacity: 0.07; }
+            100% { transform: translateY(-160px) scale(0.9);  opacity: 0;   }
+          }
+
+          /* Pulse ring behind network title */
+          .arch-network::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255,255,255,0.15);
+            animation: pulseRing 3.5s ease-out infinite;
+          }
+          .arch-network::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px; height: 280px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.08);
+            animation: pulseRing 3.5s ease-out infinite 0.8s;
+          }
+          @keyframes pulseRing {
+            0%   { opacity: 0.6; transform: translate(-50%,-50%) scale(0.7); }
+            100% { opacity: 0;   transform: translate(-50%,-50%) scale(1.4); }
+          }
+
+          .arch-network-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.55rem;
+          }
+          .arch-network-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 1px 8px rgba(0,0,0,0.18);
+          }
+          .arch-network-features {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+          .arch-network-features span {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.92);
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 20px;
+            padding: 0.22rem 0.7rem;
+          }
+          .arch-network-tagline {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.72);
+            max-width: 340px;
+            line-height: 1.4;
+          }
+
+          /* Responsive */
+          @media (max-width: 480px) {
+            .arch-box       { font-size: 0.75rem; padding: 0.45rem 0.65rem; white-space: normal; max-width: 110px; }
+            .arch-network-title { font-size: 0.95rem; }
+            .arch-network-features span { font-size: 0.7rem; }
+          }
+
+          /* ---- FOR CONSUMERS section ---- */
+          .consumer-steps {
+            margin: 1.5rem 0;
+          }
+          .consumer-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+          }
+          .step-num {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent, #00b894);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+          }
+          .step-content h4 {
+            margin: 0 0 0.4rem;
+            font-size: 1rem;
+          }
+          .step-content p {
+            margin: 0.3rem 0;
+            color: var(--text-secondary, #475569);
+            font-size: 0.9rem;
+            line-height: 1.6;
+          }
+        </style>
+
+        <div class="arch-vertical">
+
+          <!-- Row 1: Consumer -->
+          <div class="arch-row arch-consumer">
+            <div class="arch-row-label">Consumer Premises</div>
+            <div class="arch-flow-h">
+              <div class="arch-box arch-box-user">Your App</div>
+              <div class="arch-arrow-h">&#8594;</div>
+              <div class="arch-box arch-box-sertone">Your Sertone<br>Control Center</div>
+            </div>
+            <div class="arch-row-sublabel">On your premises</div>
+          </div>
+
+          <!-- Arrow down/up between consumer and network -->
+          <div class="arch-arrow-v">
+            <span class="arrow-down">&#9660; Request</span>
+            <span class="arrow-up">&#9650; Response</span>
+          </div>
+
+          <!-- Row 2: Network — the star -->
+          <div class="arch-row arch-network">
+            <div class="particle p1"></div>
+            <div class="particle p2"></div>
+            <div class="particle p3"></div>
+            <div class="particle p4"></div>
+            <div class="particle p5"></div>
+            <div class="arch-network-content">
+              <div class="arch-network-title">Sertone Global Network</div>
+              <div class="arch-network-features">
+                <span>&#128274; Encrypted</span>
+                <span>&#128279; Automatic Payment</span>
+                <span>&#127760; 5 Delivery Methods</span>
+              </div>
+              <div class="arch-network-tagline">Proprietary fully encrypted protocol with automatic payment settlement</div>
+            </div>
+          </div>
+
+          <!-- Arrow down/up between network and owner -->
+          <div class="arch-arrow-v">
+            <span class="arrow-down">&#9660; Request</span>
+            <span class="arrow-up">&#9650; Response</span>
+          </div>
+
+          <!-- Row 3: Owner -->
+          <div class="arch-row arch-owner">
+            <div class="arch-row-label">Owner Premises</div>
+            <div class="arch-flow-h">
+              <div class="arch-box arch-box-sertone">Their Sertone<br>Control Center</div>
+              <div class="arch-arrow-h">&#8594;</div>
+              <div class="arch-box arch-box-user">Earthquake<br>Data Service</div>
+            </div>
+            <div class="arch-row-sublabel">On their premises</div>
+          </div>
+
+        </div><!-- /arch-vertical -->
+
+        <div style="margin:1.25rem auto 0;max-width:44rem;background:linear-gradient(135deg,rgba(0,184,148,0.06),rgba(0,184,148,0.02));border:1px solid rgba(0,184,148,0.15);border-radius:12px;padding:1rem 1.5rem;">
+          <p style="font-size:0.85rem;color:#475569;line-height:1.65;margin:0;">
+            <strong style="color:#1e293b;">What is the Sertone control center?</strong> A single Docker container you run on your own machine — a laptop, a Raspberry Pi, a cloud server. It connects you to the Sertone Global Network. Through its built-in web console, you browse services, register your own, manage your wallet, and monitor your earnings. Installation takes minutes. It is completely free, forever.
+          </p>
+          <div style="margin-top:0.75rem;">
+            <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+          </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 1.75rem;">
+          <p>The Sertone Global Network uses a proprietary fully encrypted protocol. All traffic is end-to-end encrypted. Settlement is automatic.</p>
+        </div>
+
+        <div class="info-box" style="margin-top: 1rem;">
+          <p><strong>What the owner did:</strong> installed their Sertone control center, registered their earthquake data service through the web console, set their price, and started earning USDC on every call. The Sertone Global Network handles the rest.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOR CONSUMERS -->
+    <section>
+      <div class="container">
+        <span class="section-label">For Consumers</span>
+        <h2 class="section-title">How to use this service</h2>
+
+        <p>Any developer worldwide can consume this service from their own Sertone control center. Here is the complete flow from installation to first call:</p>
+
+        <div class="consumer-steps">
+
+          <div class="consumer-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Install your Sertone control center</h4>
+              <p>One Docker command on any machine -- your laptop, a Raspberry Pi, a cloud VM.</p>
+              <div class="code-block"><span class="prompt">$</span> docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</div>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Browse the catalog</h4>
+              <p>Open your web console at <code>https://localhost:3002/panel</code>. Go to the Catalog tab. Search for the service you need -- use keywords, tags, or browse by category.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Preview with demo samples</h4>
+              <p>Click on any service to see its full description, available endpoints, and sample data. Try it in the Swagger sandbox -- demo samples are free, no payment needed. See exactly what the data looks like before you spend a cent.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Fund your wallet</h4>
+              <p>Go to the Finance tab. Deposit USDC and a small amount of ETH for gas. Your control center shows both balances and alerts you when they are low.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <h4>Call it from your code</h4>
+              <p>Copy your consumer secret from Settings. Use the service UUID from the catalog. Make your first real call:</p>
+              <div class="code-block"><span class="prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"api_id_public": "SERVICE_UUID", "path": "/v1/earthquakes/recent", "method": "GET"}'</div>
+              <p>Or generate an SDK in your preferred language (Python, TypeScript, Go, Rust, Kotlin, and more) -- the web console generates ready-to-use client code with the UUID pre-filled.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">6</div>
+            <div class="step-content">
+              <h4>You are in business</h4>
+              <p>Every call settles automatically in USDC. You pay the service owner's price. No invoices, no payment terms, no chargebacks. Your Finance tab shows every transaction.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Demo -->
+    <section style="background: #f8fafc;">
+      <div class="container">
+        <span class="section-label">Try It</span>
+        <h2 class="section-title" style="margin-bottom: 1.75rem;">Run a Live Query</h2>
+
+        <div class="demo-interactive">
+          <div class="demo-interactive-header">
+            <span class="dot red"></span>
+            <span class="dot amber"></span>
+            <span class="dot green"></span>
+            <span class="header-title">GET /v1/earthquakes/recent - routed through the Sertone Global Network</span>
+          </div>
+          <div class="demo-interactive-body">
+            <div class="demo-form-row">
+              <div class="demo-form-field">
+                <label for="eq-minmag">Minimum Magnitude</label>
+                <select id="eq-minmag">
+                  <option value="4.5">4.5 — Moderate (common)</option>
+                  <option value="5.0" selected>5.0 — Strong</option>
+                  <option value="6.0">6.0 — Major</option>
+                  <option value="7.0">7.0 — Great</option>
+                </select>
+              </div>
+              <div class="demo-form-field">
+                <label for="eq-limit">Max Results</label>
+                <select id="eq-limit">
+                  <option value="3">3 events</option>
+                  <option value="5" selected>5 events</option>
+                  <option value="10">10 events</option>
+                </select>
+              </div>
+              <div class="demo-form-field">
+                <label for="eq-period">Time Window</label>
+                <select id="eq-period">
+                  <option value="7">Last 7 days</option>
+                  <option value="30" selected>Last 30 days</option>
+                  <option value="90">Last 90 days</option>
+                </select>
+              </div>
+              <button class="btn-run" id="eq-run" onclick="runEarthquakeDemo()">
+                <span class="run-icon">&#9654;</span> Run Demo
+              </button>
+            </div>
+
+            <div class="demo-result" id="eq-result">
+              <div class="demo-result-bar">
+                <span class="result-status" id="eq-status">Waiting</span>
+                <span class="latency-badge hidden" id="eq-latency">—</span>
+              </div>
+              <div class="demo-result-body" id="eq-body">
+                <div class="demo-result-placeholder">Select parameters above and click Run Demo</div>
+              </div>
+            </div>
+            <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+              Live call through the Sertone Global Network. Install your own Sertone to make unlimited calls.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section>
+      <div class="container">
+        <span class="section-label">Code Samples</span>
+        <h2 class="section-title" style="margin-bottom: 1.75rem;">Call It From Your Code</h2>
+        <p style="color:#64748b; margin-bottom: 1.5rem; font-size: 0.95rem;">
+          Your Sertone runs at <code style="font-family:monospace; color:#00b894;">localhost:3000</code>. The API ID comes from the catalog. Everything else is standard HTTP.
+        </p>
+
+        <div class="demo-code">
+          <div class="demo-code-tabs">
+            <button class="demo-code-tab active" onclick="switchTab(this, 'tab-curl')">curl</button>
+            <button class="demo-code-tab" onclick="switchTab(this, 'tab-js')">JavaScript</button>
+            <button class="demo-code-tab" onclick="switchTab(this, 'tab-python')">Python</button>
+          </div>
+
+          <div class="demo-code-panel active" id="tab-curl"><span class="c-comment"># Query earthquakes magnitude 5.0+ over the last 30 days</span>
+<span class="c-comment"># Your Sertone runs at localhost:3000</span>
+<span class="c-comment"># SERVICE_UUID: copy from your catalog (Catalog tab → click the service)</span>
+
+<span class="c-prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H <span class="c-string">"Authorization: Bearer YOUR_CONSUMER_SECRET"</span> \
+  -H <span class="c-string">"Content-Type: application/json"</span> \
+  -d <span class="c-string">'{"api_id_public": "SERVICE_UUID", "path": "/v1/earthquakes/recent", "method": "GET",
+     "params": {"format": "geojson", "minmagnitude": "5.0", "limit": "5"}}'</span>
+
+<span class="c-comment"># Response (routed through the Sertone Global Network, paid automatically):</span>
+{
+  <span class="c-string">"place"</span>: <span class="c-string">"127km SSE of Kamchatka"</span>,
+  <span class="c-string">"mag"</span>: <span class="c-num">5.4</span>,
+  <span class="c-string">"time"</span>: <span class="c-num">1743200400000</span>
+}
+</div>
+
+          <div class="demo-code-panel" id="tab-js"><span class="c-comment">// Node.js or browser — plain fetch(), no SDK needed</span>
+<span class="c-comment">// SERVICE_UUID: copy from your catalog (Catalog tab → click the service)</span>
+<span class="c-comment">// YOUR_CONSUMER_SECRET: copy from Settings tab</span>
+
+<span class="c-keyword">const</span> <span class="c-var">response</span> = <span class="c-keyword">await</span> <span class="c-func">fetch</span>(<span class="c-string">'https://localhost:3000/internal/call'</span>, {
+  method: <span class="c-string">'POST'</span>,
+  headers: {
+    <span class="c-string">'Authorization'</span>: <span class="c-string">'Bearer YOUR_CONSUMER_SECRET'</span>,
+    <span class="c-string">'Content-Type'</span>:  <span class="c-string">'application/json'</span>,
+  },
+  body: <span class="c-var">JSON</span>.<span class="c-func">stringify</span>({
+    api_id_public: <span class="c-string">'SERVICE_UUID'</span>,
+    path:          <span class="c-string">'/v1/earthquakes/recent'</span>,
+    method:        <span class="c-string">'GET'</span>,
+    params:        { format: <span class="c-string">'geojson'</span>, minmagnitude: <span class="c-string">'5.0'</span>, limit: <span class="c-string">'5'</span> },
+  }),
+});
+
+<span class="c-keyword">const</span> <span class="c-var">data</span> = <span class="c-keyword">await</span> <span class="c-var">response</span>.<span class="c-func">json</span>();
+
+<span class="c-var">data</span>.<span class="c-var">features</span>.<span class="c-func">forEach</span>(<span class="c-var">f</span> =&gt; {
+  <span class="c-keyword">const</span> { place, mag, time } = <span class="c-var">f</span>.<span class="c-var">properties</span>;
+  <span class="c-var">console</span>.<span class="c-func">log</span>(<span class="c-string">`M<span class="c-var">${mag}</span> — <span class="c-var">${place}</span>`</span>);
+});
+
+<span class="c-comment">// Your Sertone handles routing, billing, and settlement automatically.</span>
+<span class="c-comment">// Check your balance in the Finance tab of your web console.</span>
+</div>
+
+          <div class="demo-code-panel" id="tab-python"><span class="c-comment"># Python — standard requests library</span>
+<span class="c-comment"># pip install requests</span>
+<span class="c-comment"># SERVICE_UUID: copy from your catalog. YOUR_CONSUMER_SECRET: from Settings tab.</span>
+
+<span class="c-keyword">import</span> <span class="c-var">requests</span>
+
+<span class="c-var">r</span> = <span class="c-var">requests</span>.<span class="c-func">post</span>(<span class="c-string">'https://localhost:3000/internal/call'</span>,
+    headers={<span class="c-string">'Authorization'</span>: <span class="c-string">'Bearer YOUR_CONSUMER_SECRET'</span>},
+    json={
+        <span class="c-string">'api_id_public'</span>: <span class="c-string">'SERVICE_UUID'</span>,
+        <span class="c-string">'path'</span>:          <span class="c-string">'/v1/earthquakes/recent'</span>,
+        <span class="c-string">'method'</span>:        <span class="c-string">'GET'</span>,
+        <span class="c-string">'params'</span>:        {<span class="c-string">'format'</span>: <span class="c-string">'geojson'</span>, <span class="c-string">'minmagnitude'</span>: <span class="c-string">'5.0'</span>, <span class="c-string">'limit'</span>: <span class="c-string">'5'</span>},
+    })
+
+<span class="c-var">r</span>.<span class="c-func">raise_for_status</span>()
+
+<span class="c-keyword">for</span> <span class="c-var">feature</span> <span class="c-keyword">in</span> <span class="c-var">r</span>.<span class="c-func">json</span>()[<span class="c-string">"features"</span>]:
+    <span class="c-var">p</span> = <span class="c-var">feature</span>[<span class="c-string">"properties"</span>]
+    <span class="c-func">print</span>(<span class="c-string">f"M{p['mag']} — {p['place']}"</span>)
+
+<span class="c-comment"># Output:</span>
+<span class="c-comment"># M5.4 — 127km SSE of Kamchatka</span>
+<span class="c-comment"># M5.1 — Southern Mid-Atlantic Ridge</span>
+<span class="c-comment"># M5.3 — off the coast of Oregon</span>
+</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Replicate -->
+    <section style="background: #f8fafc;">
+      <div class="container">
+        <div class="demo-replicate">
+          <h3>Replicate This on Your Raspberry Pi</h3>
+          <p class="replicate-intro">This exact demo — an earthquake data endpoint earning per-call revenue — can run on a Raspberry Pi 4 with 4 GB of RAM. You need Docker, an internet connection, and about five minutes.</p>
+
+          <div class="replicate-steps">
+
+            <div class="replicate-step">
+              <div class="replicate-step-num">1</div>
+              <div class="replicate-step-content">
+                <h4>Install Docker on your Raspberry Pi</h4>
+                <p>Official one-liner. Works on Raspberry Pi OS (64-bit) and Ubuntu for Pi.</p>
+                <div class="code-block"><span class="prompt">$</span> curl -fsSL https://get.docker.com | sh
+<span class="prompt">$</span> sudo usermod -aG docker $USER
+<span class="prompt">$</span> newgrp docker</div>
+              </div>
+            </div>
+
+            <div class="replicate-step">
+              <div class="replicate-step-num">2</div>
+              <div class="replicate-step-content">
+                <h4>Start your Sertone</h4>
+                <p>The container auto-generates a wallet, registers on the network, and starts listening. Your Sertone gets a unique identity that persists across restarts.</p>
+                <div class="code-block"><span class="prompt">$</span> docker run -d \
+  --name sertone \
+  -p 3000:3000 \
+  -p 3001:3001 \
+  -v sertone-data:/data \
+  sertone/wrapper:latest</div>
+                <p style="margin-top:0.5rem;">Data (keys, config, DB) is in the <code style="font-family:monospace;color:#00b894;">sertone-data</code> volume — never deleted when the container restarts.</p>
+              </div>
+            </div>
+
+            <div class="replicate-step">
+              <div class="replicate-step-num">3</div>
+              <div class="replicate-step-content">
+                <h4>Register your API</h4>
+                <p>Open your Sertone web console and register your service:</p>
+                <div class="code-block">1. Go to your web console (https://localhost:3002/panel)
+2. Click "Register" in the My APIs section
+3. Select "API Service"
+4. Fill in your service name, description, and price
+5. Upload your OpenAPI spec or let Sertone scan your server
+6. Click "Register" - your service is live on the network</div>
+              </div>
+            </div>
+
+            <div class="replicate-step">
+              <div class="replicate-step-num">4</div>
+              <div class="replicate-step-content">
+                <h4>Call your own API</h4>
+                <p>Your service is now discoverable on the Sertone Global Network. Other users can find it in their catalog, call it, and you earn USDC on every request - settled automatically.</p>
+                <div class="code-block"><span class="prompt">$</span> # From any Sertone control center worldwide:
+curl -X POST https://localhost:3000/internal/call \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{"api_id_public":"SERVICE_UUID","path":"/v1/earthquakes/recent","method":"GET"}'</div>
+              </div>
+            </div>
+
+            <div class="replicate-step">
+              <div class="replicate-step-num">5</div>
+              <div class="replicate-step-content">
+                <h4>Expose it to the internet (optional)</h4>
+                <p>For other Sertone instances to reach you, forward port 3001 on your router, or use any tunnel (Cloudflare Tunnel, ngrok, etc.). Your Sertone uses its wallet address as its identity — no domain name required.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Next demos -->
+    <section>
+      <div class="container text-center">
+        <h2 class="section-title">Explore More Demos</h2>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+          <a href="/demos/graphql" class="btn btn-secondary">GraphQL Demo</a>
+          <a href="/demos/smart-contract" class="btn btn-secondary">Smart Contract</a>
+          <a href="/demos/streaming" class="btn btn-secondary">Streaming</a>
+          <a href="/demos/cross-geography" class="btn btn-secondary">Cross-Geography</a>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /demo-page -->
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/docs/" style="color:#64748b;font-size:0.85rem;">Docs</a>
+        <a href="/pricing" style="color:#64748b;font-size:0.85rem;">Pricing</a>
+        <a href="/trust" style="color:#64748b;font-size:0.85rem;">Trust</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy</a>
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+  <script>
+    /* ---------- Tab switching ---------- */
+    function switchTab(btn, panelId) {
+      btn.closest('.demo-code').querySelectorAll('.demo-code-tab').forEach(t => t.classList.remove('active'));
+      btn.closest('.demo-code').querySelectorAll('.demo-code-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(panelId).classList.add('active');
+    }
+
+    /* ---------- Demo data ---------- */
+    const EARTHQUAKE_DATA = {
+      '4.5': [
+        { place: '84km SE of Nikolski, Alaska', mag: 4.6, depth: 35.2, time: '2026-03-28T14:22:11Z', id: 'us7000p4k1' },
+        { place: '127km SSE of Petropavlovsk-Kamchatsky', mag: 4.8, depth: 52.0, time: '2026-03-27T09:44:05Z', id: 'us7000p4k2' },
+        { place: 'Southern Mid-Atlantic Ridge', mag: 4.7, depth: 10.0, time: '2026-03-26T22:11:43Z', id: 'us7000p4k3' },
+        { place: '23km SW of Calama, Chile', mag: 4.5, depth: 118.4, time: '2026-03-26T17:55:29Z', id: 'us7000p4k4' },
+        { place: 'Fiji region', mag: 4.9, depth: 566.1, time: '2026-03-25T03:08:12Z', id: 'us7000p4k5' },
+        { place: 'off the coast of Oregon', mag: 4.6, depth: 10.0, time: '2026-03-24T11:30:00Z', id: 'us7000p4k6' },
+        { place: 'Tonga region', mag: 5.0, depth: 10.0, time: '2026-03-23T19:17:33Z', id: 'us7000p4k7' },
+        { place: 'Java, Indonesia', mag: 4.7, depth: 88.5, time: '2026-03-22T07:44:55Z', id: 'us7000p4k8' },
+        { place: '65km E of Honiara, Solomon Islands', mag: 4.5, depth: 22.0, time: '2026-03-21T15:02:01Z', id: 'us7000p4k9' },
+        { place: 'Rat Islands, Aleutian Islands', mag: 4.8, depth: 40.0, time: '2026-03-20T08:55:44Z', id: 'us7000p4ka' },
+      ],
+      '5.0': [
+        { place: '127km SSE of Petropavlovsk-Kamchatsky', mag: 5.4, depth: 52.0, time: '2026-03-27T09:44:05Z', id: 'us7000p5k1' },
+        { place: 'Southern Mid-Atlantic Ridge', mag: 5.1, depth: 10.0, time: '2026-03-26T22:11:43Z', id: 'us7000p5k2' },
+        { place: 'off the coast of Oregon', mag: 5.3, depth: 10.0, time: '2026-03-24T11:30:00Z', id: 'us7000p5k3' },
+        { place: 'Tonga region', mag: 5.0, depth: 10.0, time: '2026-03-23T19:17:33Z', id: 'us7000p5k4' },
+        { place: 'Java, Indonesia', mag: 5.2, depth: 88.5, time: '2026-03-22T07:44:55Z', id: 'us7000p5k5' },
+      ],
+      '6.0': [
+        { place: 'Vanuatu', mag: 6.2, depth: 33.0, time: '2026-03-25T05:12:07Z', id: 'us7000p6k1' },
+        { place: '198km E of Chichi-shima, Japan', mag: 6.1, depth: 22.5, time: '2026-03-18T14:33:00Z', id: 'us7000p6k2' },
+        { place: 'Loyalty Islands', mag: 6.4, depth: 10.0, time: '2026-03-10T08:21:55Z', id: 'us7000p6k3' },
+      ],
+      '7.0': [
+        { place: 'near the east coast of Honshu, Japan', mag: 7.1, depth: 60.0, time: '2026-03-05T01:44:22Z', id: 'us7000p7k1' },
+      ],
+    };
+
+    function colorJson(json) {
+      return json
+        .replace(/("(?:[^"\\]|\\.)*")(\s*:)/g, '<span class="json-key">$1</span>$2')
+        .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span class="json-str">$1</span>')
+        .replace(/:\s*(\b\d+\.?\d*\b)/g, ': <span class="json-num">$1</span>')
+        .replace(/:\s*(true|false)/g, ': <span class="json-bool">$1</span>')
+        .replace(/:\s*(null)/g, ': <span class="json-null">$1</span>');
+    }
+
+    function runEarthquakeDemo() {
+      const minmag  = document.getElementById('eq-minmag').value;
+      const limit   = parseInt(document.getElementById('eq-limit').value);
+      const btn     = document.getElementById('eq-run');
+      const status  = document.getElementById('eq-status');
+      const latency = document.getElementById('eq-latency');
+      const body    = document.getElementById('eq-body');
+
+      btn.classList.add('loading');
+      btn.textContent = 'Running…';
+      status.textContent = 'Routing through the Sertone Global Network…';
+      status.className = 'result-status';
+      latency.classList.add('hidden');
+      body.innerHTML = '<div class="demo-result-placeholder">Routing request through the Sertone Global Network…</div>';
+
+      const t0 = Date.now();
+      const simLatency = 42 + Math.floor(Math.random() * 80); // 42–122ms
+
+      setTimeout(() => {
+        const pool    = EARTHQUAKE_DATA[minmag] || EARTHQUAKE_DATA['5.0'];
+        const events  = pool.slice(0, limit);
+        const elapsed = Date.now() - t0;
+
+        const features = events.map(e => ({
+          type: 'Feature',
+          properties: {
+            mag:   e.mag,
+            place: e.place,
+            time:  new Date(e.time).getTime(),
+            depth: e.depth,
+            ids:   e.id,
+          },
+          geometry: null,
+          id: e.id,
+        }));
+
+        const response = {
+          type: 'FeatureCollection',
+          metadata: {
+            generated:  Date.now(),
+            url:        `POST https://localhost:3000/internal/call`,
+            title:      `Magnitude ${minmag}+ Earthquakes`,
+            status:     200,
+            count:      events.length,
+            _sertone: {
+              routed_via:  'Sertone Global Network',
+              settlement:  'blockchain',
+              latency_ms:  simLatency,
+              settled:     true,
+              price_usdc:  '0.000200',
+            },
+          },
+          features,
+        };
+
+        const json = JSON.stringify(response, null, 2);
+        body.innerHTML = colorJson(json);
+
+        status.textContent = `200 OK — ${events.length} events`;
+        status.className = 'result-status ok';
+        latency.textContent = `${simLatency}ms`;
+        latency.classList.remove('hidden');
+
+        btn.classList.remove('loading');
+        btn.innerHTML = '<span class="run-icon">&#9654;</span> Run Demo';
+      }, simLatency + 300);
+    }
+  </script>
+
+</body>
+</html>

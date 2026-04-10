@@ -1,0 +1,6 @@
+# Legacy redirects
+/try / 301
+/product/ / 301
+/product/try.html / 301
+/product/terms.html /terms 301
+/security /trust 301

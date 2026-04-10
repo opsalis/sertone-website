@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate SSO for APIs — OAuth2 via Sertone</title>
+  <meta name="description" content="Enterprise OAuth2 single sign-on for API marketplace access. Auto-provision subscriptions with corporate SSO — zero onboarding friction.">
+  <meta name="keywords" content="OAuth2 API, corporate SSO, enterprise API access, API subscription management, single sign-on API, API marketplace, Sertone">
+  <link rel="canonical" href="https://sertone.net/demos/oauth-corporate/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/oauth-corporate/">
+  <meta property="og:title" content="Corporate SSO for APIs — OAuth2 via Sertone">
+  <meta property="og:description" content="Enterprise OAuth2 single sign-on for API marketplace access. Auto-provision subscriptions with corporate SSO.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Corporate SSO for APIs — OAuth2 via Sertone">
+  <meta name="twitter:description" content="Enterprise OAuth2 single sign-on for API marketplace access. Auto-provision subscriptions with corporate SSO.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Sertone",
+        "applicationCategory": "DeveloperApplication",
+        "description": "Decentralized API marketplace with OAuth2 corporate SSO integration for enterprise subscription management.",
+        "url": "https://sertone.net",
+        "operatingSystem": "Linux, Docker",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "description": "Free self-hosted Docker container"
+        }
+      },
+      {
+        "@type": "HowTo",
+        "name": "How to Set Up Corporate SSO for API Access via Sertone",
+        "description": "Connect your corporate identity provider to Sertone for automatic API subscription provisioning.",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "position": 1,
+            "name": "Install Sertone",
+            "text": "Pull and run the Sertone Docker container on your own infrastructure."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 2,
+            "name": "Configure OAuth2 Provider",
+            "text": "Set your corporate IdP (Okta, Azure AD, Keycloak) in the Sertone control center."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 3,
+            "name": "Map Groups to Subscriptions",
+            "text": "Map IdP groups or roles to API subscription tiers so employees get auto-provisioned access."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 4,
+            "name": "Start Using APIs",
+            "text": "Employees sign in with corporate credentials and call APIs immediately — no manual onboarding."
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div class="demo-container">
+    <nav class="demo-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>&rsaquo;</span>
+      <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+      <a href="/demos/">Advanced</a> <span>&rsaquo;</span>
+      Corporate SSO
+    </nav>
+  </div>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Enterprise Authentication</p>
+      <h1>Corporate SSO for API Access</h1>
+      <p class="demo-tagline">Enterprise customers sign in with their corporate identity provider. Sertone auto-provisions API subscriptions — zero onboarding friction.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="OAuth2 SSO architecture diagram">
+      <h2>How OAuth2 SSO Works with Sertone</h2>
+
+      <style>
+        .arch-vertical { display: flex; flex-direction: column; align-items: stretch; gap: 0; max-width: 680px; margin: 0 auto; font-family: inherit; }
+        .arch-row { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1.1rem 1.5rem 1rem; background: #f1f5f9; border: 1px solid #e2e8f0; }
+        .arch-row.arch-consumer { border-radius: 14px 14px 0 0; border-bottom: none; }
+        .arch-row.arch-owner { border-radius: 0 0 14px 14px; border-top: none; }
+        .arch-row-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #94a3b8; }
+        .arch-row-sublabel { font-size: 0.72rem; color: #94a3b8; font-style: italic; }
+        .arch-flow-h { display: flex; align-items: center; gap: 0.6rem; }
+        .arch-box { background: #fff; border: 1.5px solid #cbd5e1; border-radius: 9px; padding: 0.55rem 0.9rem; font-size: 0.82rem; font-weight: 600; color: #1e293b; text-align: center; line-height: 1.35; white-space: nowrap; }
+        .arch-box-user { background: #fff; border: 2px solid #1e293b; border-radius: 12px; padding: 0.9rem 1.3rem; font-size: 1rem; font-weight: 700; color: #1e293b; text-align: center; line-height: 1.35; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .arch-box-sertone { background: linear-gradient(135deg, rgba(0,184,148,0.08), rgba(0,184,148,0.03)); border: 1.5px solid rgba(0,184,148,0.4); border-radius: 9px; padding: 0.5rem 0.8rem; font-size: 0.78rem; font-weight: 600; color: #047857; text-align: center; line-height: 1.35; }
+        .arch-arrow-h { font-size: 1.1rem; color: #94a3b8; flex-shrink: 0; }
+        .arch-arrow-v { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0.15rem 0; position: relative; z-index: 2; }
+        .arch-arrow-v .arrow-down, .arch-arrow-v .arrow-up { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; padding: 0.18rem 0.65rem; border-radius: 20px; }
+        .arch-arrow-v .arrow-down { color: #00b894; background: #e6faf4; border: 1px solid #b2edd8; }
+        .arch-arrow-v .arrow-up { color: #0ea5e9; background: #e0f4fd; border: 1px solid #b3e4f9; }
+        .arch-network { position: relative; overflow: hidden; border-radius: 24px; background: linear-gradient(135deg, #00b894 0%, #00a381 55%, #007d65 100%); border: none; padding: 2rem 1.5rem; min-height: 160px; justify-content: center; box-shadow: 0 4px 32px rgba(0,184,148,0.22), 0 1px 4px rgba(0,0,0,0.06); }
+        .particle { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.12); animation: floatUp 6s ease-in-out infinite; }
+        .particle.p1 { width: 48px; height: 48px; left: 8%; bottom: -20px; animation-duration: 7s; animation-delay: 0s; }
+        .particle.p2 { width: 28px; height: 28px; left: 28%; bottom: -14px; animation-duration: 5s; animation-delay: 1.4s; }
+        .particle.p3 { width: 64px; height: 64px; left: 58%; bottom: -28px; animation-duration: 9s; animation-delay: 0.7s; }
+        .particle.p4 { width: 20px; height: 20px; left: 80%; bottom: -10px; animation-duration: 6s; animation-delay: 2.5s; }
+        .particle.p5 { width: 36px; height: 36px; left: 45%; bottom: -18px; animation-duration: 8s; animation-delay: 3.2s; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0.10; } 40% { transform: translateY(-70px) scale(1.08); opacity: 0.18; } 80% { transform: translateY(-130px) scale(0.95); opacity: 0.07; } 100% { transform: translateY(-160px) scale(0.9); opacity: 0; } }
+        .arch-network::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 180px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.15); animation: pulseRing 3.5s ease-out infinite; }
+        .arch-network::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 280px; height: 280px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.08); animation: pulseRing 3.5s ease-out infinite 0.8s; }
+        @keyframes pulseRing { 0% { opacity: 0.6; transform: translate(-50%,-50%) scale(0.7); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.4); } }
+        .arch-network-content { position: relative; z-index: 3; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+        .arch-network-title { font-size: 1.15rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,0.18); }
+        .arch-network-features { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+        .arch-network-features span { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.92); background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 0.22rem 0.7rem; }
+        .arch-network-tagline { font-size: 0.72rem; color: rgba(255,255,255,0.72); max-width: 340px; line-height: 1.4; }
+        @media (max-width: 480px) { .arch-box { font-size: 0.75rem; padding: 0.45rem 0.65rem; white-space: normal; max-width: 110px; } .arch-network-title { font-size: 0.95rem; } .arch-network-features span { font-size: 0.7rem; } }
+      </style>
+
+      <div class="arch-vertical">
+        <div class="arch-row arch-consumer">
+          <div class="arch-row-label">Consumer Premises</div>
+          <div class="arch-flow-h">
+            <div class="arch-box arch-box-user">Employee Browser</div>
+            <div class="arch-arrow-h">&#8594;</div>
+            <div class="arch-box arch-box-user">Corporate OAuth<br>Server</div>
+          </div>
+          <div class="arch-row-sublabel">On your premises</div>
+        </div>
+        <div class="arch-arrow-v">
+          <span class="arrow-down">&#9660; Request</span>
+          <span class="arrow-up">&#9650; Response</span>
+        </div>
+        <div class="arch-row arch-network">
+          <div class="particle p1"></div><div class="particle p2"></div><div class="particle p3"></div><div class="particle p4"></div><div class="particle p5"></div>
+          <div class="arch-network-content">
+            <div class="arch-network-title">Sertone Global Network</div>
+            <div class="arch-network-features">
+              <span>&#128274; Encrypted</span>
+              <span>&#128279; Automatic Payment</span>
+              <span>&#127760; 5 Delivery Methods</span>
+            </div>
+            <div class="arch-network-tagline">Proprietary fully encrypted protocol with automatic payment settlement</div>
+          </div>
+        </div>
+        <div class="arch-arrow-v">
+          <span class="arrow-down">&#9660; Request</span>
+          <span class="arrow-up">&#9650; Response</span>
+        </div>
+        <div class="arch-row arch-owner">
+          <div class="arch-row-label">Owner Premises</div>
+          <div class="arch-flow-h">
+            <div class="arch-box arch-box-sertone">Their Sertone<br>Control Center</div>
+            <div class="arch-arrow-h">&#8594;</div>
+            <div class="arch-box arch-box-user">Protected Corporate<br>Service</div>
+          </div>
+          <div class="arch-row-sublabel">On their premises</div>
+        </div>
+      </div><!-- /arch-vertical -->
+
+      <p class="arch-caption" style="margin-top:1.25rem;">A service registered on the Sertone network. Corporate employees authenticate via OAuth SSO — Sertone validates the token and routes the call to the protected service.</p>
+      <div style="margin:1.25rem auto 0;max-width:44rem;background:linear-gradient(135deg,rgba(0,184,148,0.06),rgba(0,184,148,0.02));border:1px solid rgba(0,184,148,0.15);border-radius:12px;padding:1rem 1.5rem;">
+        <p style="font-size:0.85rem;color:#475569;line-height:1.65;margin:0;">
+          <strong style="color:#1e293b;">What is the Sertone control center?</strong> A single Docker container you run on your own machine — a laptop, a Raspberry Pi, a cloud server. It connects you to the Sertone Global Network. Through its built-in web console, you browse services, register your own, manage your wallet, and monitor your earnings. Installation takes minutes. It is completely free, forever.
+        </p>
+        <div style="margin-top:0.75rem;">
+          <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why Corporate SSO for APIs?</h2>
+      <p>Enterprise API consumers don't want to create individual accounts on every marketplace. They already have an identity provider — Okta, Azure Active Directory, Keycloak, or Auth0. Sertone integrates with any OAuth2 / OIDC provider so employees authenticate with the credentials they already use every day.</p>
+      <p>When an employee signs in through their corporate SSO, Sertone validates the token, checks their group memberships, and automatically provisions the correct subscription tier. A "Data Engineering" group might get access to streaming APIs, while "Finance" gets access to payment and settlement endpoints. No manual onboarding, no support tickets, no waiting.</p>
+      <p>For API owners, this means enterprise customers adopt faster and churn less. The IT department approves once, and hundreds of employees get instant access. Billing rolls up to the corporate account, and usage reports integrate with existing dashboards.</p>
+    </section>
+
+    <!-- Interactive Demo -->
+    <section class="demo-interactive">
+      <h2>Live Demo: OAuth2 SSO Flow</h2>
+      <div class="demo-interactive-layout">
+
+        <div class="demo-form-panel">
+          <h3>Simulated OAuth2 Flow</h3>
+          <p style="color:#64748b; font-size:0.85rem; margin-bottom:1.25rem;">This demo simulates the full OAuth2 authorization code flow. In production, the user would be redirected to their corporate IdP.</p>
+
+          <div class="demo-field">
+            <label for="idp-provider">Identity Provider</label>
+            <select id="idp-provider">
+              <option value="keycloak">Keycloak (Demo Instance)</option>
+              <option value="okta">Okta (Simulated)</option>
+              <option value="azure">Azure AD (Simulated)</option>
+            </select>
+          </div>
+
+          <div class="demo-field">
+            <label for="user-email">Employee Email</label>
+            <input type="email" id="user-email" value="alice@acme-corp.example" placeholder="user@company.com">
+          </div>
+
+          <div class="demo-field">
+            <label for="user-group">Corporate Group / Role</label>
+            <select id="user-group">
+              <option value="engineering">Engineering — Full API Access</option>
+              <option value="data-science">Data Science — Streaming + Analytics</option>
+              <option value="finance">Finance — Payment APIs Only</option>
+              <option value="viewer">Viewer — Read-Only</option>
+            </select>
+          </div>
+
+          <button class="demo-run-btn" id="run-oauth-btn" onclick="runOAuthDemo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Simulate SSO Login</span>
+          </button>
+        </div>
+
+        <div class="result-panel" id="oauth-result">
+          <div class="result-placeholder">
+            Select an identity provider and click "Simulate SSO Login" to see the full OAuth2 flow with token validation and subscription provisioning.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Code Samples</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">cURL</button>
+        <button class="code-tab" data-tab="javascript">JavaScript</button>
+        <button class="code-tab" data-tab="python">Python</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+<span class="prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{"api_id_public": "API_UUID_FROM_CATALOG", "method": "GET", "path": "/quote/AAPL", "params": {}}'</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code><span class="comment">// Call the API through YOUR local Sertone control center</span>
+<span class="comment">// Consumer secret is in Settings &gt; Security</span>
+const response = await fetch('https://localhost:3000/internal/call', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+  },
+  body: JSON.stringify({
+    api_id_public: 'API_UUID_FROM_CATALOG',
+    method: 'GET',
+    path: '/quote/AAPL',
+    params: {}
+  })
+});
+const data = await response.json();
+console.log(data.result);</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+import requests
+
+response = requests.post(
+    'https://localhost:3000/internal/call',
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+    },
+    json={
+        'api_id_public': 'API_UUID_FROM_CATALOG',
+        'method': 'GET',
+        'path': '/quote/AAPL',
+        'params': {}
+    }
+)
+print(response.json()['result'])</code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Self-Host with Corporate SSO</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Install the Control Center</h4>
+          <p>Run the free Sertone Docker container. No cloud account needed.</p>
+          <pre class="code-block"><code><span class="prompt">$</span> docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  sertone/wrapper:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Open the Web Console</h4>
+          <p>Go to <code>https://localhost:3002/panel</code> in your browser. Create your account, accept terms, and your wallet is generated automatically.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Browse the Catalog</h4>
+          <p>Click <strong>Catalog &amp; SDKs</strong> in the sidebar. Search for APIs, try them in demo mode (free), then switch to production when ready.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Make Your First Call</h4>
+          <p>Copy your consumer secret from <strong>Settings &gt; Security</strong>, then use the code samples above to call any API from your own code.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FAQ Schema + CTA Footer -->
+    <section class="demo-footer-cta">
+      <h2>Ready for Enterprise API Access?</h2>
+      <p>Deploy Sertone with corporate SSO in minutes. Free Docker container, no vendor lock-in, your infrastructure.</p>
+      <a href="/try" class="btn">Get Started</a>
+      <a href="/docs/" class="btn btn-secondary" style="margin-left: 0.75rem;">Read the Docs</a>
+
+      <div class="related-demos" style="margin-top: 2.5rem;">
+        <a href="/demos/pay-per-use/" class="related-demo-link">Pay-Per-Use Billing</a>
+        <a href="/demos/subscription/" class="related-demo-link">Subscriptions</a>
+        <a href="/demos/security/" class="related-demo-link">Zero-Knowledge Security</a>
+        <a href="/demos/failover/" class="related-demo-link">Delivery Failover</a>
+        <a href="/demos/rest-api/" class="related-demo-link">REST API</a>
+        <a href="/demos/multi-protocol/" class="related-demo-link">Multi-Protocol</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- FAQ JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Which identity providers does Sertone support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sertone supports any OAuth2 / OpenID Connect provider including Okta, Azure Active Directory, Keycloak, Auth0, Google Workspace, and PingIdentity."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does auto-provisioning work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When an employee authenticates, Sertone reads their group memberships from the identity provider token. These groups are mapped to subscription tiers, so the employee receives the correct API access level automatically on first login."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the OAuth2 integration free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Sertone is a free Docker container you run on your own infrastructure. OAuth2 integration is a built-in feature with no additional cost."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    function runOAuthDemo() {
+      var btn = document.getElementById('run-oauth-btn');
+      var resultEl = document.getElementById('oauth-result');
+      setLoading(btn, true);
+
+      var provider = document.getElementById('idp-provider').value;
+      var email = document.getElementById('user-email').value;
+      var group = document.getElementById('user-group').value;
+
+      var providerNames = {
+        keycloak: 'Keycloak (Demo)',
+        okta: 'Okta',
+        azure: 'Azure AD'
+      };
+
+      var tierMap = {
+        engineering: { tier: 'full-access', apis: 6, calls: 'unlimited' },
+        'data-science': { tier: 'streaming-only', apis: 3, calls: '10,000/day' },
+        finance: { tier: 'payment-apis', apis: 2, calls: '5,000/day' },
+        viewer: { tier: 'read-only', apis: 6, calls: '500/day' }
+      };
+
+      var steps = [
+        { step: 1, action: 'Redirect to IdP', detail: 'Opening ' + providerNames[provider] + ' login page...' },
+        { step: 2, action: 'User authenticates', detail: email + ' enters corporate credentials' },
+        { step: 3, action: 'Authorization code received', detail: 'IdP redirects back with authorization code' },
+        { step: 4, action: 'Token exchange', detail: 'Exchanging code for access token + ID token' },
+        { step: 5, action: 'Token validation', detail: 'Sertone verifies JWT signature against IdP JWKS endpoint' },
+        { step: 6, action: 'Group extraction', detail: 'Token contains group: "' + group + '"' },
+        { step: 7, action: 'Subscription provisioned', detail: 'Mapped to tier: ' + tierMap[group].tier + ' (' + tierMap[group].apis + ' APIs, ' + tierMap[group].calls + ')' },
+        { step: 8, action: 'API access granted', detail: email + ' can now call APIs with bearer token' }
+      ];
+
+      var currentStep = 0;
+      var startTime = performance.now();
+
+      function showStep() {
+        if (currentStep >= steps.length) {
+          var totalMs = Math.round(performance.now() - startTime);
+          var latencyClass = totalMs < 2000 ? 'fast' : totalMs < 4000 ? 'medium' : 'slow';
+
+          var tokenPayload = {
+            sub: email,
+            iss: provider === 'keycloak' ? 'https://keycloak.demo.sertone.net/realms/demo' : 'https://' + provider + '.example.com',
+            groups: [group],
+            iat: Math.floor(Date.now() / 1000),
+            exp: Math.floor(Date.now() / 1000) + 3600
+          };
+
+          var provisionResult = {
+            status: 'provisioned',
+            consumer: email,
+            provider: providerNames[provider],
+            subscription: {
+              tier: tierMap[group].tier,
+              apis_accessible: tierMap[group].apis,
+              rate_limit: tierMap[group].calls,
+              provisioned_at: new Date().toISOString(),
+              expires_at: new Date(Date.now() + 30 * 86400000).toISOString()
+            },
+            token_claims: tokenPayload
+          };
+
+          resultEl.innerHTML =
+            '<div class="result-header">' +
+              '<span class="latency-badge ' + latencyClass + '">' + totalMs + 'ms total</span>' +
+              '<span class="status-badge">SSO Complete</span>' +
+            '</div>' +
+            '<pre><code>' + escapeHtml(JSON.stringify(provisionResult, null, 2)) + '</code></pre>';
+
+          setLoading(btn, false);
+          return;
+        }
+
+        var s = steps[currentStep];
+        var stepsHtml = '';
+        for (var i = 0; i <= currentStep; i++) {
+          var done = i < currentStep;
+          stepsHtml +=
+            '<div style="padding:0.6rem 0; border-bottom:1px solid #1e293b; display:flex; align-items:center; gap:0.75rem;">' +
+              '<span style="color:' + (done ? '#10b981' : '#f59e0b') + '; font-size:1.1rem;">' + (done ? '&#x2713;' : '&#x25CF;') + '</span>' +
+              '<div>' +
+                '<div style="color:#e2e8f0; font-size:0.85rem; font-weight:600;">Step ' + steps[i].step + ': ' + escapeHtml(steps[i].action) + '</div>' +
+                '<div style="color:#94a3b8; font-size:0.8rem;">' + escapeHtml(steps[i].detail) + '</div>' +
+              '</div>' +
+            '</div>';
+        }
+        resultEl.innerHTML = stepsHtml;
+        currentStep++;
+        setTimeout(showStep, 350 + Math.random() * 200);
+      }
+
+      resultEl.innerHTML = '<div style="color:#94a3b8; text-align:center; padding:2rem;">Initiating OAuth2 flow...</div>';
+      setTimeout(showStep, 300);
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2A Protocol (Agent-to-Agent) — Sertone Docs</title>
+  <meta name="description" content="Sertone supports Google's A2A protocol natively. Every service in the catalog auto-generates an A2A agent card. AI agents can discover and call any service programmatically with automatic USDC payment.">
+  <meta name="keywords" content="A2A protocol, agent-to-agent, AI agent API, agent card, multi-agent workflow, Sertone A2A, Google A2A">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/a2a">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/a2a">
+  <meta property="og:title" content="A2A Protocol (Agent-to-Agent) — Sertone Docs">
+  <meta property="og:description" content="Sertone supports Google's A2A protocol natively. AI agents discover and call services via agent cards. Payment is automatic in USDC.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="A2A Protocol — Sertone Docs">
+  <meta name="twitter:description" content="Sertone supports Google's A2A protocol natively. AI agents discover and call services via agent cards. Payment is automatic in USDC.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "A2A Protocol (Agent-to-Agent) — Sertone",
+    "description": "Sertone supports Google's A2A protocol natively. Every service in the catalog auto-generates an A2A agent card. AI agents can discover and call any service programmatically with automatic USDC payment.",
+    "url": "https://sertone.net/docs/a2a",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link active">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>A2A Protocol (Agent-to-Agent)</h1>
+      <p class="lead">Sertone supports Google's A2A protocol natively. Every service in the catalog auto-generates an agent card. AI agents discover and call any service programmatically — payment settles automatically in USDC.</p>
+
+      <h2 id="overview">Overview</h2>
+      <p>A2A (Agent-to-Agent) is an open protocol by Google that lets AI agents communicate with each other in a standard way. An agent advertises what it can do via an <strong>agent card</strong> — a JSON document describing its capabilities, endpoints, and pricing. Other agents discover this card and call the agent using JSON-RPC 2.0.</p>
+      <p>On Sertone, every registered service automatically gets an A2A agent card. No extra setup is required. The card is generated from the service's catalog metadata and is always in sync.</p>
+      <p>What Sertone adds on top of the base A2A spec:</p>
+      <ul>
+        <li><strong>Automatic USDC payment</strong> — each call is billed and paid automatically, transparently</li>
+        <li><strong>Discovery search</strong> — find agents by capability, price, or keyword across the entire catalog</li>
+        <li><strong>Quality metadata</strong> — uptime, success rate, and average latency exposed in the agent card</li>
+      </ul>
+
+      <h2 id="discovery">Discovery</h2>
+      <p>Three endpoints let agents find services programmatically:</p>
+      <table>
+        <thead>
+          <tr><th>Endpoint</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>GET /.well-known/agent-card.json</code></td>
+            <td>Aggregate agent card listing all services on this node</td>
+          </tr>
+          <tr>
+            <td><code>GET /agent/:uuid/card.json</code></td>
+            <td>Agent card for a single service identified by its UUID</td>
+          </tr>
+          <tr>
+            <td><code>GET /a2a/discover</code></td>
+            <td>Search services by keyword, capability, or price</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 id="discover-params">Discovery query parameters</h3>
+      <table>
+        <thead>
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>q</code></td><td>string</td><td>Full-text search query</td></tr>
+          <tr><td><code>capability</code></td><td>string</td><td>Filter by capability keyword (e.g. <code>earthquake</code>, <code>weather</code>)</td></tr>
+          <tr><td><code>max_price</code></td><td>number</td><td>Maximum price per call in USDC</td></tr>
+          <tr><td><code>limit</code></td><td>integer</td><td>Maximum number of results (default: 10)</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="agent-card-format">Agent Card Format</h2>
+      <p>Each agent card follows the A2A specification with Sertone-specific extensions in the <code>x_sertone</code> field:</p>
+      <pre><code>{
+  "schema_version": "1.0",
+  "name": "Earthquake Data API",
+  "description": "Real-time global earthquake data from USGS. Filter by magnitude, region, and time range.",
+  "url": "https://&lt;node-address&gt;:3000/a2a/message",
+  "version": "1.0.0",
+  "capabilities": {
+    "streaming": false,
+    "push_notifications": false,
+    "state_transition_history": false
+  },
+  "authentication": {
+    "schemes": ["bearer"],
+    "credentials": "X-Consumer-Secret header"
+  },
+  "skills": [
+    {
+      "id": "query_earthquakes",
+      "name": "Query Earthquakes",
+      "description": "Fetch recent earthquake events filtered by magnitude and region",
+      "input_modes": ["application/json"],
+      "output_modes": ["application/json"],
+      "tags": ["earthquake", "seismic", "usgs", "geo"]
+    }
+  ],
+  "x_sertone": {
+    "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "price_usdc": "0.001",
+    "settlement": "on-chain USDC, Base",
+    "quality": {
+      "uptime_pct": 99.7,
+      "success_rate_pct": 98.2,
+      "avg_latency_ms": 320
+    }
+  }
+}</code></pre>
+
+      <table>
+        <thead>
+          <tr><th>Field</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>name</code></td><td>Service name from the catalog</td></tr>
+          <tr><td><code>description</code></td><td>Service description</td></tr>
+          <tr><td><code>url</code></td><td>The JSON-RPC endpoint to call this service</td></tr>
+          <tr><td><code>skills</code></td><td>List of capabilities this agent provides</td></tr>
+          <tr><td><code>x_sertone.uuid</code></td><td>Unique service identifier — use this when calling</td></tr>
+          <tr><td><code>x_sertone.price_usdc</code></td><td>Cost per call in USDC</td></tr>
+          <tr><td><code>x_sertone.settlement</code></td><td>Settlement method (automatic USDC payment)</td></tr>
+          <tr><td><code>x_sertone.quality</code></td><td>Live quality metrics from the Sertone network</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="calling">Calling Services (JSON-RPC 2.0)</h2>
+      <p>Send a <code>POST</code> request to <code>/a2a/message</code> with a JSON-RPC 2.0 payload:</p>
+      <table>
+        <thead>
+          <tr><th>Item</th><th>Value</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Endpoint</td><td><code>POST /a2a/message</code></td></tr>
+          <tr><td>Auth header</td><td><code>X-Consumer-Secret: YOUR_SECRET</code></td></tr>
+          <tr><td>Content-Type</td><td><code>application/json</code></td></tr>
+          <tr><td>JSON-RPC method</td><td><code>message/send</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3 id="request-format">Request format</h3>
+      <pre><code>{
+  "jsonrpc": "2.0",
+  "method": "message/send",
+  "params": {
+    "api_uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "content": "{\"path\":\"/v1/earthquakes/recent\",\"method\":\"GET\",\"params\":{\"minMagnitude\":4.5}}"
+  },
+  "id": 1
+}</code></pre>
+
+      <table>
+        <thead>
+          <tr><th>Field</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>params.api_uuid</code></td><td>The UUID from the agent card's <code>x_sertone.uuid</code> field</td></tr>
+          <tr><td><code>params.content</code></td><td>JSON-encoded object with <code>path</code>, <code>method</code>, and optional <code>params</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3 id="response-format">Response format</h3>
+      <pre><code>{
+  "jsonrpc": "2.0",
+  "result": {
+    "task_id": "tsk_9f3a2b1c",
+    "status": "completed",
+    "output": {
+      "status": 200,
+      "data": { ... }
+    }
+  },
+  "id": 1
+}</code></pre>
+
+      <h2 id="code-examples">Code Examples</h2>
+
+      <h3 id="python">Python</h3>
+      <pre><code>import requests
+
+# Discover earthquake services
+agents = requests.get(
+    'https://&lt;node-address&gt;:3000/a2a/discover',
+    params={'capability': 'earthquake', 'limit': 3},
+    verify=False
+).json()
+
+# Call via A2A
+response = requests.post(
+    'https://&lt;node-address&gt;:3000/a2a/message',
+    headers={'X-Consumer-Secret': 'YOUR_SECRET'},
+    json={
+        'jsonrpc': '2.0',
+        'method': 'message/send',
+        'params': {
+            'api_uuid': agents['agents'][0]['x_sertone']['uuid'],
+            'content': '{"path":"/v1/earthquakes/recent","method":"GET"}'
+        },
+        'id': 1
+    },
+    verify=False
+).json()
+
+print(response['result']['output']['data'])</code></pre>
+
+      <h3 id="javascript">JavaScript</h3>
+      <pre><code>// Discover earthquake services
+const agents = await fetch(
+  'https://&lt;node-address&gt;:3000/a2a/discover?capability=earthquake'
+).then(r =&gt; r.json());
+
+// Call via A2A
+const result = await fetch('https://&lt;node-address&gt;:3000/a2a/message', {
+  method: 'POST',
+  headers: {
+    'X-Consumer-Secret': 'YOUR_SECRET',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    jsonrpc: '2.0',
+    method: 'message/send',
+    params: {
+      api_uuid: agents.agents[0].x_sertone.uuid,
+      content: '{"path":"/v1/earthquakes/recent","method":"GET"}'
+    },
+    id: 1
+  })
+}).then(r =&gt; r.json());
+
+console.log(result.result.output.data);</code></pre>
+
+      <div class="info-box">
+        <p><strong>Your consumer secret</strong> is shown in the web console under <strong>Settings</strong>. Never share it. Each call is billed at the service's listed price in USDC.</p>
+      </div>
+
+      <h2 id="registering-agent">Registering an External A2A Agent</h2>
+      <p>You can register an external A2A-compatible agent in the Sertone catalog so other participants can discover and call it through the network:</p>
+      <ol>
+        <li>Get the agent card URL from the external agent (e.g. <code>https://example.com/.well-known/agent-card.json</code>)</li>
+        <li>Go to the web console and click <strong>Register</strong></li>
+        <li>Select <strong>A2A Agent</strong> as the service type</li>
+        <li>Paste the agent card URL</li>
+        <li>Sertone fetches and parses the card automatically</li>
+        <li>The agent appears in the catalog and is discoverable by other participants</li>
+      </ol>
+      <p>Once registered, the external agent is callable through the standard A2A message endpoint on your node, with Sertone handling authentication and USDC billing.</p>
+
+      <h2 id="a2a-vs-mcp">A2A vs MCP</h2>
+      <p>Sertone supports both A2A and MCP (Model Context Protocol). They serve different purposes and complement each other:</p>
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>A2A</th><th>MCP</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Purpose</strong></td><td>Agent &harr; Agent communication</td><td>LLM &harr; Tools integration</td></tr>
+          <tr><td><strong>Direction</strong></td><td>Horizontal (peer agents)</td><td>Vertical (model to tool)</td></tr>
+          <tr><td><strong>Discovery</strong></td><td>Agent cards</td><td>Server capabilities list</td></tr>
+          <tr><td><strong>Payment</strong></td><td>External &mdash; Sertone fills this gap</td><td>Not applicable</td></tr>
+          <tr><td><strong>Sertone port</strong></td><td>3000</td><td>3003</td></tr>
+        </tbody>
+      </table>
+      <p>Use <strong>MCP</strong> when you want an LLM (like Claude or GPT) to use Sertone services as tools. Use <strong>A2A</strong> when building multi-agent systems where autonomous agents need to find and call each other. Both work on Sertone simultaneously with no extra configuration.</p>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/sdks" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">SDKs</span>
+        </a>
+        <a href="/docs/faq" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">FAQ</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#overview" class="toc-link">Overview</a>
+      <a href="#discovery" class="toc-link">Discovery</a>
+      <a href="#agent-card-format" class="toc-link">Agent Card Format</a>
+      <a href="#calling" class="toc-link">Calling Services</a>
+      <a href="#code-examples" class="toc-link">Code Examples</a>
+      <a href="#python" class="toc-link">— Python</a>
+      <a href="#javascript" class="toc-link">— JavaScript</a>
+      <a href="#registering-agent" class="toc-link">Registering an Agent</a>
+      <a href="#a2a-vs-mcp" class="toc-link">A2A vs MCP</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

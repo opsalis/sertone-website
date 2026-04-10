@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REST API Marketplace Demo — Sertone</title>
+  <meta name="description" content="Call a real REST API through the Sertone marketplace. See a live request and response with real latency.">
+  <meta name="keywords" content="REST API marketplace, API monetization, REST demo, API billing, USDC payment">
+  <link rel="canonical" href="https://sertone.net/demos/rest-api/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/rest-api/">
+  <meta property="og:title" content="REST API Marketplace Demo — Sertone">
+  <meta property="og:description" content="Call a real REST API through the Sertone marketplace. See a live request and response with real latency.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="REST API Marketplace Demo — Sertone">
+  <meta name="twitter:description" content="Call a real REST API through the Sertone marketplace. See a live request and response with real latency.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Sertone REST API Marketplace",
+    "applicationCategory": "DeveloperApplication",
+    "description": "Monetize any REST API through the Sertone marketplace with automatic USDC payment.",
+    "url": "https://sertone.net/demos/rest-api/",
+    "operatingSystem": "Docker (Linux, macOS, Windows)",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free self-hosted control center"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Monetize a REST API with Sertone",
+    "description": "Register your REST API on the Sertone marketplace and start earning USDC per call.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Install the control center",
+        "text": "Pull and run the free Sertone Docker container on your own hardware."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Register your API",
+        "text": "Open the web console and register your REST API endpoint with pricing."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Start earning",
+        "text": "Consumers discover and call your API. Payment happens automatically in USDC."
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <nav class="demo-breadcrumb demo-container" aria-label="Breadcrumb">
+    <a href="/">Home</a> <span>&rsaquo;</span>
+    <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+    <a href="/demos/">Protocols</a> <span>&rsaquo;</span>
+    REST API
+  </nav>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Protocol Demo</p>
+      <h1>REST API Marketplace Demo</h1>
+      <p class="demo-tagline">Call a real REST API through the Sertone marketplace. See a live request and response with real latency and automatic payment.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="Architecture diagram">
+      <h2>How It Works</h2>
+      <svg viewBox="0 0 900 200" role="img" aria-label="REST API data flow: Consumer to their Sertone, P2P network to owner's Sertone, to REST API and back">
+        <!-- Consumer -->
+        <rect x="10" y="60" width="130" height="80" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+        <text x="75" y="95" text-anchor="middle" font-size="13" font-weight="600" fill="#1e293b">Your Browser</text>
+        <text x="75" y="115" text-anchor="middle" font-size="11" fill="#64748b">Consumer</text>
+
+        <!-- Arrow 1 -->
+        <line x1="140" y1="100" x2="210" y2="100" stroke="#00b894" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <text x="175" y="90" text-anchor="middle" font-size="10" fill="#94a3b8">HTTPS</text>
+
+        <!-- Consumer Sertone -->
+        <rect x="210" y="60" width="130" height="80" rx="10" fill="#f0fdf4" stroke="#00b894" stroke-width="2"/>
+        <text x="275" y="95" text-anchor="middle" font-size="13" font-weight="600" fill="#1e293b">Your Sertone</text>
+        <text x="275" y="115" text-anchor="middle" font-size="11" fill="#64748b">Consumer's</text>
+
+        <!-- Arrow 2 -->
+        <line x1="340" y1="100" x2="410" y2="100" stroke="#00b894" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <text x="375" y="90" text-anchor="middle" font-size="10" fill="#94a3b8">P2P Encrypted</text>
+
+        <!-- Owner Sertone -->
+        <rect x="410" y="60" width="130" height="80" rx="10" fill="#f0fdf4" stroke="#00b894" stroke-width="2"/>
+        <text x="475" y="95" text-anchor="middle" font-size="13" font-weight="600" fill="#1e293b">Owner's Sertone</text>
+        <text x="475" y="115" text-anchor="middle" font-size="11" fill="#64748b">API Owner</text>
+
+        <!-- Arrow 3 -->
+        <line x1="540" y1="100" x2="610" y2="100" stroke="#00b894" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <text x="575" y="90" text-anchor="middle" font-size="10" fill="#94a3b8">localhost</text>
+
+        <!-- Mock REST API -->
+        <rect x="610" y="60" width="130" height="80" rx="10" fill="#fff7ed" stroke="#f59e0b" stroke-width="2"/>
+        <text x="675" y="95" text-anchor="middle" font-size="13" font-weight="600" fill="#1e293b">Mock REST API</text>
+        <text x="675" y="115" text-anchor="middle" font-size="11" fill="#64748b">SSE Ticker</text>
+
+        <!-- Return arrow -->
+        <path d="M675,140 L675,170 L75,170 L75,140" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrowhead-gray)"/>
+        <text x="375" y="185" text-anchor="middle" font-size="10" fill="#94a3b8">JSON Response + Latency</text>
+
+        <!-- Settlement -->
+        <rect x="760" y="60" width="130" height="80" rx="10" fill="#faf5ff" stroke="#a855f7" stroke-width="2"/>
+        <text x="825" y="95" text-anchor="middle" font-size="13" font-weight="600" fill="#1e293b">Blockchain</text>
+        <text x="825" y="115" text-anchor="middle" font-size="11" fill="#64748b">USDC Payment</text>
+
+        <line x1="540" y1="85" x2="760" y2="85" stroke="#a855f7" stroke-width="1" stroke-dasharray="4 3"/>
+
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#00b894"/>
+          </marker>
+          <marker id="arrowhead-gray" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8"/>
+          </marker>
+        </defs>
+      </svg>
+      <p class="arch-caption">Data flow: Your browser &rarr; your Sertone &rarr; encrypted direct connection &rarr; owner's Sertone &rarr; REST API &rarr; JSON response returned via same path. Payment automatic.</p>
+      <div style="margin:1.25rem auto 0;max-width:44rem;background:linear-gradient(135deg,rgba(0,184,148,0.06),rgba(0,184,148,0.02));border:1px solid rgba(0,184,148,0.15);border-radius:12px;padding:1rem 1.5rem;">
+        <p style="font-size:0.85rem;color:#475569;line-height:1.65;margin:0;">
+          <strong style="color:#1e293b;">What is the Sertone control center?</strong> A single Docker container you run on your own machine — a laptop, a Raspberry Pi, a cloud server. It connects you to the Sertone Global Network. Through its built-in web console, you browse services, register your own, manage your wallet, and monitor your earnings. Installation takes minutes. It is completely free, forever.
+        </p>
+        <div style="margin-top:0.75rem;">
+          <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why REST APIs on Sertone?</h2>
+      <p>Any REST API can be monetized through Sertone without code changes. Set your price, register your endpoint, and start earning per call. The marketplace handles authentication, billing, and automatic payment so you can focus on building great APIs.</p>
+      <p>Whether you run a weather service, financial data feed, or machine learning inference endpoint, Sertone turns your REST API into a revenue stream. Consumers pay per call in USDC, paid automatically &mdash; no invoicing, no payment disputes, no 30-day net terms.</p>
+      <p>Real-world example: A stock market data provider registers their ticker API. A fintech startup in another country subscribes and starts making calls. Each call costs $0.001, paid instantly. The provider earns 95% of every call, with the 5% platform fee covering infrastructure.</p>
+    </section>
+
+    <!-- Live Demo -->
+    <section class="demo-interactive">
+      <h2>Try It Live</h2>
+      <div class="demo-interactive-layout">
+
+        <div class="demo-form-panel">
+          <h3>Request Configuration</h3>
+          <div class="demo-field">
+            <label for="rest-api-name">API Name</label>
+            <input type="text" id="rest-api-name" value="bb-sse-ticker" placeholder="bb-sse-ticker">
+            <label for="rest-endpoint">API Path</label>
+            <input type="text" id="rest-endpoint" value="/quote/AAPL" placeholder="/quote/AAPL">
+          </div>
+          <div class="demo-field">
+            <label for="rest-method">HTTP Method</label>
+            <select id="rest-method">
+              <option value="POST" selected>POST</option>
+              <option value="GET">GET</option>
+            </select>
+          </div>
+          <div class="demo-field">
+            <label for="rest-body">Request Body (JSON)</label>
+            <textarea id="rest-body">{
+  "symbol": "AAPL",
+  "interval": "1m"
+}</textarea>
+          </div>
+          <div class="demo-field">
+            <label for="rest-apikey">Consumer Key</label>
+            <input type="text" id="rest-apikey" value="demo-public-key-2026" readonly>
+          </div>
+          <button class="demo-run-btn" id="rest-run-btn" onclick="runRestDemo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Run Demo</span>
+          </button>
+        </div>
+
+        <div class="result-panel" id="rest-result">
+          <div class="result-placeholder">Click "Run Demo" to make a live REST API call through Sertone.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Code Samples</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">cURL</button>
+        <button class="code-tab" data-tab="javascript">JavaScript</button>
+        <button class="code-tab" data-tab="python">Python</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+<span class="prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{"api_id_public": "API_UUID_FROM_CATALOG", "method": "GET", "path": "/quote/AAPL", "params": {"symbol": "AAPL", "interval": "1m"}}'</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code><span class="comment">// Call the API through YOUR local Sertone control center</span>
+<span class="comment">// Consumer secret is in Settings &gt; Security</span>
+const response = await fetch('https://localhost:3000/internal/call', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+  },
+  body: JSON.stringify({
+    api_id_public: 'API_UUID_FROM_CATALOG',
+    method: 'GET',
+    path: '/quote/AAPL',
+    params: { symbol: 'AAPL', interval: '1m' }
+  })
+});
+const data = await response.json();
+console.log(data.result);</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+import requests
+
+response = requests.post(
+    'https://localhost:3000/internal/call',
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+    },
+    json={
+        'api_id_public': 'API_UUID_FROM_CATALOG',
+        'method': 'GET',
+        'path': '/quote/AAPL',
+        'params': {'symbol': 'AAPL', 'interval': '1m'}
+    }
+)
+print(response.json()['result'])</code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Self-Host in Minutes</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Install Your Sertone</h4>
+          <p>Run the free Sertone Docker container. No cloud account needed.</p>
+          <pre class="code-block"><code><span class="prompt">$</span> docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  sertone/wrapper:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Open the Web Console</h4>
+          <p>Go to <code>https://localhost:3002/panel</code> in your browser. Create your account, accept terms, and your wallet is generated automatically.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Browse the Catalog</h4>
+          <p>Click <strong>Catalog &amp; SDKs</strong> in the sidebar. Search for APIs, try them in demo mode (free), then switch to production when ready.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Make Your First Call</h4>
+          <p>Copy your consumer secret from <strong>Settings &gt; Security</strong>, then use the code samples above to call any API from your own code.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SEO Footer -->
+    <section class="demo-footer-cta">
+      <h2>Ready to Monetize Your REST API?</h2>
+      <p>Deploy your own Sertone in minutes. Free Docker container, no vendor lock-in, no code changes to your existing API.</p>
+      <a href="/try" class="btn">Get Started</a>
+      <a href="/docs/" class="btn btn-secondary" style="margin-left: 0.75rem;">Read the Docs</a>
+
+      <div class="related-demos" aria-label="Related demos">
+        <a href="/demos/graphql/" class="related-demo-link">GraphQL Demo</a>
+        <a href="/demos/soap/" class="related-demo-link">SOAP Demo</a>
+        <a href="/demos/xml-rpc/" class="related-demo-link">XML-RPC Demo</a>
+        <a href="/demos/sse-streaming/" class="related-demo-link">SSE Streaming</a>
+        <a href="/demos/pay-per-use/" class="related-demo-link">Pay-Per-Use Billing</a>
+        <a href="/demos/multi-protocol/" class="related-demo-link">Multi-Protocol</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I monetize any REST API with Sertone?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Any REST API can be registered on the Sertone marketplace without code changes. The control center wraps your endpoint and handles authentication, billing, and settlement automatically."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is payment handled for REST API calls?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Every API call is paid in USDC automatically. The API owner sets the price per call, the platform takes a 5% fee, and the owner receives 95% instantly."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What latency does the P2P relay add?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Sertone routing layer typically adds under 50ms of overhead. Cross-geography calls (e.g., London to New York) complete in under 100ms total."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    async function runRestDemo() {
+      var btn = document.getElementById('rest-run-btn');
+      var resultPanel = document.getElementById('rest-result');
+      var apiName = document.getElementById('rest-api-name').value.trim();
+      var apiPath = document.getElementById('rest-endpoint').value.trim();
+      var method = document.getElementById('rest-method').value;
+      var bodyText = document.getElementById('rest-body').value.trim();
+
+      setLoading(btn, true);
+      resultPanel.innerHTML = '<div class="result-placeholder">Sending request...</div>';
+
+      try {
+        var params = {};
+        if (method !== 'GET' && bodyText) {
+          params = JSON.parse(bodyText);
+        }
+
+        var result = await callDemo(apiName, params, { method: method, path: apiPath });
+        renderResult('rest-result', result);
+      } catch (err) {
+        showError('rest-result', err);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+  </script>
+
+</body>
+</html>

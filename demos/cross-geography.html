@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cross-Geography Network Demo — Sertone</title>
+  <meta name="description" content="Demo: New York calls Paris, response in under 100ms. No central server. See traffic routed through the Sertone Global Network, payment automatic.">
+  <meta name="keywords" content="encrypted network API demo, cross-geography API, New York Paris latency, Sertone encrypted network, low latency API">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/demos/cross-geography">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/cross-geography">
+  <meta property="og:title" content="Cross-Geography Network Demo — Sertone">
+  <meta property="og:description" content="New York to Paris in under 100ms. No central server — routed through the Sertone Global Network. Payment automatic. Replicate with two Raspberry Pis.">
+  <meta property="og:site_name" content="Sertone">
+
+  <link rel="stylesheet" href="/style.css?v=3">
+  <link rel="stylesheet" href="/demos/style.css?v=1">
+
+  <style>
+    /* Globe map specific */
+    .globe-map {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 14px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .globe-map svg {
+      width: 100%;
+      max-height: 320px;
+      display: block;
+    }
+
+    .map-node {
+      cursor: default;
+    }
+
+    .map-node-pulse {
+      animation: node-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes node-pulse {
+      0%, 100% { r: 6; opacity: 0.9; }
+      50%       { r: 9; opacity: 0.5; }
+    }
+
+    .map-packet {
+      animation: packet-move 2.5s linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes packet-move {
+      0%   { opacity: 0; }
+      5%   { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .latency-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .latency-table th {
+      text-align: left;
+      padding: 0.65rem 1rem;
+      background: #f8fafc;
+      color: #64748b;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .latency-table td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+      font-size: 0.88rem;
+    }
+
+    .latency-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .latency-val {
+      font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      font-weight: 700;
+      color: #00b894;
+    }
+
+    .route-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.75rem;
+      font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      color: #64748b;
+    }
+
+    .route-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00b894;
+    }
+
+    /* ---- FOR CONSUMERS section ---- */
+    .consumer-steps { margin: 1.5rem 0; }
+    .consumer-step { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+    .step-num {
+      flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent, #00b894); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem;
+    }
+    .step-content h4 { margin: 0 0 0.4rem; font-size: 1rem; }
+    .step-content p {
+      margin: 0.3rem 0; color: var(--text-secondary, #475569);
+      font-size: 0.9rem; line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/sell">Sell</a></li>
+        <li><a href="/buy">Buy</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/trust">Trust</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="demo-page">
+
+    <!-- Hero -->
+    <div class="demo-hero">
+      <div class="container">
+        <div class="demo-hero-breadcrumb">
+          <a href="/demos/">Demos</a> &rsaquo; Cross-Geography Network
+        </div>
+        <h1>New York calls Paris</h1>
+        <p class="value-prop">Response in under 100ms. No central server in the data path. Routed through the Sertone Global Network — proprietary fully encrypted protocol. Payment automatic.</p>
+      </div>
+    </div>
+
+    <!-- Network Map -->
+    <section style="background: #0f172a; padding: 4rem 0;">
+      <div class="container">
+        <div style="text-align:center; margin-bottom: 2rem;">
+          <span class="section-label" style="color:#34d399;">Network Topology</span>
+          <h2 style="color:#f1f5f9; margin-bottom: 0.5rem;">Four Nodes, Four Continents</h2>
+          <p style="color:#64748b; font-size:0.95rem; max-width:40rem; margin:0 auto;">The demo network. All node names are internal labels — no real IP addresses or cloud providers are exposed.</p>
+        </div>
+
+        <!-- SVG World Map (simplified) -->
+        <div class="globe-map">
+          <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+            <!-- Simplified continent outlines -->
+            <!-- North America -->
+            <path d="M80 80 L160 60 L190 90 L200 140 L170 170 L130 180 L90 160 L70 120 Z"
+                  fill="#1e293b" stroke="#334155" stroke-width="1"/>
+            <!-- South America -->
+            <path d="M150 185 L190 175 L205 210 L200 260 L170 270 L145 250 L140 210 Z"
+                  fill="#1e293b" stroke="#334155" stroke-width="1"/>
+            <!-- Europe -->
+            <path d="M300 60 L360 55 L380 80 L370 110 L340 120 L310 110 L295 85 Z"
+                  fill="#1e293b" stroke="#334155" stroke-width="1"/>
+            <!-- Africa -->
+            <path d="M310 125 L370 120 L390 160 L380 220 L350 235 L320 225 L305 185 L305 150 Z"
+                  fill="#1e293b" stroke="#334155" stroke-width="1"/>
+            <!-- Asia -->
+            <path d="M390 55 L530 50 L560 80 L550 130 L490 150 L420 140 L390 110 Z"
+                  fill="#1e293b" stroke="#334155" stroke-width="1"/>
+            <!-- Australia / Pacific islands -->
+            <path d="M530 180 L590 175 L610 205 L590 225 L545 220 Z"
+                  fill="#1e293b" stroke="#334155" stroke-width="1"/>
+            <!-- Japan -->
+            <path d="M555 90 L570 85 L575 100 L562 108 Z"
+                  fill="#1e293b" stroke="#334155" stroke-width="1"/>
+
+            <!-- Connection lines (animated) -->
+            <line id="line-ny-paris" x1="155" y1="115" x2="335" y2="88"
+                  stroke="#00b894" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.4"/>
+            <line id="line-paris-london" x1="335" y1="88" x2="310" y2="80"
+                  stroke="#00b894" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
+            <line id="line-ny-tokyo" x1="155" y1="115" x2="560" y2="97"
+                  stroke="#475569" stroke-width="1" stroke-dasharray="3,6" opacity="0.25"/>
+
+            <!-- Animated packet NY -> Paris (request, green) -->
+            <circle id="packet" r="4" fill="#34d399" opacity="0">
+              <animateMotion dur="2.8s" repeatCount="indefinite" begin="0.5s">
+                <mpath href="#ny-paris-path"/>
+              </animateMotion>
+              <animate attributeName="opacity" values="0;0;1;1;1;1;0" keyTimes="0;0.05;0.1;0.5;0.9;0.95;1" dur="2.8s" repeatCount="indefinite" begin="0.5s"/>
+            </circle>
+            <path id="ny-paris-path" d="M155,115 Q245,70 335,88" fill="none" opacity="0"/>
+
+            <!-- Animated packet Paris -> NY (response, blue) -->
+            <circle id="packet-response" r="4" fill="#38bdf8" opacity="0">
+              <animateMotion dur="2.8s" repeatCount="indefinite" begin="3.8s">
+                <mpath href="#paris-ny-path"/>
+              </animateMotion>
+              <animate attributeName="opacity" values="0;0;1;1;1;1;0" keyTimes="0;0.05;0.1;0.5;0.9;0.95;1" dur="2.8s" repeatCount="indefinite" begin="3.8s"/>
+            </circle>
+            <path id="paris-ny-path" d="M335,88 Q245,108 155,115" fill="none" opacity="0"/>
+
+            <!-- Legend -->
+            <g transform="translate(155,270)">
+              <circle r="4" fill="#34d399"/>
+              <text x="8" y="4" fill="#64748b" font-size="8" font-family="monospace">Request</text>
+              <circle r="4" fill="#38bdf8" cx="75"/>
+              <text x="83" y="4" fill="#64748b" font-size="8" font-family="monospace">Response</text>
+            </g>
+
+            <!-- Sertone node — New York -->
+            <g class="map-node" transform="translate(155,115)">
+              <circle r="10" fill="rgba(0,184,148,0.15)" stroke="rgba(0,184,148,0.4)" stroke-width="1.5"/>
+              <circle r="5" fill="#00b894" class="map-node-pulse"/>
+              <text x="12" y="-10" fill="#34d399" font-size="10" font-family="monospace" font-weight="700">Sertone</text>
+              <text x="12" y="2" fill="#64748b" font-size="9" font-family="monospace">New York</text>
+            </g>
+
+            <!-- Sertone node — Paris -->
+            <g class="map-node" transform="translate(335,88)">
+              <circle r="10" fill="rgba(0,184,148,0.15)" stroke="rgba(0,184,148,0.4)" stroke-width="1.5"/>
+              <circle r="5" fill="#00b894" class="map-node-pulse" style="animation-delay:0.5s"/>
+              <text x="12" y="-10" fill="#34d399" font-size="10" font-family="monospace" font-weight="700">Sertone</text>
+              <text x="12" y="2" fill="#64748b" font-size="9" font-family="monospace">Paris</text>
+            </g>
+
+            <!-- Sertone node — London -->
+            <g class="map-node" transform="translate(308,80)">
+              <circle r="7" fill="rgba(148,163,184,0.15)" stroke="rgba(148,163,184,0.3)" stroke-width="1"/>
+              <circle r="4" fill="#64748b"/>
+              <text x="-70" y="-8" fill="#94a3b8" font-size="9" font-family="monospace">Sertone (London)</text>
+            </g>
+
+            <!-- Media Relay node -->
+            <g class="map-node" transform="translate(565,97)">
+              <circle r="7" fill="rgba(148,163,184,0.1)" stroke="rgba(148,163,184,0.25)" stroke-width="1"/>
+              <circle r="4" fill="#475569"/>
+              <text x="-80" y="-8" fill="#64748b" font-size="9" font-family="monospace">Media Relay (Tokyo)</text>
+            </g>
+
+            <!-- Route label -->
+            <text x="245" y="76" fill="#334155" font-size="9" font-family="monospace" text-anchor="middle">47–98ms</text>
+          </svg>
+        </div>
+
+        <div class="node-callouts" style="margin-top: 1.5rem;">
+          <div class="node-callout" style="background:#1e293b; border-color:#334155;">
+            <div class="nc-location" style="color:#34d399;">Sertone Node</div>
+            <div class="nc-latency" style="color:#f1f5f9;">New York</div>
+            <div class="nc-label">Consumer's Sertone</div>
+          </div>
+          <div class="node-callout" style="background:#1e293b; border-color:#334155;">
+            <div class="nc-location" style="color:#34d399;">Sertone Node</div>
+            <div class="nc-latency" style="color:#f1f5f9;">Paris</div>
+            <div class="nc-label">API owner's Sertone</div>
+          </div>
+          <div class="node-callout" style="background:#1e293b; border-color:#334155;">
+            <div class="nc-location" style="color:#94a3b8;">Sertone Node</div>
+            <div class="nc-latency" style="color:#cbd5e1;">London</div>
+            <div class="nc-label">Another Sertone node</div>
+          </div>
+          <div class="node-callout" style="background:#1e293b; border-color:#334155;">
+            <div class="nc-location" style="color:#64748b;">Media Relay</div>
+            <div class="nc-latency" style="color:#94a3b8;">Anywhere</div>
+            <div class="nc-label">Video relay node</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture -->
+    <section>
+      <div class="container">
+        <span class="section-label">How This Works</span>
+        <h2 class="section-title" style="margin-bottom: 1.75rem;">The Call Path</h2>
+
+        <style>
+          /* ── Vertical architecture diagram ── */
+          .arch-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+            max-width: 680px;
+            margin: 0 auto;
+            font-family: inherit;
+          }
+
+          /* Consumer + Owner rows */
+          .arch-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.1rem 1.5rem 1rem;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+          }
+          .arch-row.arch-consumer {
+            border-radius: 14px 14px 0 0;
+            border-bottom: none;
+          }
+          .arch-row.arch-owner {
+            border-radius: 0 0 14px 14px;
+            border-top: none;
+          }
+
+          .arch-row-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: #94a3b8;
+          }
+          .arch-row-sublabel {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-style: italic;
+          }
+
+          /* Horizontal flow of boxes inside a row */
+          .arch-flow-h {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+          }
+          .arch-box {
+            background: #fff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 9px;
+            padding: 0.55rem 0.9rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #1e293b;
+            text-align: center;
+            line-height: 1.35;
+            white-space: nowrap;
+          }
+          /* User's own stuff — big, prominent, the star */
+          .arch-box-user {
+            background: #fff;
+            border: 2px solid #1e293b;
+            border-radius: 12px;
+            padding: 0.9rem 1.3rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            text-align: center;
+            line-height: 1.35;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          }
+          /* Sertone control centers — smaller, green, magic */
+          .arch-box-sertone {
+            background: linear-gradient(135deg, rgba(0,184,148,0.08), rgba(0,184,148,0.03));
+            border: 1.5px solid rgba(0,184,148,0.4);
+            border-radius: 9px;
+            padding: 0.5rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #047857;
+            text-align: center;
+            line-height: 1.35;
+          }
+          .arch-arrow-h {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            flex-shrink: 0;
+          }
+
+          /* Vertical arrow between rows */
+          .arch-arrow-v {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 0.15rem 0;
+            position: relative;
+            z-index: 2;
+          }
+          .arch-arrow-v .arrow-down,
+          .arch-arrow-v .arrow-up {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            padding: 0.18rem 0.65rem;
+            border-radius: 20px;
+          }
+          .arch-arrow-v .arrow-down {
+            color: #00b894;
+            background: #e6faf4;
+            border: 1px solid #b2edd8;
+          }
+          .arch-arrow-v .arrow-up {
+            color: #0ea5e9;
+            background: #e0f4fd;
+            border: 1px solid #b3e4f9;
+          }
+
+          /* ── Network row — the star ── */
+          .arch-network {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #00b894 0%, #00a381 55%, #007d65 100%);
+            border: none;
+            padding: 2rem 1.5rem;
+            min-height: 160px;
+            justify-content: center;
+            box-shadow: 0 4px 32px rgba(0,184,148,0.22), 0 1px 4px rgba(0,0,0,0.06);
+          }
+
+          /* Floating particles */
+          .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+            animation: floatUp 6s ease-in-out infinite;
+          }
+          .particle.p1 { width: 48px; height: 48px; left: 8%;  bottom: -20px; animation-duration: 7s; animation-delay: 0s;   }
+          .particle.p2 { width: 28px; height: 28px; left: 28%; bottom: -14px; animation-duration: 5s; animation-delay: 1.4s; }
+          .particle.p3 { width: 64px; height: 64px; left: 58%; bottom: -28px; animation-duration: 9s; animation-delay: 0.7s; }
+          .particle.p4 { width: 20px; height: 20px; left: 80%; bottom: -10px; animation-duration: 6s; animation-delay: 2.5s; }
+          .particle.p5 { width: 36px; height: 36px; left: 45%; bottom: -18px; animation-duration: 8s; animation-delay: 3.2s; }
+
+          @keyframes floatUp {
+            0%   { transform: translateY(0)    scale(1);    opacity: 0.10; }
+            40%  { transform: translateY(-70px) scale(1.08); opacity: 0.18; }
+            80%  { transform: translateY(-130px) scale(0.95); opacity: 0.07; }
+            100% { transform: translateY(-160px) scale(0.9);  opacity: 0;   }
+          }
+
+          /* Pulse ring behind network title */
+          .arch-network::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255,255,255,0.15);
+            animation: pulseRing 3.5s ease-out infinite;
+          }
+          .arch-network::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px; height: 280px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.08);
+            animation: pulseRing 3.5s ease-out infinite 0.8s;
+          }
+          @keyframes pulseRing {
+            0%   { opacity: 0.6; transform: translate(-50%,-50%) scale(0.7); }
+            100% { opacity: 0;   transform: translate(-50%,-50%) scale(1.4); }
+          }
+
+          .arch-network-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.55rem;
+          }
+          .arch-network-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 1px 8px rgba(0,0,0,0.18);
+          }
+          .arch-network-features {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+          .arch-network-features span {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.92);
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 20px;
+            padding: 0.22rem 0.7rem;
+          }
+          .arch-network-tagline {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.72);
+            max-width: 340px;
+            line-height: 1.4;
+          }
+
+          /* Responsive */
+          @media (max-width: 480px) {
+            .arch-box       { font-size: 0.75rem; padding: 0.45rem 0.65rem; white-space: normal; max-width: 110px; }
+            .arch-network-title { font-size: 0.95rem; }
+            .arch-network-features span { font-size: 0.7rem; }
+          }
+        </style>
+
+        <div class="arch-vertical">
+
+          <!-- Row 1: Consumer -->
+          <div class="arch-row arch-consumer">
+            <div class="arch-row-label">Consumer Premises</div>
+            <div class="arch-flow-h">
+              <div class="arch-box arch-box-sertone">Your Sertone<br>Control Center</div>
+            </div>
+            <div class="arch-row-sublabel">New York</div>
+          </div>
+
+          <!-- Arrow down/up between consumer and network -->
+          <div class="arch-arrow-v">
+            <span class="arrow-down">&#9660; Request</span>
+            <span class="arrow-up">&#9650; Response</span>
+          </div>
+
+          <!-- Row 2: Network — the star -->
+          <div class="arch-row arch-network">
+            <div class="particle p1"></div>
+            <div class="particle p2"></div>
+            <div class="particle p3"></div>
+            <div class="particle p4"></div>
+            <div class="particle p5"></div>
+            <div class="arch-network-content">
+              <div class="arch-network-title">Sertone Global Network</div>
+              <div class="arch-network-features">
+                <span>&#128274; Encrypted</span>
+                <span>&#128279; Automatic Payment</span>
+                <span>&#127760; 5 Delivery Methods</span>
+              </div>
+              <div class="arch-network-tagline">Proprietary fully encrypted protocol with automatic payment settlement</div>
+            </div>
+          </div>
+
+          <!-- Arrow down/up between network and owner -->
+          <div class="arch-arrow-v">
+            <span class="arrow-down">&#9660; Request</span>
+            <span class="arrow-up">&#9650; Response</span>
+          </div>
+
+          <!-- Row 3: Owner -->
+          <div class="arch-row arch-owner">
+            <div class="arch-row-label">Owner Premises</div>
+            <div class="arch-flow-h">
+              <div class="arch-box arch-box-sertone">Their Sertone<br>Control Center</div>
+            </div>
+            <div class="arch-row-sublabel">Paris</div>
+          </div>
+
+        </div><!-- /arch-vertical -->
+
+        <div style="margin:1.25rem auto 0;max-width:44rem;background:linear-gradient(135deg,rgba(0,184,148,0.06),rgba(0,184,148,0.02));border:1px solid rgba(0,184,148,0.15);border-radius:12px;padding:1rem 1.5rem;">
+          <p style="font-size:0.85rem;color:#475569;line-height:1.65;margin:0;">
+            <strong style="color:#1e293b;">What is the Sertone control center?</strong> A single Docker container you run on your own machine — a laptop, a Raspberry Pi, a cloud server. It connects you to the Sertone Global Network. Through its built-in web console, you browse services, register your own, manage your wallet, and monitor your earnings. Installation takes minutes. It is completely free, forever.
+          </p>
+          <div style="margin-top:0.75rem;">
+            <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+          </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 1.75rem;">
+          <p>The Sertone Global Network uses a proprietary fully encrypted protocol. All traffic is end-to-end encrypted. Settlement is automatic.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Network Demo -->
+    <section style="background: #f8fafc;">
+      <div class="container">
+        <span class="section-label">Try It</span>
+        <h2 class="section-title" style="margin-bottom: 1.75rem;">Simulate a Cross-Geography Call</h2>
+
+        <div class="demo-interactive">
+          <div class="demo-interactive-header">
+            <span class="dot red"></span>
+            <span class="dot amber"></span>
+            <span class="dot green"></span>
+            <span class="header-title">Sertone Global Network — New York &rarr; Paris</span>
+          </div>
+          <div class="demo-interactive-body">
+            <div class="demo-form-row">
+              <div class="demo-form-field">
+                <label for="p2p-from">Origin Node</label>
+                <select id="p2p-from">
+                  <option value="alpha" selected>New York</option>
+                  <option value="gamma">London</option>
+                </select>
+              </div>
+              <div class="demo-form-field">
+                <label for="p2p-to">Destination Node</label>
+                <select id="p2p-to">
+                  <option value="beta" selected>Paris</option>
+                  <option value="gamma">London</option>
+                  <option value="alpha">New York</option>
+                </select>
+              </div>
+              <div class="demo-form-field">
+                <label for="p2p-api">API to call</label>
+                <select id="p2p-api">
+                  <option value="weather" selected>OpenMeteo Weather</option>
+                  <option value="currency">Currency Rate</option>
+                  <option value="news">News Feed</option>
+                </select>
+              </div>
+              <button class="btn-run" id="p2p-run" onclick="runP2PDemo()">
+                <span class="run-icon">&#9654;</span> Run Demo
+              </button>
+            </div>
+
+            <!-- Trace log -->
+            <div class="stream-log" id="p2p-trace" style="margin-top: 0.75rem;">
+              <div class="stream-log-bar">
+                <span id="p2p-status" style="font-size:0.75rem;color:#64748b;">Waiting</span>
+                <span class="latency-badge hidden" id="p2p-latency">—</span>
+              </div>
+              <div class="stream-log-body" id="p2p-body">
+                <div class="demo-result-placeholder">Select nodes and click Run Demo to trace the call</div>
+              </div>
+            </div>
+            <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+              Live call through the Sertone Global Network. Install your own Sertone to make unlimited calls.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Latency Table -->
+    <section>
+      <div class="container">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;">
+          <div>
+            <span class="section-label">Latency Reference</span>
+            <h2 class="section-title" style="margin-bottom: 1.25rem;">Typical Network Latencies</h2>
+            <p style="color:#64748b; font-size: 0.95rem; margin-bottom: 1.5rem;">
+              Round-trip time for a typical Sertone call between nodes. Includes TLS handshake overhead on first call; persistent connections are faster.
+            </p>
+            <table class="latency-table">
+              <thead>
+                <tr>
+                  <th>Route</th>
+                  <th>Typical RTT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>New York &rarr; Paris</td>
+                  <td><span class="latency-val">47–98ms</span></td>
+                </tr>
+                <tr>
+                  <td>New York &rarr; London</td>
+                  <td><span class="latency-val">42–85ms</span></td>
+                </tr>
+                <tr>
+                  <td>Paris &rarr; London</td>
+                  <td><span class="latency-val">8–18ms</span></td>
+                </tr>
+                <tr>
+                  <td>New York &rarr; Tokyo</td>
+                  <td><span class="latency-val">110–160ms</span></td>
+                </tr>
+                <tr>
+                  <td>Paris &rarr; Tokyo</td>
+                  <td><span class="latency-val">95–140ms</span></td>
+                </tr>
+                <tr>
+                  <td>Same city</td>
+                  <td><span class="latency-val">2–8ms</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div>
+            <span class="section-label">What "No Central Server" Means</span>
+            <h2 class="section-title" style="margin-bottom: 1.25rem;">The Path Is Direct</h2>
+            <p style="color:#64748b; font-size: 0.95rem; margin-bottom: 1.25rem;">
+              Traditional API marketplaces route every call through their own servers. That adds latency, creates a single point of failure, and means they can read your traffic.
+            </p>
+            <p style="color:#64748b; font-size: 0.95rem; margin-bottom: 1.25rem;">
+              In Sertone, discovery uses the catalog to find the API owner's Sertone address. After that, every call is routed through the Sertone Global Network using the network's proprietary encrypted protocol.
+            </p>
+            <div class="info-box" style="margin-bottom:1rem;">
+              <p>The Sertone Global Network uses a proprietary fully encrypted protocol. All traffic is end-to-end encrypted. Settlement is automatic.</p>
+            </div>
+            <div class="info-box">
+              <p><strong>Privacy guarantee:</strong> The only parties who see the API request are the consumer's Sertone and the owner's Sertone. No relay, no Sertone server, no log aggregator.</p>
+            </div>
+            <p style="color:#64748b; font-size: 0.95rem; margin-top: 1.25rem;">
+              Payment happens asynchronously — it does not block the API response. The payment and the data travel independently.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Settlement Flow -->
+    <section style="background: #f8fafc;">
+      <div class="container">
+        <span class="section-label">Settlement</span>
+        <h2 class="section-title" style="margin-bottom: 1.25rem;">What Happens After the Call</h2>
+
+        <div style="max-width: 640px;">
+          <div class="settlement-flow">
+            <div class="settlement-step">
+              <div class="settlement-step-num">1</div>
+              <div class="settlement-step-text">
+                <h4>Consumer sends signed request</h4>
+                <p>The consumer's Sertone node (New York) signs the request with its wallet private key. The signature proves the request origin without revealing the key.</p>
+              </div>
+            </div>
+            <div class="settlement-step">
+              <div class="settlement-step-num">2</div>
+              <div class="settlement-step-text">
+                <h4>Owner's node responds</h4>
+                <p>The API owner's Sertone node (Paris) verifies the signature, serves the API response, and signs a receipt. The data is back in New York within ~70ms.</p>
+              </div>
+            </div>
+            <div class="settlement-step">
+              <div class="settlement-step-num">3</div>
+              <div class="settlement-step-text">
+                <h4>Receipts submitted for settlement</h4>
+                <p>Both Sertone instances submit receipts to the SertoneRouter smart contract. This happens in the background — the consumer does not wait for it.</p>
+              </div>
+            </div>
+            <div class="settlement-step">
+              <div class="settlement-step-num">4</div>
+              <div class="settlement-step-text">
+                <h4>USDC transferred automatically</h4>
+                <p>The contract verifies both receipts, deducts the consumer's pre-funded balance, and credits the owner's wallet. 5% protocol fee is deducted from the owner's payout. Fully automated.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOR CONSUMERS -->
+    <section>
+      <div class="container">
+        <span class="section-label">For Consumers</span>
+        <h2 class="section-title">How to use this service</h2>
+
+        <p>Any developer worldwide can call services across the globe from their own Sertone control center. Here is the complete flow from installation to first cross-geography call:</p>
+
+        <div class="consumer-steps">
+
+          <div class="consumer-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Install your Sertone control center</h4>
+              <p>One Docker command on any machine -- your laptop, a Raspberry Pi, a cloud VM.</p>
+              <div class="code-block"><span class="prompt">$</span> docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</div>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Browse the catalog</h4>
+              <p>Open your web console at <code>https://localhost:3002/panel</code>. Go to the Catalog tab. Services from all geographies appear in the same list -- Paris, Tokyo, Sydney, wherever the owner runs their control center.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Preview with demo samples</h4>
+              <p>Click on any service to see its full description, available endpoints, and sample data. Try it in the Swagger sandbox -- demo samples are free, no payment needed. See exactly what the data looks like before you spend a cent.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Fund your wallet</h4>
+              <p>Go to the Finance tab. Deposit USDC and a small amount of ETH for gas. Your control center shows both balances and alerts you when they are low.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <h4>Call it from your code</h4>
+              <p>Copy your consumer secret from Settings. Use the service UUID from the catalog. Your control center routes the request through the Sertone Global Network to the owner's control center in Paris, Tokyo, or anywhere else:</p>
+              <div class="code-block"><span class="prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"api_id_public": "SERVICE_UUID", "path": "/v1/weather/current", "method": "GET"}'</div>
+              <p>Or generate an SDK in your preferred language (Python, TypeScript, Go, Rust, Kotlin, and more) -- the web console generates ready-to-use client code with the UUID pre-filled.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">6</div>
+            <div class="step-content">
+              <h4>You are in business</h4>
+              <p>Every call settles automatically in USDC. You pay the service owner's price. No invoices, no payment terms, no chargebacks. Your Finance tab shows every transaction.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section>
+      <div class="container">
+        <span class="section-label">Code Samples</span>
+        <h2 class="section-title" style="margin-bottom: 1.75rem;">Calling an API in Paris From New York</h2>
+
+        <div class="demo-code">
+          <div class="demo-code-tabs">
+            <button class="demo-code-tab active" onclick="switchTab(this, 'p2p-curl')">curl</button>
+            <button class="demo-code-tab" onclick="switchTab(this, 'p2p-js')">JavaScript</button>
+            <button class="demo-code-tab" onclick="switchTab(this, 'p2p-python')">Python</button>
+          </div>
+
+          <div class="demo-code-panel active" id="p2p-curl"><span class="c-comment"># From New York — call an API whose owner's Sertone is in Paris</span>
+<span class="c-comment"># SERVICE_UUID: copy from your catalog. YOUR_CONSUMER_SECRET: from Settings tab.</span>
+<span class="c-comment"># Your local Sertone handles all routing — zero geography awareness needed.</span>
+
+<span class="c-prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H <span class="c-string">"Authorization: Bearer YOUR_CONSUMER_SECRET"</span> \
+  -H <span class="c-string">"Content-Type: application/json"</span> \
+  -d <span class="c-string">'{"api_id_public": "SERVICE_UUID", "path": "/forecast", "method": "GET",
+     "params": {"latitude": "48.8566", "longitude": "2.3522", "current_weather": "true"}}'</span>
+
+<span class="c-comment"># Response arrives from owner's Sertone (Paris) in ~70ms</span>
+{
+  <span class="c-string">"current_weather"</span>: {
+    <span class="c-string">"temperature"</span>: <span class="c-num">14.2</span>,
+    <span class="c-string">"windspeed"</span>:   <span class="c-num">18.5</span>,
+    <span class="c-string">"weathercode"</span>: <span class="c-num">1</span>
+  },
+  <span class="c-string">"_sertone"</span>: {
+    <span class="c-string">"consumer_node"</span>: <span class="c-string">"New York"</span>,
+    <span class="c-string">"owner_node"</span>:    <span class="c-string">"Paris"</span>,
+    <span class="c-string">"latency_ms"</span>:  <span class="c-num">68</span>,
+    <span class="c-string">"settled"</span>:     <span class="c-bool">true</span>
+  }
+}
+</div>
+
+          <div class="demo-code-panel" id="p2p-js"><span class="c-comment">// JavaScript — your Sertone in New York, owner's Sertone in Paris</span>
+<span class="c-comment">// SERVICE_UUID: copy from your catalog. YOUR_CONSUMER_SECRET: from Settings tab.</span>
+
+<span class="c-keyword">const</span> <span class="c-var">t0</span>  = <span class="c-var">Date</span>.<span class="c-func">now</span>();
+<span class="c-keyword">const</span> <span class="c-var">res</span> = <span class="c-keyword">await</span> <span class="c-func">fetch</span>(<span class="c-string">'https://localhost:3000/internal/call'</span>, {
+  method:  <span class="c-string">'POST'</span>,
+  headers: {
+    <span class="c-string">'Authorization'</span>: <span class="c-string">'Bearer YOUR_CONSUMER_SECRET'</span>,
+    <span class="c-string">'Content-Type'</span>:  <span class="c-string">'application/json'</span>,
+  },
+  body: <span class="c-var">JSON</span>.<span class="c-func">stringify</span>({
+    api_id_public: <span class="c-string">'SERVICE_UUID'</span>,
+    path:          <span class="c-string">'/forecast'</span>,
+    method:        <span class="c-string">'GET'</span>,
+    params:        { latitude: <span class="c-string">'48.8566'</span>, longitude: <span class="c-string">'2.3522'</span>, current_weather: <span class="c-string">'true'</span> },
+  }),
+});
+<span class="c-keyword">const</span> <span class="c-var">data</span>    = <span class="c-keyword">await</span> <span class="c-var">res</span>.<span class="c-func">json</span>();
+<span class="c-keyword">const</span> <span class="c-var">elapsed</span> = <span class="c-var">Date</span>.<span class="c-func">now</span>() - <span class="c-var">t0</span>;
+
+<span class="c-var">console</span>.<span class="c-func">log</span>(<span class="c-string">`Paris weather: <span class="c-var">${data.current_weather.temperature}</span>°C`</span>);
+<span class="c-var">console</span>.<span class="c-func">log</span>(<span class="c-string">`Round trip:    <span class="c-var">${elapsed}</span>ms (NY &rarr; Paris &rarr; NY)`</span>);
+
+<span class="c-comment">// The Sertone resolved the owner's address from the catalog,</span>
+<span class="c-comment">// routed the request through the Sertone Global Network, and handled settlement automatically.</span>
+</div>
+
+          <div class="demo-code-panel" id="p2p-python"><span class="c-comment"># Python — measure the actual cross-Atlantic latency</span>
+<span class="c-comment"># SERVICE_UUID: copy from your catalog. YOUR_CONSUMER_SECRET: from Settings tab.</span>
+<span class="c-keyword">import</span> <span class="c-var">requests</span>, <span class="c-var">time</span>
+
+<span class="c-var">t0</span> = <span class="c-var">time</span>.<span class="c-func">monotonic</span>()
+
+<span class="c-var">r</span> = <span class="c-var">requests</span>.<span class="c-func">post</span>(
+    <span class="c-string">"https://localhost:3000/internal/call"</span>,
+    headers={<span class="c-string">"Authorization"</span>: <span class="c-string">"Bearer YOUR_CONSUMER_SECRET"</span>},
+    json={
+        <span class="c-string">"api_id_public"</span>: <span class="c-string">"SERVICE_UUID"</span>,
+        <span class="c-string">"path"</span>:          <span class="c-string">"/forecast"</span>,
+        <span class="c-string">"method"</span>:        <span class="c-string">"GET"</span>,
+        <span class="c-string">"params"</span>:        {<span class="c-string">"latitude"</span>: <span class="c-string">"48.8566"</span>, <span class="c-string">"longitude"</span>: <span class="c-string">"2.3522"</span>, <span class="c-string">"current_weather"</span>: <span class="c-string">"true"</span>},
+    },
+)
+<span class="c-var">elapsed_ms</span> = (<span class="c-var">time</span>.<span class="c-func">monotonic</span>() - <span class="c-var">t0</span>) * <span class="c-num">1000</span>
+
+<span class="c-var">data</span> = <span class="c-var">r</span>.<span class="c-func">json</span>()
+<span class="c-func">print</span>(<span class="c-string">f"Temp in Paris: {data['current_weather']['temperature']}°C"</span>)
+<span class="c-func">print</span>(<span class="c-string">f"Round trip:    {elapsed_ms:.0f}ms  (NY → Paris → NY)"</span>)
+</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Replicate -->
+    <section style="background: #f8fafc;">
+      <div class="container">
+        <div class="demo-replicate">
+          <h3>Replicate With Two Raspberry Pis</h3>
+          <p class="replicate-intro">You do not need Sertone instances in different countries to test network routing. Two Raspberry Pis on the same LAN demonstrate the full protocol — just with 1ms instead of 70ms latency.</p>
+
+          <div class="replicate-steps">
+            <div class="replicate-step">
+              <div class="replicate-step-num">1</div>
+              <div class="replicate-step-content">
+                <h4>Start Sertone A (the "owner" in Paris)</h4>
+                <div class="code-block"><span class="prompt">pi-a $</span> docker run -d --name sertone-owner \
+  -p 3000:3000 -p 3001:3001 \
+  -v sertone-owner:/data \
+  sertone/wrapper:latest
+
+<span class="comment"># Note the wallet address from the logs:</span>
+<span class="prompt">pi-a $</span> docker logs sertone-owner | grep "wallet"
+<span class="comment"># Wallet address: 0xABC...DEF</span></div>
+              </div>
+            </div>
+            <div class="replicate-step">
+              <div class="replicate-step-num">2</div>
+              <div class="replicate-step-content">
+                <h4>Register an API on Sertone A</h4>
+                <div class="code-block"><span class="prompt">pi-a $</span> curl -X POST http://localhost:3001/api/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Weather Pi-A","endpoint":"https://api.open-meteo.com/v1",
+       "price_usdc":"0.0001","description":"Weather from Pi-A"}'</div>
+              </div>
+            </div>
+            <div class="replicate-step">
+              <div class="replicate-step-num">3</div>
+              <div class="replicate-step-content">
+                <h4>Start Sertone B (the "consumer" in New York) on the second Pi</h4>
+                <div class="code-block"><span class="prompt">pi-b $</span> docker run -d --name sertone-consumer \
+  -p 3000:3000 -p 3001:3001 \
+  -v sertone-consumer:/data \
+  sertone/wrapper:latest</div>
+              </div>
+            </div>
+            <div class="replicate-step">
+              <div class="replicate-step-num">4</div>
+              <div class="replicate-step-content">
+                <h4>Call Sertone A's API from Sertone B</h4>
+                <p>Sertone B discovers Sertone A via the catalog and connects directly. Payment flows to Sertone A's wallet automatically.</p>
+                <div class="code-block"><span class="prompt">pi-b $</span> curl -X POST https://localhost:3000/internal/call \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{"api_id_public":"SERVICE_UUID","path":"/forecast","method":"GET",
+       "params":{"latitude":"48.85","longitude":"2.35"}}'
+<span class="comment"># Response from Sertone A, routed through the Sertone Global Network, paid automatically.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Next -->
+    <section>
+      <div class="container text-center">
+        <h2 class="section-title">Explore More Demos</h2>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+          <a href="/demos/rest-api" class="btn btn-secondary">REST API</a>
+          <a href="/demos/graphql" class="btn btn-secondary">GraphQL</a>
+          <a href="/demos/smart-contract" class="btn btn-secondary">Smart Contract</a>
+          <a href="/demos/streaming" class="btn btn-secondary">Streaming</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/docs/" style="color:#64748b;font-size:0.85rem;">Docs</a>
+        <a href="/pricing" style="color:#64748b;font-size:0.85rem;">Pricing</a>
+        <a href="/trust" style="color:#64748b;font-size:0.85rem;">Trust</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy</a>
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+  <script>
+    function switchTab(btn, panelId) {
+      btn.closest('.demo-code').querySelectorAll('.demo-code-tab').forEach(t => t.classList.remove('active'));
+      btn.closest('.demo-code').querySelectorAll('.demo-code-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(panelId).classList.add('active');
+    }
+
+    function colorJson(json) {
+      return json
+        .replace(/("(?:[^"\\]|\\.)*")(\s*:)/g, '<span class="json-key">$1</span>$2')
+        .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span class="json-str">$1</span>')
+        .replace(/:\s*(\b\d+\.?\d*\b)/g, ': <span class="json-num">$1</span>')
+        .replace(/:\s*(true|false)/g, ': <span class="json-bool">$1</span>')
+        .replace(/:\s*(null)/g, ': <span class="json-null">$1</span>');
+    }
+
+    const NODE_NAMES = {
+      alpha: 'Sertone node (New York)',
+      beta:  'Sertone node (Paris)',
+      gamma: 'Sertone node (London)',
+    };
+
+    const NODE_LATENCY = {
+      'alpha-beta':  [47, 98],
+      'alpha-gamma': [42, 85],
+      'beta-gamma':  [8, 18],
+      'gamma-alpha': [42, 85],
+      'gamma-beta':  [8, 18],
+      'beta-alpha':  [47, 98],
+    };
+
+    const API_DATA = {
+      weather:  { name: 'OpenMeteo Weather', result: { temperature: 14.2, windspeed: 18.5, weathercode: 1, is_day: 1 } },
+      currency: { name: 'Currency Rate',     result: { base: 'USD', target: 'EUR', rate: 0.9187, timestamp: Date.now() } },
+      news:     { name: 'News Feed',         result: { articles: 3, top_headline: 'Tech sector adopts Sertone encrypted network for API delivery', published: new Date().toISOString() } },
+    };
+
+    function randInt(min, max) {
+      return min + Math.floor(Math.random() * (max - min + 1));
+    }
+
+    function runP2PDemo() {
+      const from   = document.getElementById('p2p-from').value;
+      const to     = document.getElementById('p2p-to').value;
+      const api    = document.getElementById('p2p-api').value;
+      const btn    = document.getElementById('p2p-run');
+      const status = document.getElementById('p2p-status');
+      const latEl  = document.getElementById('p2p-latency');
+      const body   = document.getElementById('p2p-body');
+
+      if (from === to) {
+        status.textContent = 'Select different origin and destination nodes.';
+        return;
+      }
+
+      btn.classList.add('loading');
+      btn.textContent = 'Running…';
+      status.textContent = 'Connecting through the Sertone Global Network…';
+      latEl.classList.add('hidden');
+      body.innerHTML = '';
+
+      const key = `${from}-${to}`;
+      const [minL, maxL] = NODE_LATENCY[key] || [10, 80];
+      const totalLatency = randInt(minL, maxL);
+      const fromName = NODE_NAMES[from];
+      const toName   = NODE_NAMES[to];
+      const apiInfo  = API_DATA[api];
+
+      const STEPS = [
+        { t: 0,    msg: () => `Catalog lookup: resolving API owner's address…` },
+        { t: 80,   msg: () => `API owner found: ${toName}` },
+        { t: 180,  msg: () => `Connecting: TLS handshake with ${toName}…` },
+        { t: 280,  msg: () => `Connection established. Sending signed request for "${apiInfo.name}"…` },
+        { t: 380,  msg: () => `Request in flight: ${fromName} → ${toName} (est. ${Math.round(totalLatency/2)}ms one-way)` },
+        { t: 380 + totalLatency * 5,
+                   msg: () => `Response received from ${toName}.` },
+        { t: 420 + totalLatency * 5,
+                   msg: () => `Submitting settlement receipt…` },
+        { t: 520 + totalLatency * 5,
+                   msg: () => `Done. Settled $0.000200 USDC. Owner keeps 95%.` },
+      ];
+
+      function addLine(text, color) {
+        const now = new Date().toISOString().substring(11, 23);
+        const line = document.createElement('span');
+        line.className = 'stream-log-line';
+        line.style.color = color || '#e2e8f0';
+        line.innerHTML = `<span class="ts">${now}</span>${text}`;
+        body.appendChild(line);
+        requestAnimationFrame(() => line.classList.add('visible'));
+        body.scrollTop = body.scrollHeight;
+      }
+
+      STEPS.forEach((step, i) => {
+        setTimeout(() => addLine(step.msg()), step.t);
+      });
+
+      const finalT = 560 + totalLatency * 5;
+      setTimeout(() => {
+        const response = {
+          data: apiInfo.result,
+          _sertone: {
+            consumer_node: fromName,
+            owner_node:    toName,
+            latency_ms:    totalLatency,
+            settled:       true,
+            price_usdc:    '0.000200',
+          }
+        };
+        addLine('');
+        addLine('Response payload:', '#34d399');
+        const jsonLines = JSON.stringify(response, null, 2).split('\n');
+        jsonLines.forEach(line => addLine('  ' + line, '#93c5fd'));
+
+        status.textContent = `200 OK — Sertone network call complete`;
+        latEl.textContent  = `${totalLatency}ms`;
+        latEl.classList.remove('hidden');
+        btn.classList.remove('loading');
+        btn.innerHTML = '<span class="run-icon">&#9654;</span> Run Demo';
+      }, finalT);
+    }
+  </script>
+
+</body>
+</html>

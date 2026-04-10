@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6 Protocols, One Marketplace — Multi-Protocol Demo — Sertone</title>
+  <meta name="description" content="Run REST, GraphQL, SOAP, gRPC, JSON-RPC, and XML-RPC APIs in parallel through one marketplace. Compare latencies side by side — no protocol conversion needed.">
+  <meta name="keywords" content="multi-protocol API, REST GraphQL SOAP gRPC, API marketplace, protocol comparison, Sertone, JSON-RPC XML-RPC">
+  <link rel="canonical" href="https://sertone.net/demos/multi-protocol/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/multi-protocol/">
+  <meta property="og:title" content="6 Protocols, One Marketplace — Multi-Protocol Demo">
+  <meta property="og:description" content="Run REST, GraphQL, SOAP, gRPC, JSON-RPC, and XML-RPC APIs in parallel through one marketplace. Compare latencies side by side.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="6 Protocols, One Marketplace — Multi-Protocol Demo">
+  <meta name="twitter:description" content="Run REST, GraphQL, SOAP, gRPC, JSON-RPC, and XML-RPC APIs in parallel. Compare latencies side by side.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Sertone Multi-Protocol API Demo",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "description": "Run 6 different API protocols in parallel through the Sertone marketplace and compare results.",
+        "url": "https://sertone.net/demos/multi-protocol/",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "HowTo",
+        "name": "How to Use Multiple API Protocols on Sertone",
+        "description": "Register APIs of any protocol — REST, GraphQL, SOAP, gRPC, JSON-RPC, XML-RPC — on the same marketplace.",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "position": 1,
+            "name": "Install Sertone",
+            "text": "Pull the Sertone Docker container on your own server."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 2,
+            "name": "Register APIs of any protocol",
+            "text": "The wrapper auto-detects and handles protocol conversion."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 3,
+            "name": "Consumers call via unified interface",
+            "text": "All protocols are accessible through the same marketplace endpoint."
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+  <style>
+    .protocol-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+
+    .protocol-tab {
+      padding: 0.65rem 1.25rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #64748b;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    .protocol-tab:hover {
+      color: #1e293b;
+    }
+
+    .protocol-tab.active {
+      color: #00b894;
+      border-bottom-color: #00b894;
+    }
+
+    .protocol-panel {
+      display: none;
+    }
+
+    .protocol-panel.active {
+      display: block;
+    }
+
+    .parallel-results {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .protocol-result-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 1rem;
+      min-height: 140px;
+    }
+
+    .protocol-result-card .card-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    }
+
+    .protocol-result-card .card-label span:first-child {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .protocol-result-card pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .protocol-result-card code {
+      font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.75rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    .protocol-result-card .card-placeholder {
+      color: #475569;
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 2rem 0.5rem;
+    }
+
+    .run-all-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 2rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #ffffff;
+      background: linear-gradient(135deg, #00b894, #00a381);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      margin-top: 0.5rem;
+    }
+
+    .run-all-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(0, 184, 148, 0.3);
+    }
+
+    .run-all-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .total-time {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: 1rem;
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    @media (max-width: 1024px) {
+      .parallel-results {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .parallel-results {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div class="demo-container">
+    <nav class="demo-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>&rsaquo;</span>
+      <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+      <a href="/demos/">Protocols</a> <span>&rsaquo;</span>
+      Multi-Protocol
+    </nav>
+  </div>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">All Protocols</p>
+      <h1>6 Protocols, One Marketplace</h1>
+      <p class="demo-tagline">REST, GraphQL, SOAP, gRPC, JSON-RPC, XML-RPC — whatever protocol your API uses, Sertone handles it. Run all 6 in parallel and compare latencies.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="Architecture diagram">
+      <h2>How It Works</h2>
+
+      <style>
+        .arch-vertical { display: flex; flex-direction: column; align-items: stretch; gap: 0; max-width: 680px; margin: 0 auto; font-family: inherit; }
+        .arch-row { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1.1rem 1.5rem 1rem; background: #f1f5f9; border: 1px solid #e2e8f0; }
+        .arch-row.arch-consumer { border-radius: 14px 14px 0 0; border-bottom: none; }
+        .arch-row.arch-owner { border-radius: 0 0 14px 14px; border-top: none; }
+        .arch-row-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #94a3b8; }
+        .arch-row-sublabel { font-size: 0.72rem; color: #94a3b8; font-style: italic; }
+        .arch-flow-h { display: flex; align-items: center; gap: 0.6rem; }
+        .arch-box { background: #fff; border: 1.5px solid #cbd5e1; border-radius: 9px; padding: 0.55rem 0.9rem; font-size: 0.82rem; font-weight: 600; color: #1e293b; text-align: center; line-height: 1.35; white-space: nowrap; }
+        .arch-box-user { background: #fff; border: 2px solid #1e293b; border-radius: 12px; padding: 0.9rem 1.3rem; font-size: 1rem; font-weight: 700; color: #1e293b; text-align: center; line-height: 1.35; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .arch-box-sertone { background: linear-gradient(135deg, rgba(0,184,148,0.08), rgba(0,184,148,0.03)); border: 1.5px solid rgba(0,184,148,0.4); border-radius: 9px; padding: 0.5rem 0.8rem; font-size: 0.78rem; font-weight: 600; color: #047857; text-align: center; line-height: 1.35; }
+        .arch-arrow-h { font-size: 1.1rem; color: #94a3b8; flex-shrink: 0; }
+        .arch-arrow-v { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0.15rem 0; position: relative; z-index: 2; }
+        .arch-arrow-v .arrow-down, .arch-arrow-v .arrow-up { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; padding: 0.18rem 0.65rem; border-radius: 20px; }
+        .arch-arrow-v .arrow-down { color: #00b894; background: #e6faf4; border: 1px solid #b2edd8; }
+        .arch-arrow-v .arrow-up { color: #0ea5e9; background: #e0f4fd; border: 1px solid #b3e4f9; }
+        .arch-network { position: relative; overflow: hidden; border-radius: 24px; background: linear-gradient(135deg, #00b894 0%, #00a381 55%, #007d65 100%); border: none; padding: 2rem 1.5rem; min-height: 160px; justify-content: center; box-shadow: 0 4px 32px rgba(0,184,148,0.22), 0 1px 4px rgba(0,0,0,0.06); }
+        .particle { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.12); animation: floatUp 6s ease-in-out infinite; }
+        .particle.p1 { width: 48px; height: 48px; left: 8%; bottom: -20px; animation-duration: 7s; animation-delay: 0s; }
+        .particle.p2 { width: 28px; height: 28px; left: 28%; bottom: -14px; animation-duration: 5s; animation-delay: 1.4s; }
+        .particle.p3 { width: 64px; height: 64px; left: 58%; bottom: -28px; animation-duration: 9s; animation-delay: 0.7s; }
+        .particle.p4 { width: 20px; height: 20px; left: 80%; bottom: -10px; animation-duration: 6s; animation-delay: 2.5s; }
+        .particle.p5 { width: 36px; height: 36px; left: 45%; bottom: -18px; animation-duration: 8s; animation-delay: 3.2s; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0.10; } 40% { transform: translateY(-70px) scale(1.08); opacity: 0.18; } 80% { transform: translateY(-130px) scale(0.95); opacity: 0.07; } 100% { transform: translateY(-160px) scale(0.9); opacity: 0; } }
+        .arch-network::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 180px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.15); animation: pulseRing 3.5s ease-out infinite; }
+        .arch-network::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 280px; height: 280px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.08); animation: pulseRing 3.5s ease-out infinite 0.8s; }
+        @keyframes pulseRing { 0% { opacity: 0.6; transform: translate(-50%,-50%) scale(0.7); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.4); } }
+        .arch-network-content { position: relative; z-index: 3; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+        .arch-network-title { font-size: 1.15rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,0.18); }
+        .arch-network-features { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+        .arch-network-features span { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.92); background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 0.22rem 0.7rem; }
+        .arch-network-tagline { font-size: 0.72rem; color: rgba(255,255,255,0.72); max-width: 340px; line-height: 1.4; }
+        @media (max-width: 480px) { .arch-box { font-size: 0.75rem; padding: 0.45rem 0.65rem; white-space: normal; max-width: 110px; } .arch-network-title { font-size: 0.95rem; } .arch-network-features span { font-size: 0.7rem; } }
+      </style>
+
+      <div class="arch-vertical">
+        <div class="arch-row arch-consumer">
+          <div class="arch-row-label">Consumer Premises</div>
+          <div class="arch-flow-h">
+            <div class="arch-box arch-box-user">Your App</div>
+            <div class="arch-arrow-h">&#8594;</div>
+            <div class="arch-box arch-box-sertone">Your Sertone<br>Control Center</div>
+          </div>
+          <div class="arch-row-sublabel">On your premises — any protocol</div>
+        </div>
+        <div class="arch-arrow-v">
+          <span class="arrow-down">&#9660; Request</span>
+          <span class="arrow-up">&#9650; Response</span>
+        </div>
+        <div class="arch-row arch-network">
+          <div class="particle p1"></div><div class="particle p2"></div><div class="particle p3"></div><div class="particle p4"></div><div class="particle p5"></div>
+          <div class="arch-network-content">
+            <div class="arch-network-title">Sertone Global Network</div>
+            <div class="arch-network-features">
+              <span>&#128274; Encrypted</span>
+              <span>&#128279; Automatic Payment</span>
+              <span>&#127760; 5 Delivery Methods</span>
+            </div>
+            <div class="arch-network-tagline">Proprietary fully encrypted protocol with automatic payment settlement</div>
+          </div>
+        </div>
+        <div class="arch-arrow-v">
+          <span class="arrow-down">&#9660; Request</span>
+          <span class="arrow-up">&#9650; Response</span>
+        </div>
+        <div class="arch-row arch-owner">
+          <div class="arch-row-label">Owner Premises</div>
+          <div class="arch-flow-h">
+            <div class="arch-box arch-box-sertone">Their Sertone<br>Control Center</div>
+          </div>
+          <div class="arch-row-sublabel">On their premises — REST, GraphQL, SOAP, gRPC, JSON-RPC, XML-RPC</div>
+        </div>
+      </div><!-- /arch-vertical -->
+
+      <p class="arch-caption" style="margin-top:1.25rem;">All 6 API protocols are supported. Services registered on the Sertone network are accessible regardless of the protocol they speak.</p>
+      <div style="margin:1.25rem auto 0;max-width:44rem;background:linear-gradient(135deg,rgba(0,184,148,0.06),rgba(0,184,148,0.02));border:1px solid rgba(0,184,148,0.15);border-radius:12px;padding:1rem 1.5rem;">
+        <p style="font-size:0.85rem;color:#475569;line-height:1.65;margin:0;">
+          <strong style="color:#1e293b;">What is the Sertone control center?</strong> A single Docker container you run on your own machine — a laptop, a Raspberry Pi, a cloud server. It connects you to the Sertone Global Network. Through its built-in web console, you browse services, register your own, manage your wallet, and monitor your earnings. Installation takes minutes. It is completely free, forever.
+        </p>
+        <div style="margin-top:0.75rem;">
+          <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why Multi-Protocol Support?</h2>
+      <p>APIs aren't monolithic. A single organization might run REST for public endpoints, GraphQL for mobile clients, SOAP for legacy integrations, and gRPC for internal microservices. Forcing everything into one protocol means rewriting code that already works.</p>
+      <p>Sertone handles every protocol natively. Register your API regardless of what protocol it speaks — the wrapper detects the protocol, routes the request correctly, and handles any necessary conversion. Consumers and owners both use whatever protocol they prefer.</p>
+      <p>This demo runs all 6 supported protocols in parallel against the same test infrastructure. Compare latencies side by side and see that protocol choice doesn't impact performance — the Sertone network handles them all equally.</p>
+    </section>
+
+    <!-- Interactive Demo -->
+    <section class="demo-interactive">
+      <h2>Live Demo — Run All 6 Protocols</h2>
+
+      <!-- Tabbed individual protocol tests -->
+      <div class="protocol-tabs" role="tablist">
+        <button class="protocol-tab active" data-protocol="rest" role="tab" aria-selected="true">REST</button>
+        <button class="protocol-tab" data-protocol="graphql" role="tab" aria-selected="false">GraphQL</button>
+        <button class="protocol-tab" data-protocol="soap" role="tab" aria-selected="false">SOAP</button>
+        <button class="protocol-tab" data-protocol="grpc" role="tab" aria-selected="false">gRPC</button>
+        <button class="protocol-tab" data-protocol="jsonrpc" role="tab" aria-selected="false">JSON-RPC</button>
+        <button class="protocol-tab" data-protocol="xmlrpc" role="tab" aria-selected="false">XML-RPC</button>
+      </div>
+
+      <!-- Protocol panels -->
+      <div class="protocol-panel active" data-protocol="rest">
+        <div class="demo-interactive-layout">
+          <div class="demo-form-panel">
+            <h3>REST API Call</h3>
+            <div class="demo-field">
+              <label for="mp-rest-endpoint">Endpoint</label>
+              <input type="text" id="mp-rest-endpoint" value="/api/bb-sse-ticker" readonly>
+            </div>
+            <div class="demo-field">
+              <label for="mp-rest-method">Method</label>
+              <select id="mp-rest-method"><option selected>POST</option><option>GET</option></select>
+            </div>
+            <button class="demo-run-btn" onclick="runSingleProtocol('rest')">
+              <span class="spinner"></span>
+              <span class="btn-text">Run REST</span>
+            </button>
+            <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+              Live call through the Sertone Global Network. Install your own Sertone to make unlimited calls.
+            </div>
+          </div>
+          <div class="result-panel" id="mp-rest-result">
+            <div class="result-placeholder">Click "Run REST" to call the REST API.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="protocol-panel" data-protocol="graphql">
+        <div class="demo-interactive-layout">
+          <div class="demo-form-panel">
+            <h3>GraphQL Query</h3>
+            <div class="demo-field">
+              <label for="mp-gql-query">Query</label>
+              <textarea id="mp-gql-query">{ users { id name email } }</textarea>
+            </div>
+            <button class="demo-run-btn" onclick="runSingleProtocol('graphql')">
+              <span class="spinner"></span>
+              <span class="btn-text">Run GraphQL</span>
+            </button>
+            <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+              Live call through the Sertone Global Network. Install your own Sertone to make unlimited calls.
+            </div>
+          </div>
+          <div class="result-panel" id="mp-graphql-result">
+            <div class="result-placeholder">Click "Run GraphQL" to send a GraphQL query.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="protocol-panel" data-protocol="soap">
+        <div class="demo-interactive-layout">
+          <div class="demo-form-panel">
+            <h3>SOAP Operation</h3>
+            <div class="demo-field">
+              <label for="mp-soap-op">Operation</label>
+              <input type="text" id="mp-soap-op" value="getBalance">
+            </div>
+            <div class="demo-field">
+              <label for="mp-soap-acct">Account ID</label>
+              <input type="text" id="mp-soap-acct" value="ACC-001">
+            </div>
+            <button class="demo-run-btn" onclick="runSingleProtocol('soap')">
+              <span class="spinner"></span>
+              <span class="btn-text">Run SOAP</span>
+            </button>
+            <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+              Live call through the Sertone Global Network. Install your own Sertone to make unlimited calls.
+            </div>
+          </div>
+          <div class="result-panel" id="mp-soap-result">
+            <div class="result-placeholder">Click "Run SOAP" to call the SOAP service.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="protocol-panel" data-protocol="grpc">
+        <div class="demo-interactive-layout">
+          <div class="demo-form-panel">
+            <h3>gRPC Call</h3>
+            <div class="demo-field">
+              <label for="mp-grpc-service">Service / Method</label>
+              <input type="text" id="mp-grpc-service" value="UserService.GetUser">
+            </div>
+            <div class="demo-field">
+              <label for="mp-grpc-payload">Payload</label>
+              <textarea id="mp-grpc-payload">{ "user_id": 42 }</textarea>
+            </div>
+            <button class="demo-run-btn" onclick="runSingleProtocol('grpc')">
+              <span class="spinner"></span>
+              <span class="btn-text">Run gRPC</span>
+            </button>
+            <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+              Live call through the Sertone Global Network. Install your own Sertone to make unlimited calls.
+            </div>
+          </div>
+          <div class="result-panel" id="mp-grpc-result">
+            <div class="result-placeholder">Click "Run gRPC" to call the gRPC service.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="protocol-panel" data-protocol="jsonrpc">
+        <div class="demo-interactive-layout">
+          <div class="demo-form-panel">
+            <h3>JSON-RPC Call</h3>
+            <div class="demo-field">
+              <label for="mp-jsonrpc-method">Method</label>
+              <input type="text" id="mp-jsonrpc-method" value="getServerInfo">
+            </div>
+            <div class="demo-field">
+              <label for="mp-jsonrpc-params">Params</label>
+              <textarea id="mp-jsonrpc-params">{ "verbose": true }</textarea>
+            </div>
+            <button class="demo-run-btn" onclick="runSingleProtocol('jsonrpc')">
+              <span class="spinner"></span>
+              <span class="btn-text">Run JSON-RPC</span>
+            </button>
+            <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+              Live call through the Sertone Global Network. Install your own Sertone to make unlimited calls.
+            </div>
+          </div>
+          <div class="result-panel" id="mp-jsonrpc-result">
+            <div class="result-placeholder">Click "Run JSON-RPC" to call the JSON-RPC endpoint.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="protocol-panel" data-protocol="xmlrpc">
+        <div class="demo-interactive-layout">
+          <div class="demo-form-panel">
+            <h3>XML-RPC Call</h3>
+            <div class="demo-field">
+              <label for="mp-xmlrpc-method">Method</label>
+              <input type="text" id="mp-xmlrpc-method" value="wp.getPost">
+            </div>
+            <div class="demo-field">
+              <label for="mp-xmlrpc-params">Params</label>
+              <textarea id="mp-xmlrpc-params">{ "post_id": 1 }</textarea>
+            </div>
+            <button class="demo-run-btn" onclick="runSingleProtocol('xmlrpc')">
+              <span class="spinner"></span>
+              <span class="btn-text">Run XML-RPC</span>
+            </button>
+            <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+              Live call through the Sertone Global Network. Install your own Sertone to make unlimited calls.
+            </div>
+          </div>
+          <div class="result-panel" id="mp-xmlrpc-result">
+            <div class="result-placeholder">Click "Run XML-RPC" to call the XML-RPC endpoint.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Run All Parallel -->
+      <div style="margin-top: 2.5rem; text-align: center;">
+        <button class="run-all-btn" id="mp-run-all-btn" onclick="runAllProtocols()">
+          <span class="spinner"></span>
+          <span class="btn-text">Run All 6 in Parallel</span>
+        </button>
+        <span class="total-time" id="mp-total-time"></span>
+        <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+          Live call through the Sertone Global Network. Install your own Sertone to make unlimited calls.
+        </div>
+      </div>
+
+      <!-- Parallel Results Grid -->
+      <div class="parallel-results" id="mp-parallel-results">
+        <div class="protocol-result-card" id="mp-par-rest">
+          <div class="card-label"><span>REST</span><span class="latency-badge" id="mp-par-rest-lat" style="display:none;"></span></div>
+          <div class="card-placeholder">Waiting...</div>
+        </div>
+        <div class="protocol-result-card" id="mp-par-graphql">
+          <div class="card-label"><span>GraphQL</span><span class="latency-badge" id="mp-par-graphql-lat" style="display:none;"></span></div>
+          <div class="card-placeholder">Waiting...</div>
+        </div>
+        <div class="protocol-result-card" id="mp-par-soap">
+          <div class="card-label"><span>SOAP</span><span class="latency-badge" id="mp-par-soap-lat" style="display:none;"></span></div>
+          <div class="card-placeholder">Waiting...</div>
+        </div>
+        <div class="protocol-result-card" id="mp-par-grpc">
+          <div class="card-label"><span>gRPC</span><span class="latency-badge" id="mp-par-grpc-lat" style="display:none;"></span></div>
+          <div class="card-placeholder">Waiting...</div>
+        </div>
+        <div class="protocol-result-card" id="mp-par-jsonrpc">
+          <div class="card-label"><span>JSON-RPC</span><span class="latency-badge" id="mp-par-jsonrpc-lat" style="display:none;"></span></div>
+          <div class="card-placeholder">Waiting...</div>
+        </div>
+        <div class="protocol-result-card" id="mp-par-xmlrpc">
+          <div class="card-label"><span>XML-RPC</span><span class="latency-badge" id="mp-par-xmlrpc-lat" style="display:none;"></span></div>
+          <div class="card-placeholder">Waiting...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Code Samples</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">cURL</button>
+        <button class="code-tab" data-tab="javascript">JavaScript</button>
+        <button class="code-tab" data-tab="python">Python</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+<span class="prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{"api_id_public": "API_UUID_FROM_CATALOG", "method": "GET", "path": "/", "params": {}}'</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code><span class="comment">// Call the API through YOUR local Sertone control center</span>
+<span class="comment">// Consumer secret is in Settings &gt; Security</span>
+const headers = {
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+};
+
+<span class="comment">// Run multiple protocols in parallel</span>
+const [rest, graphql, soap] = await Promise.all([
+  fetch('https://localhost:3000/internal/call', {
+    method: 'POST', headers,
+    body: JSON.stringify({ api_id_public: 'REST_API_UUID', method: 'GET', path: '/quote/AAPL', params: {} })
+  }),
+  fetch('https://localhost:3000/internal/call', {
+    method: 'POST', headers,
+    body: JSON.stringify({ api_id_public: 'GRAPHQL_API_UUID', method: 'POST', path: '/', params: { query: '{ users { id name } }' } })
+  }),
+  fetch('https://localhost:3000/internal/call', {
+    method: 'POST', headers,
+    body: JSON.stringify({ api_id_public: 'SOAP_API_UUID', method: 'POST', path: '/', params: { operation: 'getBalance', accountId: 'ACC-001' } })
+  })
+]);
+const results = await Promise.all([rest, graphql, soap].map(r => r.json()));
+console.log('Results:', results.map(r => r.result));</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+import requests
+
+headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+}
+
+response = requests.post(
+    'https://localhost:3000/internal/call',
+    headers=headers,
+    json={
+        'api_id_public': 'API_UUID_FROM_CATALOG',
+        'method': 'GET',
+        'path': '/',
+        'params': {}
+    }
+)
+print(response.json()['result'])</code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Self-Host: Register APIs of Any Protocol</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Install the Control Center</h4>
+          <p>Run the free Sertone Docker container. No cloud account needed.</p>
+          <pre class="code-block"><code><span class="prompt">$</span> docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  sertone/wrapper:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Open the Web Console</h4>
+          <p>Go to <code>https://localhost:3002/panel</code> in your browser. Create your account, accept terms, and your wallet is generated automatically.</p>
+          <pre class="code-block"><code># In the Sertone web console:
+# 1. Go to APIs → Register New API
+# 2. Set endpoint URL (any protocol)
+# 3. Wrapper auto-detects: REST, GraphQL, SOAP, gRPC, JSON-RPC, XML-RPC
+# 4. Set pricing and go live</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Browse the Catalog</h4>
+          <p>Click <strong>Catalog &amp; SDKs</strong> in the sidebar. Search for APIs, try them in demo mode (free), then switch to production when ready.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Make Your First Call</h4>
+          <p>Copy your consumer secret from <strong>Settings &gt; Security</strong>, then use the code samples above to call any API from your own code.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SEO Footer -->
+    <section class="demo-footer-cta">
+      <h2>Every Protocol. One Marketplace.</h2>
+      <p>Whatever your API speaks, Sertone handles it. Register, price, and monetize — no rewrites.</p>
+      <a href="/try" class="btn">Get Started</a>
+      <a href="/docs/" class="btn btn-secondary" style="margin-left: 0.75rem;">Read the Docs</a>
+
+      <div class="related-demos">
+        <a href="/demos/rest-api/" class="related-demo-link">REST API</a>
+        <a href="/demos/graphql/" class="related-demo-link">GraphQL</a>
+        <a href="/demos/soap/" class="related-demo-link">SOAP</a>
+        <a href="/demos/xml-rpc/" class="related-demo-link">XML-RPC</a>
+        <a href="/demos/sse-streaming/" class="related-demo-link">SSE Streaming</a>
+        <a href="/demos/cross-geography/" class="related-demo-link">Cross-Geography</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What API protocols does Sertone support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sertone supports 6 API protocols: REST, GraphQL, SOAP, gRPC, JSON-RPC, and XML-RPC. All are handled natively through the same marketplace with the same billing and settlement layer."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need to convert my API to a specific protocol?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Sertone handles each protocol natively. Your REST API stays REST, your GraphQL stays GraphQL. No forced conversion or wrapper code needed on the owner side."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is there a performance difference between protocols on Sertone?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "All protocols use the same encrypted transport. Latency differences come from payload size and upstream API speed, not from the protocol type. The multi-protocol demo lets you compare latencies side by side."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    // Protocol tab switching
+    (function() {
+      var tabs = document.querySelectorAll('.protocol-tab');
+      var panels = document.querySelectorAll('.protocol-panel');
+
+      tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          var target = tab.getAttribute('data-protocol');
+
+          tabs.forEach(function(t) {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          panels.forEach(function(p) { p.classList.remove('active'); });
+
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          var targetPanel = document.querySelector('.protocol-panel[data-protocol="' + target + '"]');
+          if (targetPanel) targetPanel.classList.add('active');
+        });
+      });
+    })();
+
+    // Protocol API mappings
+    var protocolConfigs = {
+      rest: {
+        apiId: 'bb-sse-ticker',
+        getPayload: function() {
+          return { symbol: 'AAPL', method: document.getElementById('mp-rest-method').value };
+        }
+      },
+      graphql: {
+        apiId: 'bb-graphql',
+        getPayload: function() {
+          return { query: document.getElementById('mp-gql-query').value };
+        }
+      },
+      soap: {
+        apiId: 'bb-soap',
+        getPayload: function() {
+          return {
+            operation: document.getElementById('mp-soap-op').value,
+            accountId: document.getElementById('mp-soap-acct').value
+          };
+        }
+      },
+      grpc: {
+        apiId: 'bb-grpc',
+        getPayload: function() {
+          try { return JSON.parse(document.getElementById('mp-grpc-payload').value); }
+          catch (e) { return { service: document.getElementById('mp-grpc-service').value }; }
+        }
+      },
+      jsonrpc: {
+        apiId: 'bb-jsonrpc',
+        getPayload: function() {
+          try {
+            var params = JSON.parse(document.getElementById('mp-jsonrpc-params').value);
+            return { method: document.getElementById('mp-jsonrpc-method').value, params: params };
+          } catch (e) {
+            return { method: document.getElementById('mp-jsonrpc-method').value };
+          }
+        }
+      },
+      xmlrpc: {
+        apiId: 'bb-xmlrpc',
+        getPayload: function() {
+          try {
+            var params = JSON.parse(document.getElementById('mp-xmlrpc-params').value);
+            params.method = document.getElementById('mp-xmlrpc-method').value;
+            return params;
+          } catch (e) {
+            return { method: document.getElementById('mp-xmlrpc-method').value };
+          }
+        }
+      }
+    };
+
+    // Run a single protocol
+    async function runSingleProtocol(protocol) {
+      var config = protocolConfigs[protocol];
+      var btn = document.querySelector('.protocol-panel[data-protocol="' + protocol + '"] .demo-run-btn');
+      setLoading(btn, true);
+
+      try {
+        var result = await callDemo(config.apiId, config.getPayload(), { method: 'POST', path: '/' });
+        renderResult('mp-' + protocol + '-result', result);
+      } catch (err) {
+        showError('mp-' + protocol + '-result', err);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+
+    // Run all 6 protocols in parallel
+    async function runAllProtocols() {
+      var btn = document.getElementById('mp-run-all-btn');
+      var totalTimeEl = document.getElementById('mp-total-time');
+      btn.disabled = true;
+      totalTimeEl.textContent = 'Running...';
+
+      var protocols = ['rest', 'graphql', 'soap', 'grpc', 'jsonrpc', 'xmlrpc'];
+
+      // Reset all cards
+      protocols.forEach(function(p) {
+        var card = document.getElementById('mp-par-' + p);
+        var placeholder = card.querySelector('.card-placeholder');
+        var pre = card.querySelector('pre');
+        var latBadge = document.getElementById('mp-par-' + p + '-lat');
+        if (placeholder) placeholder.textContent = 'Running...';
+        if (pre) pre.remove();
+        if (latBadge) latBadge.style.display = 'none';
+      });
+
+      var overallStart = performance.now();
+
+      var promises = protocols.map(function(protocol) {
+        var config = protocolConfigs[protocol];
+        return callDemo(config.apiId, config.getPayload(), { method: 'POST', path: '/' })
+          .then(function(result) {
+            renderParallelResult(protocol, result);
+            return result;
+          })
+          .catch(function(err) {
+            renderParallelError(protocol, err);
+            return null;
+          });
+      });
+
+      await Promise.all(promises);
+
+      var totalMs = Math.round(performance.now() - overallStart);
+      var totalClass = totalMs < 500 ? 'fast' : totalMs < 1000 ? 'medium' : 'slow';
+      totalTimeEl.innerHTML = 'Total wall time: <span class="latency-badge ' + totalClass + '">' + totalMs + 'ms</span>';
+      btn.disabled = false;
+    }
+
+    function renderParallelResult(protocol, result) {
+      var card = document.getElementById('mp-par-' + protocol);
+      var placeholder = card.querySelector('.card-placeholder');
+      if (placeholder) placeholder.remove();
+
+      var latBadge = document.getElementById('mp-par-' + protocol + '-lat');
+      var latClass = result.latency < 200 ? 'fast' : result.latency < 500 ? 'medium' : 'slow';
+      latBadge.className = 'latency-badge ' + latClass;
+      latBadge.textContent = result.latency + 'ms';
+      latBadge.style.display = '';
+
+      var existingPre = card.querySelector('pre');
+      if (existingPre) existingPre.remove();
+
+      var pre = document.createElement('pre');
+      var code = document.createElement('code');
+      code.textContent = JSON.stringify(result.data, null, 2);
+      pre.appendChild(code);
+      card.appendChild(pre);
+    }
+
+    function renderParallelError(protocol, err) {
+      var card = document.getElementById('mp-par-' + protocol);
+      var placeholder = card.querySelector('.card-placeholder');
+      if (placeholder) {
+        placeholder.textContent = 'Error: ' + (err.message || String(err));
+        placeholder.style.color = '#ef4444';
+      }
+    }
+  </script>
+
+</body>
+</html>

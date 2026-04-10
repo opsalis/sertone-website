@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XML-RPC — Sertone Learn</title>
+  <meta name="description" content="Learn about XML-RPC, the original XML remote procedure call protocol. See how Sertone bridges XML-RPC APIs into its marketplace.">
+  <meta name="keywords" content="XML-RPC, XML remote procedure call, legacy API, WordPress API, methodCall, API monetization, sell XML-RPC API, API marketplace, Sertone">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/learn/xmlrpc">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/learn/xmlrpc">
+  <meta property="og:title" content="XML-RPC — Sertone Learn | Monetize XML-RPC APIs on Sertone">
+  <meta property="og:description" content="Learn about XML-RPC, the original XML remote procedure call protocol. See how Sertone bridges XML-RPC APIs into its marketplace.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="XML-RPC — Sertone Learn">
+  <meta name="twitter:description" content="Monetize your XML-RPC API on the Sertone marketplace with per-call per-call billing.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "XML-RPC — Sertone Learn",
+    "description": "Learn about XML-RPC, the original XML remote procedure call protocol. See how Sertone bridges XML-RPC APIs into its marketplace.",
+    "url": "https://sertone.net/learn/xmlrpc",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="/style.css?v=2">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/handler">Control Center</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/security">Security</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+
+      <nav class="breadcrumb">
+        <a href="/learn/owner">Owner</a>
+        <span class="sep">/</span>
+        <span class="current">XML-RPC</span>
+      </nav>
+
+      <div class="page-header">
+        <span class="protocol-icon">&lt;/&gt;</span>
+        <h1>XML-RPC</h1>
+        <p class="lead">The original XML remote calls — simple, well-understood, and widely supported since 1998.</p>
+      </div>
+
+      <!-- What is XML-RPC -->
+      <section class="content-section">
+        <h2>What Is XML-RPC?</h2>
+
+        <p>
+          <strong>XML-RPC</strong> is a remote procedure call protocol created in 1998 by
+          Dave Winer and Microsoft. It was the first widely-adopted protocol to use XML over
+          HTTP for machine-to-machine communication, and it directly inspired SOAP (which
+          evolved from XML-RPC by adding namespaces, headers, and the WS-* extensions).
+          While SOAP grew complex, XML-RPC stayed simple — and that simplicity is why it
+          endures today.
+        </p>
+
+        <p>
+          An XML-RPC request is an HTTP POST containing a <code>&lt;methodCall&gt;</code>
+          XML document. Inside that document are two things: a <code>&lt;methodName&gt;</code>
+          (the procedure to invoke, like <code>getOfficialByName</code>) and an optional
+          <code>&lt;params&gt;</code> block containing the arguments. Each parameter is
+          wrapped in a <code>&lt;value&gt;</code> tag with a type indicator:
+          <code>&lt;string&gt;</code>, <code>&lt;int&gt;</code>,
+          <code>&lt;double&gt;</code>, <code>&lt;boolean&gt;</code>,
+          <code>&lt;dateTime.iso8601&gt;</code>, <code>&lt;base64&gt;</code>,
+          <code>&lt;array&gt;</code>, or <code>&lt;struct&gt;</code>.
+        </p>
+
+        <p>
+          The server responds with a <code>&lt;methodResponse&gt;</code> document containing
+          either a <code>&lt;params&gt;</code> block (on success) or a <code>&lt;fault&gt;</code>
+          block (on error). A fault contains a <code>faultCode</code> (integer) and a
+          <code>faultString</code> (human-readable message). There is no concept of WSDL or
+          schema files — the method list and parameter types are typically documented informally
+          or discovered through a <code>system.listMethods</code> introspection call.
+        </p>
+
+        <p>
+          XML-RPC is still actively used in many systems: WordPress exposes its entire remote
+          management API via XML-RPC (<code>/xmlrpc.php</code>), many legacy enterprise systems
+          and embedded devices speak XML-RPC, and some content management systems and publishing
+          tools rely on it. If you have an XML-RPC API that works and you do not want to
+          rewrite it, Sertone can monetize it exactly as it is.
+        </p>
+      </section>
+
+      <!-- How XML-RPC works with Sertone -->
+      <section class="content-section">
+        <h2>How XML-RPC Works with Sertone</h2>
+
+        <p>
+          XML-RPC is method-based, like JSON-RPC, but uses XML for encoding. The Sertone
+          control center bridges the XML serialization gap so consumers work with clean JSON.
+        </p>
+
+        <ol class="steps">
+          <li>
+            <strong>Owner provides a method list.</strong> Upload a JSON file listing each
+            XML-RPC method name, its parameter types, and response structure. The control center
+            uses this to generate OpenAPI endpoints and validate calls.
+          </li>
+          <li>
+            <strong>Control center constructs <code>methodCall</code> XML.</strong> When a consumer
+            request arrives as JSON, the control center converts each parameter to the appropriate
+            XML-RPC type (<code>&lt;string&gt;</code>, <code>&lt;int&gt;</code>,
+            <code>&lt;struct&gt;</code>, etc.) and wraps everything in a
+            <code>&lt;methodCall&gt;</code> document.
+          </li>
+          <li>
+            <strong>Control center parses <code>methodResponse</code> XML back to JSON.</strong>
+            The XML-RPC response is parsed, type-converted (XML-RPC types mapped to JSON
+            types), and returned to the consumer as clean JSON. Faults are mapped to
+            appropriate HTTP error responses.
+          </li>
+        </ol>
+
+        <div class="info-box">
+          <p>
+            <strong>Your XML-RPC server stays untouched.</strong> Keep your existing methods
+            and endpoint. The control center handles all XML construction and parsing — consumers
+            never see XML.
+          </p>
+        </div>
+      </section>
+
+      <!-- Demo info -->
+      <section class="content-section">
+        <h2>Demo API: US Congress and Presidents</h2>
+
+        <p>
+          This demo uses a <strong>US Congress and Presidents dataset</strong> — 12,790
+          officials from 1789 to the present day. Every member of the Senate and House of
+          Representatives, every President and Vice President, with biographical data,
+          party affiliation, state, term dates, and committee assignments. Methods include
+          lookups by name, state, party, chamber, term year, and full-text search.
+        </p>
+
+        <div class="btn-group">
+          <a href="/learn/owner" class="btn btn-outline">
+            &#8592; Owner Guide
+          </a>
+        </div>
+      </section>
+
+      <!-- Code example -->
+      <section class="content-section">
+        <h2>Code Example</h2>
+
+        <p class="code-label">Look up a president by name</p>
+        <div class="code-block"><code><span class="comment"># XML-RPC methodCall to look up a historical official</span>
+<span class="keyword">curl</span> <span class="url">http://localhost:4006/xmlrpc</span> \
+  <span class="string">-H</span> <span class="string">"Content-Type: text/xml"</span> \
+  <span class="string">-d</span> <span class="string">'&lt;?xml version="1.0"?&gt;
+&lt;methodCall&gt;
+  &lt;methodName&gt;getOfficialByName&lt;/methodName&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;value&gt;&lt;string&gt;Abraham Lincoln&lt;/string&gt;&lt;/value&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodCall&gt;'</span></code></div>
+
+        <p class="code-label">Response (XML)</p>
+        <div class="code-block"><code>&lt;?xml version="1.0"?&gt;
+&lt;methodResponse&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;value&gt;
+        &lt;struct&gt;
+          &lt;member&gt;
+            &lt;name&gt;name&lt;/name&gt;
+            &lt;value&gt;&lt;string&gt;Abraham Lincoln&lt;/string&gt;&lt;/value&gt;
+          &lt;/member&gt;
+          &lt;member&gt;
+            &lt;name&gt;role&lt;/name&gt;
+            &lt;value&gt;&lt;string&gt;President&lt;/string&gt;&lt;/value&gt;
+          &lt;/member&gt;
+          &lt;member&gt;
+            &lt;name&gt;party&lt;/name&gt;
+            &lt;value&gt;&lt;string&gt;Republican&lt;/string&gt;&lt;/value&gt;
+          &lt;/member&gt;
+          &lt;member&gt;
+            &lt;name&gt;state&lt;/name&gt;
+            &lt;value&gt;&lt;string&gt;Illinois&lt;/string&gt;&lt;/value&gt;
+          &lt;/member&gt;
+          &lt;member&gt;
+            &lt;name&gt;termStart&lt;/name&gt;
+            &lt;value&gt;&lt;string&gt;1861-03-04&lt;/string&gt;&lt;/value&gt;
+          &lt;/member&gt;
+          &lt;member&gt;
+            &lt;name&gt;termEnd&lt;/name&gt;
+            &lt;value&gt;&lt;string&gt;1865-04-15&lt;/string&gt;&lt;/value&gt;
+          &lt;/member&gt;
+        &lt;/struct&gt;
+      &lt;/value&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodResponse&gt;</code></div>
+
+        <p>
+          Through the Sertone control center, the same call becomes simple JSON:
+        </p>
+
+        <p class="code-label">Same call via the Sertone control center (JSON)</p>
+        <div class="code-block"><code><span class="comment"># Consumer sends JSON — control center builds the XML-RPC methodCall</span>
+<span class="keyword">curl</span> <span class="url">http://localhost:3000/api/congress/getOfficialByName</span> \
+  <span class="string">-H</span> <span class="string">"Content-Type: application/json"</span> \
+  <span class="string">-d</span> <span class="string">'{ "name": "Abraham Lincoln" }'</span></code></div>
+      </section>
+
+      <!-- XML-RPC type mapping -->
+      <section class="content-section">
+        <h2>XML-RPC Type Mapping</h2>
+
+        <p>
+          XML-RPC defines a small set of data types. The control center automatically converts between
+          these and their JSON equivalents:
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>XML-RPC Type</th>
+              <th>JSON Equivalent</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>&lt;string&gt;</code></td>
+              <td>string</td>
+              <td><code>"hello"</code></td>
+            </tr>
+            <tr>
+              <td><code>&lt;int&gt;</code> / <code>&lt;i4&gt;</code></td>
+              <td>number</td>
+              <td><code>42</code></td>
+            </tr>
+            <tr>
+              <td><code>&lt;double&gt;</code></td>
+              <td>number</td>
+              <td><code>3.14</code></td>
+            </tr>
+            <tr>
+              <td><code>&lt;boolean&gt;</code></td>
+              <td>boolean</td>
+              <td><code>true</code></td>
+            </tr>
+            <tr>
+              <td><code>&lt;dateTime.iso8601&gt;</code></td>
+              <td>string (ISO 8601)</td>
+              <td><code>"2026-03-01T12:00:00Z"</code></td>
+            </tr>
+            <tr>
+              <td><code>&lt;base64&gt;</code></td>
+              <td>string (base64)</td>
+              <td><code>"SGVsbG8="</code></td>
+            </tr>
+            <tr>
+              <td><code>&lt;array&gt;</code></td>
+              <td>array</td>
+              <td><code>[1, 2, 3]</code></td>
+            </tr>
+            <tr>
+              <td><code>&lt;struct&gt;</code></td>
+              <td>object</td>
+              <td><code>{ "key": "value" }</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Key concepts table -->
+      <section class="content-section">
+        <h2>XML-RPC at a Glance</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Concept</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Transport</td>
+              <td>HTTP POST</td>
+            </tr>
+            <tr>
+              <td>Data format</td>
+              <td>XML</td>
+            </tr>
+            <tr>
+              <td>Spec format</td>
+              <td>Method list (no formal IDL; introspection via system.listMethods)</td>
+            </tr>
+            <tr>
+              <td>Request structure</td>
+              <td><code>&lt;methodCall&gt;</code> with <code>&lt;methodName&gt;</code> and <code>&lt;params&gt;</code></td>
+            </tr>
+            <tr>
+              <td>Error handling</td>
+              <td><code>&lt;fault&gt;</code> with faultCode and faultString</td>
+            </tr>
+            <tr>
+              <td>Best for</td>
+              <td>Legacy systems, CMS platforms, embedded devices, WordPress integrations</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms of Service</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy Policy</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+</body>
+</html>

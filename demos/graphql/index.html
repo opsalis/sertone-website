@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GraphQL API Marketplace — Sertone</title>
+  <meta name="description" content="Monetize your GraphQL endpoint through the Sertone marketplace. Send queries, see structured responses, and earn USDC per call.">
+  <meta name="keywords" content="GraphQL marketplace, GraphQL monetization, API marketplace, GraphQL demo, USDC payment">
+  <link rel="canonical" href="https://sertone.net/demos/graphql/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/graphql/">
+  <meta property="og:title" content="GraphQL API Marketplace — Monetize Your GraphQL Endpoint">
+  <meta property="og:description" content="Monetize your GraphQL endpoint through the Sertone marketplace. Send queries, see structured responses, and earn USDC per call.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GraphQL API Marketplace — Monetize Your GraphQL Endpoint">
+  <meta name="twitter:description" content="Monetize your GraphQL endpoint through the Sertone marketplace. Send queries, see structured responses, and earn USDC per call.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Sertone GraphQL API Marketplace",
+    "applicationCategory": "DeveloperApplication",
+    "description": "Monetize any GraphQL API through the Sertone marketplace with automatic USDC payment.",
+    "url": "https://sertone.net/demos/graphql/",
+    "operatingSystem": "Docker (Linux, macOS, Windows)",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free self-hosted control center"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Monetize a GraphQL API with Sertone",
+    "description": "Register your GraphQL endpoint on the Sertone marketplace and start earning USDC per query.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Install the control center",
+        "text": "Pull and run the free Sertone Docker container on your own hardware."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Register your GraphQL API",
+        "text": "Open the web console and register your GraphQL endpoint with per-query pricing."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Start earning",
+        "text": "Consumers send GraphQL queries and pay per call. Payment happens automatically in USDC."
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <nav class="demo-breadcrumb demo-container" aria-label="Breadcrumb">
+    <a href="/">Home</a> <span>&rsaquo;</span>
+    <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+    <a href="/demos/">Protocols</a> <span>&rsaquo;</span>
+    GraphQL
+  </nav>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Protocol Demo</p>
+      <h1>GraphQL API Marketplace</h1>
+      <p class="demo-tagline">Expose your GraphQL API to paying consumers. Sertone handles authentication, billing, and settlement &mdash; you focus on your schema.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="Architecture diagram">
+      <h2>How It Works</h2>
+
+      <style>
+        .arch-vertical { display: flex; flex-direction: column; align-items: stretch; gap: 0; max-width: 680px; margin: 0 auto; font-family: inherit; }
+        .arch-row { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1.1rem 1.5rem 1rem; background: #f1f5f9; border: 1px solid #e2e8f0; }
+        .arch-row.arch-consumer { border-radius: 14px 14px 0 0; border-bottom: none; }
+        .arch-row.arch-owner { border-radius: 0 0 14px 14px; border-top: none; }
+        .arch-row-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #94a3b8; }
+        .arch-row-sublabel { font-size: 0.72rem; color: #94a3b8; font-style: italic; }
+        .arch-flow-h { display: flex; align-items: center; gap: 0.6rem; }
+        .arch-box { background: #fff; border: 1.5px solid #cbd5e1; border-radius: 9px; padding: 0.55rem 0.9rem; font-size: 0.82rem; font-weight: 600; color: #1e293b; text-align: center; line-height: 1.35; white-space: nowrap; }
+        .arch-box-user { background: #fff; border: 2px solid #1e293b; border-radius: 12px; padding: 0.9rem 1.3rem; font-size: 1rem; font-weight: 700; color: #1e293b; text-align: center; line-height: 1.35; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .arch-box-sertone { background: linear-gradient(135deg, rgba(0,184,148,0.08), rgba(0,184,148,0.03)); border: 1.5px solid rgba(0,184,148,0.4); border-radius: 9px; padding: 0.5rem 0.8rem; font-size: 0.78rem; font-weight: 600; color: #047857; text-align: center; line-height: 1.35; }
+        .arch-arrow-h { font-size: 1.1rem; color: #94a3b8; flex-shrink: 0; }
+        .arch-arrow-v { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0.15rem 0; position: relative; z-index: 2; }
+        .arch-arrow-v .arrow-down, .arch-arrow-v .arrow-up { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; padding: 0.18rem 0.65rem; border-radius: 20px; }
+        .arch-arrow-v .arrow-down { color: #00b894; background: #e6faf4; border: 1px solid #b2edd8; }
+        .arch-arrow-v .arrow-up { color: #0ea5e9; background: #e0f4fd; border: 1px solid #b3e4f9; }
+        .arch-network { position: relative; overflow: hidden; border-radius: 24px; background: linear-gradient(135deg, #00b894 0%, #00a381 55%, #007d65 100%); border: none; padding: 2rem 1.5rem; min-height: 160px; justify-content: center; box-shadow: 0 4px 32px rgba(0,184,148,0.22), 0 1px 4px rgba(0,0,0,0.06); }
+        .particle { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.12); animation: floatUp 6s ease-in-out infinite; }
+        .particle.p1 { width: 48px; height: 48px; left: 8%; bottom: -20px; animation-duration: 7s; animation-delay: 0s; }
+        .particle.p2 { width: 28px; height: 28px; left: 28%; bottom: -14px; animation-duration: 5s; animation-delay: 1.4s; }
+        .particle.p3 { width: 64px; height: 64px; left: 58%; bottom: -28px; animation-duration: 9s; animation-delay: 0.7s; }
+        .particle.p4 { width: 20px; height: 20px; left: 80%; bottom: -10px; animation-duration: 6s; animation-delay: 2.5s; }
+        .particle.p5 { width: 36px; height: 36px; left: 45%; bottom: -18px; animation-duration: 8s; animation-delay: 3.2s; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0.10; } 40% { transform: translateY(-70px) scale(1.08); opacity: 0.18; } 80% { transform: translateY(-130px) scale(0.95); opacity: 0.07; } 100% { transform: translateY(-160px) scale(0.9); opacity: 0; } }
+        .arch-network::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 180px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.15); animation: pulseRing 3.5s ease-out infinite; }
+        .arch-network::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 280px; height: 280px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.08); animation: pulseRing 3.5s ease-out infinite 0.8s; }
+        @keyframes pulseRing { 0% { opacity: 0.6; transform: translate(-50%,-50%) scale(0.7); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.4); } }
+        .arch-network-content { position: relative; z-index: 3; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+        .arch-network-title { font-size: 1.15rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,0.18); }
+        .arch-network-features { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+        .arch-network-features span { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.92); background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 0.22rem 0.7rem; }
+        .arch-network-tagline { font-size: 0.72rem; color: rgba(255,255,255,0.72); max-width: 340px; line-height: 1.4; }
+        @media (max-width: 480px) { .arch-box { font-size: 0.75rem; padding: 0.45rem 0.65rem; white-space: normal; max-width: 110px; } .arch-network-title { font-size: 0.95rem; } .arch-network-features span { font-size: 0.7rem; } }
+      </style>
+
+      <div class="arch-vertical">
+        <div class="arch-row arch-consumer">
+          <div class="arch-row-label">Consumer Premises</div>
+          <div class="arch-flow-h">
+            <div class="arch-box arch-box-user">Your App</div>
+            <div class="arch-arrow-h">&#8594;</div>
+            <div class="arch-box arch-box-sertone">Your Sertone<br>Control Center</div>
+          </div>
+          <div class="arch-row-sublabel">On your premises</div>
+        </div>
+        <div class="arch-arrow-v">
+          <span class="arrow-down">&#9660; Request</span>
+          <span class="arrow-up">&#9650; Response</span>
+        </div>
+        <div class="arch-row arch-network">
+          <div class="particle p1"></div><div class="particle p2"></div><div class="particle p3"></div><div class="particle p4"></div><div class="particle p5"></div>
+          <div class="arch-network-content">
+            <div class="arch-network-title">Sertone Global Network</div>
+            <div class="arch-network-features">
+              <span>&#128274; Encrypted</span>
+              <span>&#128279; Automatic Payment</span>
+              <span>&#127760; 5 Delivery Methods</span>
+            </div>
+            <div class="arch-network-tagline">Proprietary fully encrypted protocol with automatic payment settlement</div>
+          </div>
+        </div>
+        <div class="arch-arrow-v">
+          <span class="arrow-down">&#9660; Request</span>
+          <span class="arrow-up">&#9650; Response</span>
+        </div>
+        <div class="arch-row arch-owner">
+          <div class="arch-row-label">Owner Premises</div>
+          <div class="arch-flow-h">
+            <div class="arch-box arch-box-sertone">Their Sertone<br>Control Center</div>
+            <div class="arch-arrow-h">&#8594;</div>
+            <div class="arch-box arch-box-user">GraphQL Exoplanets<br>Service</div>
+          </div>
+          <div class="arch-row-sublabel">On their premises</div>
+        </div>
+      </div><!-- /arch-vertical -->
+
+      <p class="arch-caption" style="margin-top:1.25rem;">A service registered on the Sertone network. Consumer sends GraphQL queries through the Sertone Global Network — encrypted, paid automatically.</p>
+      <div style="margin:1.25rem auto 0;max-width:44rem;background:linear-gradient(135deg,rgba(0,184,148,0.06),rgba(0,184,148,0.02));border:1px solid rgba(0,184,148,0.15);border-radius:12px;padding:1rem 1.5rem;">
+        <p style="font-size:0.85rem;color:#475569;line-height:1.65;margin:0;">
+          <strong style="color:#1e293b;">What is the Sertone control center?</strong> A single Docker container you run on your own machine — a laptop, a Raspberry Pi, a cloud server. It connects you to the Sertone Global Network. Through its built-in web console, you browse services, register your own, manage your wallet, and monitor your earnings. Installation takes minutes. It is completely free, forever.
+        </p>
+        <div style="margin-top:0.75rem;">
+          <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why GraphQL on Sertone?</h2>
+      <p>Expose your GraphQL API to paying consumers. Sertone handles authentication, billing, and settlement &mdash; you focus on your schema. Consumers get the flexibility of GraphQL queries while you earn revenue per call.</p>
+      <p>GraphQL APIs are ideal for the marketplace model because consumers request exactly the data they need. Sertone preserves the full GraphQL experience: consumers write queries, send variables, and receive structured responses &mdash; all through the Sertone Global Network.</p>
+      <p>Real-world example: A SaaS company exposes their user directory as a GraphQL API. Enterprise clients query exactly the fields they need &mdash; no over-fetching, no under-fetching. Each query is billed at $0.002 and paid instantly in USDC.</p>
+    </section>
+
+    <!-- Live Demo -->
+    <section class="demo-interactive">
+      <h2>Try It Live</h2>
+      <div class="demo-interactive-layout">
+
+        <div class="demo-form-panel">
+          <h3>GraphQL Query Editor</h3>
+          <div class="demo-field">
+            <label for="gql-query">Query</label>
+            <textarea id="gql-query" rows="8">{
+  users {
+    id
+    name
+    email
+  }
+}</textarea>
+          </div>
+          <div class="demo-field">
+            <label for="gql-variables">Variables (JSON, optional)</label>
+            <textarea id="gql-variables" rows="3">{}</textarea>
+          </div>
+          <div class="demo-field">
+            <label for="gql-apikey">Consumer Key</label>
+            <input type="text" id="gql-apikey" value="demo-public-key-2026" readonly>
+          </div>
+          <button class="demo-run-btn" id="gql-run-btn" onclick="runGraphQLDemo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Run Query</span>
+          </button>
+        </div>
+
+        <div class="result-panel" id="gql-result">
+          <div class="result-placeholder">Write a GraphQL query and click "Run Query" to send it through Sertone.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Code Samples</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">cURL</button>
+        <button class="code-tab" data-tab="javascript">JavaScript</button>
+        <button class="code-tab" data-tab="python">Python</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+<span class="prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{"api_id_public": "API_UUID_FROM_CATALOG", "method": "POST", "path": "/", "params": {"query": "{ users { id name email } }", "variables": {}}}'</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code><span class="comment">// Call the API through YOUR local Sertone control center</span>
+<span class="comment">// Consumer secret is in Settings &gt; Security</span>
+const response = await fetch('https://localhost:3000/internal/call', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+  },
+  body: JSON.stringify({
+    api_id_public: 'API_UUID_FROM_CATALOG',
+    method: 'POST',
+    path: '/',
+    params: {
+      query: '{ users { id name email } }',
+      variables: {}
+    }
+  })
+});
+const data = await response.json();
+console.log(data.result);</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+import requests
+
+response = requests.post(
+    'https://localhost:3000/internal/call',
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+    },
+    json={
+        'api_id_public': 'API_UUID_FROM_CATALOG',
+        'method': 'POST',
+        'path': '/',
+        'params': {
+            'query': '{ users { id name email } }',
+            'variables': {}
+        }
+    }
+)
+print(response.json()['result'])</code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Self-Host in Minutes</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Install Your Sertone</h4>
+          <p>Run the free Sertone Docker container. No cloud account needed.</p>
+          <pre class="code-block"><code><span class="prompt">$</span> docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  sertone/wrapper:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Open the Web Console</h4>
+          <p>Go to <code>https://localhost:3002/panel</code> in your browser. Create your account, accept terms, and your wallet is generated automatically.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Browse the Catalog</h4>
+          <p>Click <strong>Catalog &amp; SDKs</strong> in the sidebar. Search for APIs, try them in demo mode (free), then switch to production when ready.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Make Your First Call</h4>
+          <p>Copy your consumer secret from <strong>Settings &gt; Security</strong>, then use the code samples above to call any API from your own code.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SEO Footer -->
+    <section class="demo-footer-cta">
+      <h2>Ready to Monetize Your GraphQL API?</h2>
+      <p>Deploy your own Sertone node in minutes. Free Docker container, no vendor lock-in, full GraphQL support.</p>
+      <a href="/try" class="btn">Get Started</a>
+      <a href="/docs/" class="btn btn-secondary" style="margin-left: 0.75rem;">Read the Docs</a>
+
+      <div class="related-demos" aria-label="Related demos">
+        <a href="/demos/rest-api/" class="related-demo-link">REST API Demo</a>
+        <a href="/demos/soap/" class="related-demo-link">SOAP Demo</a>
+        <a href="/demos/xml-rpc/" class="related-demo-link">XML-RPC Demo</a>
+        <a href="/demos/multi-protocol/" class="related-demo-link">Multi-Protocol</a>
+        <a href="/demos/subscription/" class="related-demo-link">Subscriptions</a>
+        <a href="/demos/pay-per-use/" class="related-demo-link">Pay-Per-Use Billing</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I monetize a GraphQL API with Sertone?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Sertone natively supports GraphQL. Consumers send standard GraphQL queries, and the marketplace handles authentication, billing, and automatic payment per query."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do consumers need to change their GraphQL client?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Consumers use standard GraphQL queries and variables. The only change is the endpoint URL and adding the consumer key header. Any GraphQL client works."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is GraphQL query complexity handled for pricing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You set a flat price per query. Complex queries cost the same as simple ones. For advanced pricing, you can use subscription plans that allow unlimited queries within a billing period."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    async function runGraphQLDemo() {
+      var btn = document.getElementById('gql-run-btn');
+      var resultPanel = document.getElementById('gql-result');
+      var query = document.getElementById('gql-query').value.trim();
+      var variablesText = document.getElementById('gql-variables').value.trim();
+
+      setLoading(btn, true);
+      resultPanel.innerHTML = '<div class="result-placeholder">Sending GraphQL query...</div>';
+
+      try {
+        var variables = {};
+        if (variablesText) {
+          variables = JSON.parse(variablesText);
+        }
+
+        var result = await callDemo('bb-graphql', {
+          query: query,
+          variables: variables
+        }, { method: 'POST', path: '/' });
+        renderResult('gql-result', result);
+      } catch (err) {
+        showError('gql-result', err);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+  </script>
+
+</body>
+</html>

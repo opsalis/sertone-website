@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Contract Integration — Sertone Docs | On-Chain & Off-Chain APIs</title>
+  <meta name="description" content="Use any Ethereum smart contract as a REST API via Sertone, or let smart contracts call off-chain APIs. Two integration patterns for seamless on-chain and off-chain interoperability.">
+  <meta name="keywords" content="smart contract REST API, blockchain API integration, Ethereum API, on-chain off-chain, smart contract marketplace, Base L2 API, Solidity REST endpoint, Sertone blockchain">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/smart-contracts">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/smart-contracts">
+  <meta property="og:title" content="Smart Contract Integration — Sertone Docs | On-Chain & Off-Chain APIs">
+  <meta property="og:description" content="Use any smart contract as a REST API, or let smart contracts call APIs. On-chain and off-chain interoperability on Base L2.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Smart Contract Integration — Sertone Docs">
+  <meta name="twitter:description" content="Use any smart contract as a REST API, or let smart contracts call off-chain APIs. Base L2 integration.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Smart Contract Integration — Sertone",
+    "description": "Use any smart contract as a REST API, or let smart contracts call off-chain APIs. Two integration patterns for on-chain and off-chain interoperability on Base L2.",
+    "url": "https://sertone.net/docs/smart-contracts",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+  <style>
+    /* Code expand button */
+    .code-expand-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--accent-dim);
+      border: 1px solid var(--border-accent);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.3rem 0.7rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.15s;
+      margin: 0.5rem 0 0;
+    }
+    .code-expand-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    .code-expand-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+    /* Full code overlay */
+    .code-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 200;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+    .code-overlay.open { display: flex; justify-content: center; align-items: flex-start; }
+    .code-overlay-inner {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      max-width: 860px;
+      width: 100%;
+      padding: 2rem;
+      position: relative;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.3);
+    }
+    .code-overlay-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+    .code-overlay-close:hover { color: var(--text-primary); }
+    .code-overlay-inner h3 { margin-bottom: 1rem; }
+    .code-overlay-inner pre {
+      background: var(--bg-code);
+      padding: 1.25rem;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+    /* Flow diagram */
+    .flow-diagram {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      white-space: pre;
+      margin: 1rem 0;
+    }
+    .earnings-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    .earnings-table th, .earnings-table td {
+      text-align: left; padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .earnings-table th { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.04em; }
+    .use-case-card {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin: 0.75rem 0;
+    }
+    .use-case-card strong { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Smart Contracts</div>
+        <a href="/docs/smart-contracts" class="nav-link active">Overview</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Smart Contract Integration</h1>
+      <p class="lead">Two ways smart contracts and APIs work together on Sertone &mdash; use them independently or combine them.</p>
+
+      <!-- ============================================================ -->
+      <h2 id="overview">Two Patterns</h2>
+
+      <table class="earnings-table">
+        <thead><tr><th>Pattern</th><th>What it does</th><th>Use case</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>SC&#8209;as&#8209;Server</strong></td>
+            <td>Register any smart contract as a REST API</td>
+            <td>Let HTTP clients call blockchain functions with a simple <code>GET</code> or <code>POST</code></td>
+          </tr>
+          <tr>
+            <td><strong>SC&#8209;as&#8209;Client</strong></td>
+            <td>Smart contracts call APIs via an oracle</td>
+            <td>On-chain logic that needs off-chain data (insurance, derivatives, automation)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ============================================================ -->
+      <!-- PART 1: SC-AS-SERVER -->
+      <!-- ============================================================ -->
+      <h2 id="sc-as-server">SC-as-Server: Any Smart Contract as a REST API</h2>
+
+      <p>Register any read-only or write function from any supported blockchain as a standard REST endpoint in the Sertone catalog. Callers use plain HTTP &mdash; no Solidity, ABI encoding, or wallet required.</p>
+
+      <h3 id="supported-chains">Supported Chains</h3>
+      <p>Base, Ethereum, Arbitrum, Polygon, BNB Chain, Avalanche (mainnets and testnets).</p>
+
+      <h3 id="how-sc-server-works">How It Works</h3>
+      <div class="flow-diagram">HTTP client
+  |
+  |  GET /v1/chainlink-eth-usd/latestAnswer
+  v
+Sertone DAG node
+  |  1. Looks up API in catalog -> backend_type = "contract"
+  |  2. Reads contract address, chain, ABI
+  |  3. Maps URL path to ABI function name
+  |  4. Calls contract.latestAnswer() via eth_call (free, no gas)
+  |  5. Returns JSON response
+  v
+{"success": true, "result": "186423000000", "chain_id": 1}</div>
+
+      <p>View/pure functions are free and instant (<code>eth_call</code>). Write functions use the node operator's wallet and return the transaction hash.</p>
+
+      <!-- EXAMPLE 1: Chainlink -->
+      <h3 id="example-chainlink">Example: Chainlink ETH/USD as REST API</h3>
+      <p>The <a href="https://docs.chain.link/data-feeds" rel="noopener">Chainlink ETH/USD Price Feed</a> on Ethereum mainnet (<code>0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419</code>) exposes <code>latestAnswer()</code> and <code>decimals()</code>.</p>
+
+      <p><strong>Step 1</strong> &mdash; Register via the web console:</p>
+      <ul>
+        <li>Backend type: <strong>Smart Contract</strong></li>
+        <li>Contract address: <code>0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419</code></li>
+        <li>Chain: <strong>Ethereum</strong></li>
+        <li>ABI: paste the Chainlink aggregator ABI (just the functions you want to expose)</li>
+      </ul>
+
+      <button class="code-expand-btn" onclick="openOverlay('chainlink-abi')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+        View ABI
+      </button>
+
+      <p><strong>Step 2</strong> &mdash; Call it:</p>
+      <pre><code>curl https://your-node.example.com:3000/v1/chainlink-eth-usd/latestAnswer</code></pre>
+
+      <p><strong>Response:</strong></p>
+      <pre><code>{
+  "success": true,
+  "view": true,
+  "function": "latestAnswer",
+  "result": "186423000000",
+  "chain_id": 1
+}</code></pre>
+      <p>Chainlink uses 8 decimals: <code>186423000000 / 1e8 = $1,864.23</code>.</p>
+
+      <!-- EXAMPLE 2: Uniswap -->
+      <h3 id="example-uniswap">Example: Uniswap V3 Swap Quotes</h3>
+      <p>Register the <a href="https://docs.uniswap.org/contracts/v3/reference/periphery/lens/QuoterV2" rel="noopener">Uniswap V3 QuoterV2</a> on Base (<code>0x3d4e44Eb1374240CE5F1B136aa68B6A5f2f0Caa3</code>). Expose <code>quoteExactInputSingle()</code> to let HTTP clients get real-time swap quotes.</p>
+
+      <p><strong>Call it</strong> (how much USDC for 1 WETH?):</p>
+      <pre><code>curl -X POST https://your-node.example.com:3000/v1/uniswap-quote/quoteExactInputSingle \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tokenIn":  "0x4200000000000000000000000000000000000006",
+    "tokenOut": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "amountIn": "1000000000000000000",
+    "fee": 500,
+    "sqrtPriceLimitX96": "0"
+  }'</code></pre>
+
+      <p><strong>Response:</strong></p>
+      <pre><code>{
+  "success": true,
+  "function": "quoteExactInputSingle",
+  "result": {
+    "amountOut": "1863410241",
+    "sqrtPriceX96After": "1412854891823641928374918",
+    "initializedTicksCrossed": "2",
+    "gasEstimate": "127400"
+  },
+  "chain_id": 8453
+}</code></pre>
+      <p><code>amountOut</code> is raw USDC (6 decimals): <code>1863410241 / 1e6 = $1,863.41</code>.</p>
+
+      <!-- ============================================================ -->
+      <!-- PART 2: SC-AS-CLIENT -->
+      <!-- ============================================================ -->
+      <h2 id="sc-as-client">SC-as-Client: Smart Contracts That Call APIs</h2>
+
+      <p>Any smart contract on Base can request data from any API in the Sertone catalog. The result is delivered on-chain via a callback &mdash; the same request/fulfill pattern used by Chainlink VRF and other oracles.</p>
+
+      <h3 id="how-sc-client-works">How It Works</h3>
+      <div class="flow-diagram">Your smart contract (Base)
+  |
+  |  1. Approve USDC to SertoneOracleRouter
+  |  2. Call requestData(wrapperUid, apiUid, params, ...)
+  |     -> USDC split atomically: 95% to API owner, 5% royalty
+  |     -> Emits DataRequested event
+  v
+SertoneOracleRouter (Base)
+  |
+  |  3. Sertone DAG node detects the event
+  |  4. Node calls the real API (HTTP or another contract)
+  |  5. Node submits fulfillData(requestId, result) on-chain
+  v
+SertoneOracleRouter delivers result to your callback function</div>
+
+      <h3 id="real-world-use-cases">Real-World Use Cases</h3>
+
+      <div class="use-case-card">
+        <strong>Parametric Earthquake Insurance</strong><br>
+        A smart contract auto-pays policyholders when the USGS reports an earthquake above magnitude 6.0 within 100 km of an insured location. No claims process, no adjusters &mdash; the contract reads the API and settles instantly.
+      </div>
+
+      <div class="use-case-card">
+        <strong>Weather Derivatives</strong><br>
+        Agricultural hedging contracts that settle based on actual temperature or rainfall data from a weather API. Farmers lock in a price; if drought hits, the contract pays out automatically.
+      </div>
+
+      <div class="use-case-card">
+        <strong>Flight Delay Insurance</strong><br>
+        Travelers buy coverage for a specific flight. If the flight status API reports a delay over 2 hours, the contract refunds the ticket automatically &mdash; before the traveler even lands.
+      </div>
+
+      <!-- EXAMPLE: Earthquake Insurance -->
+      <h3 id="example-earthquake-insurance">Example: Parametric Earthquake Insurance</h3>
+
+      <p>This contract monitors earthquake data from the USGS API (registered in the Sertone catalog). When an earthquake above the configured magnitude threshold occurs near an insured location, the contract automatically pays out the policyholder.</p>
+
+      <p><strong>Step 1</strong> &mdash; The Solidity contract:</p>
+
+      <pre><code>// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+interface ISertoneOracle {
+    function requestData(
+        bytes32 wrapperUid, bytes32 apiUid, bytes calldata params,
+        address callbackAddr, bytes4 callbackSel,
+        address apiOwnerWallet, uint256 fee
+    ) external returns (bytes32);
+}
+
+interface IERC20 {
+    function approve(address, uint256) external returns (bool);
+    function transfer(address, uint256) external returns (bool);
+}
+
+contract EarthquakeInsurance {
+    ISertoneOracle public immutable oracle;
+    IERC20         public immutable usdc;
+
+    struct Policy {
+        address holder;
+        uint256 payout;       // USDC amount
+        int32   lat;          // latitude x 1000 (e.g. 37770 = 37.77)
+        int32   lon;          // longitude x 1000
+        uint16  radiusKm;
+        uint16  minMagnitude; // x 10 (e.g. 60 = M6.0)
+        bool    active;
+    }
+
+    mapping(uint256 => Policy) public policies;
+    mapping(bytes32 => uint256) public requestToPolicy;
+    uint256 public nextPolicyId;
+
+    // ... (full contract below)
+}</code></pre>
+
+      <button class="code-expand-btn" onclick="openOverlay('earthquake-full')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+        View Full Contract
+      </button>
+
+      <p><strong>Step 2</strong> &mdash; Deploy and fund:</p>
+      <pre><code># Deploy to Base Sepolia
+forge create EarthquakeInsurance \
+  --rpc-url https://sepolia.base.org \
+  --private-key $KEY \
+  --constructor-args $ORACLE_ADDRESS $USDC_ADDRESS
+
+# Fund with USDC for payouts + oracle fees
+cast send $USDC "transfer(address,uint256)" $CONTRACT 10000000 \
+  --rpc-url https://sepolia.base.org --private-key $KEY</code></pre>
+
+      <p><strong>Step 3</strong> &mdash; Create a policy:</p>
+      <pre><code># Insure San Francisco (lat 37.77, lon -122.42) for M5.0+, $50 payout
+cast send $CONTRACT \
+  "createPolicy(address,uint256,int32,int32,uint16,uint16)" \
+  $POLICYHOLDER 50000000 37770 -122420 200 50 \
+  --rpc-url https://sepolia.base.org --private-key $KEY</code></pre>
+
+      <p><strong>Step 4</strong> &mdash; Check for earthquakes (anyone can trigger):</p>
+      <pre><code># This calls the USGS API through the Sertone oracle
+cast send $CONTRACT \
+  "checkEarthquake(uint256,bytes32,bytes32,address)" \
+  0 $WRAPPER_UID $USGS_API_UID $API_OWNER \
+  --rpc-url https://sepolia.base.org --private-key $KEY</code></pre>
+
+      <p>The oracle fetches live USGS data. If a qualifying earthquake is found, the contract pays the policyholder automatically.</p>
+
+      <h3 id="payment-flow">Payment Flow</h3>
+
+      <table class="earnings-table">
+        <thead><tr><th>Party</th><th>Role</th><th>Earns</th></tr></thead>
+        <tbody>
+          <tr><td>API owner</td><td>Registered the USGS earthquake API</td><td>95% of each oracle call fee</td></tr>
+          <tr><td>Sertone</td><td>Protocol royalty (immutable, on-chain)</td><td>5% of each oracle call fee</td></tr>
+          <tr><td>Node operator</td><td>Runs the node, fulfills the request</td><td>Reimbursed via the API owner's pricing</td></tr>
+        </tbody>
+      </table>
+
+      <p>Both transfers happen atomically in a single transaction. If either fails, the entire request reverts &mdash; no funds are ever held by any intermediary.</p>
+
+      <!-- ============================================================ -->
+      <!-- PART 3: FULL CIRCLE -->
+      <!-- ============================================================ -->
+      <h2 id="full-circle">Full Circle: SC Calls SC Through Sertone</h2>
+
+      <p>The two patterns can combine. A Base smart contract uses the oracle to call a Chainlink price feed that is registered as an API in Sertone.</p>
+
+      <div class="flow-diagram">DeFi contract (Base)
+  |  requestData(wrapperUid, chainlinkApiUid, ...)
+  |  USDC: 95% -> Chainlink API registrant, 5% -> royalty
+  v
+SertoneOracleRouter (Base)
+  |  emits DataRequested
+  v
+Sertone DAG node
+  |  detects event
+  |  calls Chainlink ETH/USD on Ethereum mainnet (eth_call, free)
+  |  submits fulfillData() on Base
+  v
+SertoneOracleRouter -> DeFi contract callback
+  |  receives ETH/USD price on Base
+  v
+DeFi contract uses the price for lending, liquidation, etc.</div>
+
+      <p>The Chainlink protocol call is free (read-only <code>eth_call</code>). The Sertone fee covers the node operator's infrastructure costs, paid in USDC on Base. This creates a cross-chain oracle bridge &mdash; read data from any chain, deliver it to Base.</p>
+
+      <!-- ============================================================ -->
+      <!-- REFERENCE -->
+      <!-- ============================================================ -->
+      <h2 id="reference">API Reference</h2>
+
+      <h3 id="oracle-interface">SertoneOracleRouter Interface</h3>
+
+      <button class="code-expand-btn" onclick="openOverlay('oracle-interface')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+        View Full Interface
+      </button>
+
+      <h3 id="params-encoding">Params Encoding</h3>
+      <p>The <code>params</code> field is ABI-encoded as a single string containing a JSON object:</p>
+      <pre><code>// View function, no arguments
+bytes memory params = abi.encode(
+    '{"path":"/latestAnswer","method":"GET"}'
+);
+
+// Function with arguments
+bytes memory params = abi.encode(
+    '{"path":"/balanceOf","method":"GET","account":"0xabc...123"}'
+);
+
+// REST API endpoint
+bytes memory params = abi.encode(
+    '{"path":"/v1/earthquakes/recent","method":"GET","min_magnitude":"5","limit":"10"}'
+);</code></pre>
+
+      <h3 id="events">Events</h3>
+      <pre><code>event DataRequested(
+    bytes32 indexed wrapperUid,
+    bytes32 indexed apiUid,
+    bytes32 requestId,
+    bytes   params,
+    address callbackAddress,
+    bytes4  callbackSelector,
+    address requester
+);
+
+event DataFulfilled(
+    bytes32 indexed requestId,
+    bytes32 indexed wrapperUid
+);</code></pre>
+
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On This Page</div>
+      <a class="toc-link" href="#overview">Two Patterns</a>
+      <a class="toc-link" href="#sc-as-server">SC-as-Server</a>
+      <a class="toc-link" href="#supported-chains">Supported Chains</a>
+      <a class="toc-link" href="#example-chainlink">Example: Chainlink</a>
+      <a class="toc-link" href="#example-uniswap">Example: Uniswap</a>
+      <a class="toc-link" href="#sc-as-client">SC-as-Client</a>
+      <a class="toc-link" href="#real-world-use-cases">Use Cases</a>
+      <a class="toc-link" href="#example-earthquake-insurance">Example: Insurance</a>
+      <a class="toc-link" href="#payment-flow">Payment Flow</a>
+      <a class="toc-link" href="#full-circle">Full Circle</a>
+      <a class="toc-link" href="#reference">API Reference</a>
+    </aside>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CODE OVERLAYS (expand on click) -->
+  <!-- ============================================================ -->
+
+  <!-- Chainlink ABI -->
+  <div class="code-overlay" id="overlay-chainlink-abi" onclick="if(event.target===this)closeOverlay('chainlink-abi')">
+    <div class="code-overlay-inner">
+      <button class="code-overlay-close" onclick="closeOverlay('chainlink-abi')">&times;</button>
+      <h3>Chainlink ETH/USD Aggregator ABI (Minimal)</h3>
+      <pre><code>[
+  {
+    "inputs": [],
+    "name": "latestAnswer",
+    "outputs": [{"internalType": "int256", "name": "", "type": "int256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "decimals",
+    "outputs": [{"internalType": "uint8", "name": "", "type": "uint8"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "description",
+    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "latestRoundData",
+    "outputs": [
+      {"internalType": "uint80",  "name": "roundId",   "type": "uint80"},
+      {"internalType": "int256",  "name": "answer",    "type": "int256"},
+      {"internalType": "uint256", "name": "startedAt", "type": "uint256"},
+      {"internalType": "uint256", "name": "updatedAt", "type": "uint256"},
+      {"internalType": "uint80",  "name": "answeredInRound", "type": "uint80"}
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]</code></pre>
+    </div>
+  </div>
+
+  <!-- Full Earthquake Insurance Contract -->
+  <div class="code-overlay" id="overlay-earthquake-full" onclick="if(event.target===this)closeOverlay('earthquake-full')">
+    <div class="code-overlay-inner">
+      <button class="code-overlay-close" onclick="closeOverlay('earthquake-full')">&times;</button>
+      <h3>EarthquakeInsurance.sol &mdash; Full Contract</h3>
+      <pre><code>// SPDX-License-Identifier: MIT
+pragma solidity 0.8.20;
+
+interface ISertoneOracle {
+    function requestData(
+        bytes32 wrapperUid,
+        bytes32 apiUid,
+        bytes calldata params,
+        address callbackAddress,
+        bytes4  callbackSelector,
+        address apiOwnerWallet,
+        uint256 fee
+    ) external returns (bytes32 requestId);
+}
+
+interface IERC20 {
+    function approve(address spender, uint256 amount) external returns (bool);
+    function transfer(address to, uint256 amount) external returns (bool);
+    function balanceOf(address account) external view returns (uint256);
+}
+
+/**
+ * @title EarthquakeInsurance
+ * @notice Parametric insurance that auto-pays when USGS reports a qualifying earthquake.
+ *
+ * How it works:
+ * 1. Admin creates policies for insured locations (lat/lon, magnitude threshold, payout)
+ * 2. Anyone calls checkEarthquake() which queries the USGS API via Sertone oracle
+ * 3. If a qualifying earthquake is found, the contract pays the policyholder automatically
+ * 4. No claims, no adjusters, no delays
+ */
+contract EarthquakeInsurance {
+    ISertoneOracle public immutable oracle;
+    IERC20         public immutable usdc;
+    address        public admin;
+
+    struct Policy {
+        address holder;       // Who gets paid
+        uint256 payout;       // USDC amount (6 decimals)
+        int32   lat;          // Latitude x 1000 (e.g. 37770 = 37.770)
+        int32   lon;          // Longitude x 1000 (e.g. -122420 = -122.420)
+        uint16  radiusKm;     // Coverage radius in km
+        uint16  minMagnitude; // Minimum magnitude x 10 (e.g. 60 = M6.0)
+        bool    active;       // Can still trigger
+        uint256 lastChecked;  // Timestamp of last check
+    }
+
+    mapping(uint256 =&gt; Policy) public policies;
+    mapping(bytes32 =&gt; uint256) public requestToPolicy;
+    uint256 public nextPolicyId;
+
+    event PolicyCreated(uint256 indexed policyId, address holder, uint256 payout);
+    event EarthquakeChecked(uint256 indexed policyId, bytes32 requestId);
+    event PolicyTriggered(uint256 indexed policyId, address holder, uint256 payout);
+    event PolicyExpired(uint256 indexed policyId);
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Only admin");
+        _;
+    }
+
+    constructor(address _oracle, address _usdc) {
+        oracle = ISertoneOracle(_oracle);
+        usdc   = IERC20(_usdc);
+        admin  = msg.sender;
+        // Approve oracle to spend USDC for API call fees
+        IERC20(_usdc).approve(_oracle, type(uint256).max);
+    }
+
+    /// @notice Create an insurance policy for a specific location.
+    function createPolicy(
+        address holder,
+        uint256 payout,
+        int32   lat,
+        int32   lon,
+        uint16  radiusKm,
+        uint16  minMagnitude
+    ) external onlyAdmin returns (uint256 policyId) {
+        policyId = nextPolicyId++;
+        policies[policyId] = Policy({
+            holder: holder,
+            payout: payout,
+            lat: lat,
+            lon: lon,
+            radiusKm: radiusKm,
+            minMagnitude: minMagnitude,
+            active: true,
+            lastChecked: 0
+        });
+        emit PolicyCreated(policyId, holder, payout);
+    }
+
+    /// @notice Query the USGS API for recent earthquakes near the insured location.
+    ///         Anyone can call this (e.g. a keeper bot or the policyholder).
+    function checkEarthquake(
+        uint256 policyId,
+        bytes32 wrapperUid,
+        bytes32 usgsApiUid,
+        address apiOwnerWallet
+    ) external returns (bytes32 requestId) {
+        Policy storage p = policies[policyId];
+        require(p.active, "Policy not active");
+        require(block.timestamp &gt; p.lastChecked + 1 hours, "Too soon");
+
+        p.lastChecked = block.timestamp;
+
+        // Build USGS query: earthquakes near this location, above threshold
+        // lat/lon are stored as x1000, convert back for the API
+        bytes memory params = abi.encode(
+            string(abi.encodePacked(
+                '{"path":"/v1/earthquakes/search","method":"GET",',
+                '"lat":"', _intToString(p.lat), '",',
+                '"lon":"', _intToString(p.lon), '",',
+                '"radius_km":"', _uintToString(p.radiusKm), '",',
+                '"min_magnitude":"', _magToString(p.minMagnitude), '",',
+                '"limit":"1"}'
+            ))
+        );
+
+        requestId = oracle.requestData(
+            wrapperUid,
+            usgsApiUid,
+            params,
+            address(this),
+            this.onEarthquakeData.selector,
+            apiOwnerWallet,
+            0 // use default fee
+        );
+
+        requestToPolicy[requestId] = policyId;
+        emit EarthquakeChecked(policyId, requestId);
+    }
+
+    /// @notice Oracle callback with USGS earthquake data.
+    function onEarthquakeData(bytes32 requestId, bytes calldata result) external {
+        require(msg.sender == address(oracle), "Only oracle");
+
+        uint256 policyId = requestToPolicy[requestId];
+        Policy storage p = policies[policyId];
+        if (!p.active) return;
+
+        // Decode the API response (JSON string)
+        string memory json = abi.decode(result, (string));
+
+        // Check if any earthquake was returned (simple: look for "magnitude" in response)
+        // In production, use a proper JSON parser or have the API return structured data
+        if (_containsMatch(bytes(json))) {
+            // Qualifying earthquake found - pay out!
+            p.active = false;
+            usdc.transfer(p.holder, p.payout);
+            emit PolicyTriggered(policyId, p.holder, p.payout);
+        }
+    }
+
+    /// @notice Deactivate a policy and return funds.
+    function cancelPolicy(uint256 policyId) external onlyAdmin {
+        Policy storage p = policies[policyId];
+        require(p.active, "Already inactive");
+        p.active = false;
+        emit PolicyExpired(policyId);
+    }
+
+    /// @notice Withdraw unused USDC from the contract.
+    function withdraw(address to, uint256 amount) external onlyAdmin {
+        usdc.transfer(to, amount);
+    }
+
+    // --- Internal helpers ---
+
+    function _containsMatch(bytes memory b) internal pure returns (bool) {
+        // Look for "magnitude" key in JSON response (indicates earthquake data present)
+        // Empty response = no matching earthquakes
+        bytes memory key = bytes('"magnitude"');
+        if (b.length &lt; key.length + 10) return false;
+        for (uint i = 0; i + key.length &lt;= b.length; i++) {
+            bool found = true;
+            for (uint j = 0; j &lt; key.length; j++) {
+                if (b[i + j] != key[j]) { found = false; break; }
+            }
+            if (found) return true;
+        }
+        return false;
+    }
+
+    function _intToString(int32 val) internal pure returns (string memory) {
+        if (val &lt; 0) return string(abi.encodePacked("-", _uintToString(uint32(-val))));
+        return _uintToString(uint32(val));
+    }
+
+    function _uintToString(uint256 val) internal pure returns (string memory) {
+        if (val == 0) return "0";
+        uint256 temp = val;
+        uint256 digits;
+        while (temp != 0) { digits++; temp /= 10; }
+        bytes memory buffer = new bytes(digits);
+        while (val != 0) {
+            digits--;
+            buffer[digits] = bytes1(uint8(48 + val % 10));
+            val /= 10;
+        }
+        return string(buffer);
+    }
+
+    function _magToString(uint16 mag) internal pure returns (string memory) {
+        // mag is x10, e.g. 60 = "6.0"
+        return string(abi.encodePacked(
+            _uintToString(mag / 10), ".", _uintToString(mag % 10)
+        ));
+    }
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- Oracle Interface -->
+  <div class="code-overlay" id="overlay-oracle-interface" onclick="if(event.target===this)closeOverlay('oracle-interface')">
+    <div class="code-overlay-inner">
+      <button class="code-overlay-close" onclick="closeOverlay('oracle-interface')">&times;</button>
+      <h3>SertoneOracleRouter &mdash; Full Interface</h3>
+      <pre><code>interface ISertoneOracleRouter {
+    /// @notice Register your node's wallet as an authorized fulfiller.
+    /// @param wrapperUid  keccak256 of your node's unique ID.
+    function registerWrapper(bytes32 wrapperUid) external;
+
+    /// @notice Request data from any API in the Sertone catalog.
+    ///         Payment (USDC) is split atomically: 95% to API owner, 5% royalty.
+    /// @param wrapperUid       Target node's UID (keccak256 of its ID)
+    /// @param apiUid           Target API's UID (keccak256 of its public ID)
+    /// @param params           ABI-encoded JSON string with path, method, and arguments
+    /// @param callbackAddress  Contract that receives the result
+    /// @param callbackSelector Function selector for the callback (e.g. this.onData.selector)
+    /// @param apiOwnerWallet   Wallet that owns the API (receives 95%)
+    /// @param fee              USDC fee in raw units (6 decimals). 0 = use defaultFee.
+    /// @return requestId       Unique ID for this request
+    function requestData(
+        bytes32 wrapperUid,
+        bytes32 apiUid,
+        bytes calldata params,
+        address callbackAddress,
+        bytes4  callbackSelector,
+        address apiOwnerWallet,
+        uint256 fee
+    ) external returns (bytes32 requestId);
+
+    /// @notice Deliver the API result. Only the registered node wallet can call this.
+    /// @param requestId  The request to fulfill
+    /// @param result     ABI-encoded response data
+    function fulfillData(bytes32 requestId, bytes calldata result) external;
+
+    /// @notice Check if a request is still pending.
+    function isPending(bytes32 requestId) external view returns (bool);
+
+    /// @notice Check if a request has been fulfilled.
+    function isFulfilled(bytes32 requestId) external view returns (bool);
+
+    /// @notice Preview the 95/5 USDC split for a given fee.
+    function calculateSplit(uint256 fee) external pure
+        returns (uint256 ownerPayment, uint256 royalty);
+}</code></pre>
+    </div>
+  </div>
+
+  <script>
+    function openOverlay(id) {
+      document.getElementById('overlay-' + id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeOverlay(id) {
+      document.getElementById('overlay-' + id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.code-overlay.open').forEach(function(el) {
+          el.classList.remove('open');
+        });
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
+  <script src="docs.js"></script>
+
+</body>
+</html>

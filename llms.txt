@@ -1,0 +1,68 @@
+# Sertone — Monetize Any Service
+# https://sertone.net
+
+## What is Sertone?
+
+Sertone is free software that turns any API, AI model, data feed, or digital service into a revenue stream. You install it on your machine (Docker image: sertone/dag), open a web console, register your services, set your price, and start earning. Consumers discover your services, call them, and pay automatically. Payments settle in USDC (a digital dollar, always worth $1.00). The consumer pays the owner's price. From that payment, 5% goes to the platform and 95% goes to the owner.
+
+The software handles everything: peer discovery, end-to-end encryption, payment settlement, SDK generation, and AI agent compatibility. No account required. An admin email is stored on your machine only.
+
+## Key Facts
+
+- Free to install: Docker image sertone/dag (early access, not yet public)
+- Payments in USDC (digital dollar, 1:1 with USD)
+- Revenue split: consumer pays owner's price, owner keeps 95%, 5% deducted from owner
+- No account required. An admin email is stored on your machine only
+- Self-hosted: runs on your machine, your data stays with you
+- Non-custodial: we never hold or control your funds
+- Supported protocols: REST (OpenAPI), GraphQL, SOAP (WSDL), gRPC (Protobuf), JSON-RPC 2.0, XML-RPC
+- SDK generation: 13 languages + 5 AI integrations (18 total) -- TypeScript, JavaScript, Python, Go, Java, C#, PHP, Ruby, Rust, Kotlin, Swift, Dart, cURL
+- AI agent support via MCP protocol
+- AI framework integrations: LangChain, CrewAI, AutoGen, A2A
+- Billing models: per-call or monthly subscription
+- All data is end-to-end encrypted; Sertone never sees parameters or responses
+- Streaming support for AI responses and live data feeds
+- Smart contracts currently on Base Sepolia testnet
+
+## Who Is It For
+
+- Developers with APIs to sell
+- AI engineers with models to monetize
+- Data providers (IoT, weather, financial feeds)
+- Startups building API businesses
+- Enterprises managing internal API costs
+- Anyone with a computer and something to sell
+- AI agents that need to call services and pay automatically
+
+## Getting Started
+
+- Install: https://sertone.net/docs/installation
+- Quick start: https://sertone.net/docs/quick-start
+- Sell your service: https://sertone.net/docs/tutorial-sell-api
+- Use services: https://sertone.net/docs/tutorial-consume-api
+
+## Documentation Index
+
+- Overview: https://sertone.net/docs/
+- Quick start: https://sertone.net/docs/quick-start
+- Installation: https://sertone.net/docs/installation
+- Register a service: https://sertone.net/docs/registering-apis
+- Call a service: https://sertone.net/docs/calling-apis
+- SDKs (18 total): https://sertone.net/docs/sdks
+- Use cases (AI, IoT, data, video, compute): https://sertone.net/docs/use-cases
+- Pricing: https://sertone.net/pricing
+- FAQ: https://sertone.net/docs/faq
+- Security: https://sertone.net/security
+- Dashboard: https://sertone.net/docs/dashboard
+- Finance: https://sertone.net/docs/wallet
+- Funding and withdrawing: https://sertone.net/docs/funding
+
+## For AI Agents
+
+Sertone nodes expose an MCP (Model Context Protocol) server that lets AI agents discover available services and invoke them programmatically. SDKs for LangChain, CrewAI, AutoGen, and A2A are auto-generated from any registered service's spec.
+
+## Legal
+
+- Privacy policy: https://sertone.net/privacy
+- Terms of service: https://sertone.net/terms
+- Security reports: https://github.com/sertone/sertone/security/advisories

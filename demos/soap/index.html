@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOAP Web Services — Legacy API Monetization — Sertone</title>
+  <meta name="description" content="Monetize legacy SOAP web services through Sertone. Auto-converts between JSON and SOAP XML — consumers never see XML.">
+  <meta name="keywords" content="SOAP API marketplace, legacy API monetization, SOAP to JSON, SOAP demo, XML conversion, API marketplace">
+  <link rel="canonical" href="https://sertone.net/demos/soap/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/soap/">
+  <meta property="og:title" content="SOAP Web Services — Legacy API Monetization">
+  <meta property="og:description" content="Monetize legacy SOAP web services through Sertone. Auto-converts between JSON and SOAP XML — consumers never see XML.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SOAP Web Services — Legacy API Monetization">
+  <meta name="twitter:description" content="Monetize legacy SOAP web services through Sertone. Auto-converts between JSON and SOAP XML — consumers never see XML.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Sertone SOAP API Marketplace",
+    "applicationCategory": "DeveloperApplication",
+    "description": "Monetize legacy SOAP web services through the Sertone marketplace with automatic JSON-to-XML conversion and USDC payment.",
+    "url": "https://sertone.net/demos/soap/",
+    "operatingSystem": "Docker (Linux, macOS, Windows)",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free self-hosted control center"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Monetize a SOAP Web Service with Sertone",
+    "description": "Register your SOAP service on the Sertone marketplace. The wrapper auto-converts JSON to SOAP XML and back.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Install the control center",
+        "text": "Pull and run the free Sertone Docker container on your own hardware."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Register your SOAP service",
+        "text": "Open the web console and register your SOAP WSDL endpoint. The wrapper auto-detects operations."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Start earning",
+        "text": "Consumers call your SOAP service using simple JSON. The wrapper handles XML conversion. Payment in USDC automatically."
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <nav class="demo-breadcrumb demo-container" aria-label="Breadcrumb">
+    <a href="/">Home</a> <span>&rsaquo;</span>
+    <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+    <a href="/demos/">Protocols</a> <span>&rsaquo;</span>
+    SOAP
+  </nav>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Protocol Demo</p>
+      <h1>SOAP Web Services on Blockchain</h1>
+      <p class="demo-tagline">Legacy SOAP services can earn revenue through Sertone. The wrapper auto-converts between JSON and SOAP XML &mdash; consumers never see XML.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="Architecture diagram">
+      <h2>How It Works</h2>
+      <svg viewBox="0 0 960 220" role="img" aria-label="SOAP data flow: Consumer sends JSON, wrapper converts to SOAP XML envelope, SOAP service responds, wrapper converts back to JSON">
+        <!-- Consumer -->
+        <rect x="10" y="60" width="120" height="80" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+        <text x="70" y="95" text-anchor="middle" font-size="13" font-weight="600" fill="#1e293b">Your Browser</text>
+        <text x="70" y="115" text-anchor="middle" font-size="11" fill="#64748b">JSON Request</text>
+
+        <!-- Arrow 1 -->
+        <line x1="130" y1="100" x2="190" y2="100" stroke="#00b894" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <text x="160" y="90" text-anchor="middle" font-size="9" fill="#94a3b8">JSON</text>
+
+        <!-- Consumer Sertone -->
+        <rect x="190" y="60" width="120" height="80" rx="10" fill="#f0fdf4" stroke="#00b894" stroke-width="2"/>
+        <text x="250" y="95" text-anchor="middle" font-size="12" font-weight="600" fill="#1e293b">Your Sertone</text>
+        <text x="250" y="115" text-anchor="middle" font-size="11" fill="#64748b">Consumer</text>
+
+        <!-- Arrow 2 -->
+        <line x1="310" y1="100" x2="370" y2="100" stroke="#00b894" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <text x="340" y="90" text-anchor="middle" font-size="9" fill="#94a3b8">Direct</text>
+
+        <!-- Owner Sertone -->
+        <rect x="370" y="60" width="120" height="80" rx="10" fill="#f0fdf4" stroke="#00b894" stroke-width="2"/>
+        <text x="430" y="95" text-anchor="middle" font-size="12" font-weight="600" fill="#1e293b">Owner's Sertone</text>
+        <text x="430" y="115" text-anchor="middle" font-size="11" fill="#64748b">API Owner</text>
+
+        <!-- Arrow 3: JSON→XML conversion -->
+        <line x1="490" y1="100" x2="570" y2="100" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead-amber)"/>
+        <text x="530" y="90" text-anchor="middle" font-size="9" fill="#f59e0b">JSON → XML</text>
+
+        <!-- SOAP Converter -->
+        <rect x="570" y="50" width="130" height="100" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+        <text x="635" y="85" text-anchor="middle" font-size="12" font-weight="600" fill="#1e293b">SOAP Wrapper</text>
+        <text x="635" y="105" text-anchor="middle" font-size="10" fill="#92400e">JSON ↔ XML</text>
+        <text x="635" y="122" text-anchor="middle" font-size="10" fill="#92400e">Auto-Convert</text>
+
+        <!-- Arrow 4 -->
+        <line x1="700" y1="100" x2="770" y2="100" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead-amber)"/>
+        <text x="735" y="90" text-anchor="middle" font-size="9" fill="#f59e0b">SOAP Env</text>
+
+        <!-- SOAP Service -->
+        <rect x="770" y="60" width="130" height="80" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+        <text x="835" y="95" text-anchor="middle" font-size="13" font-weight="600" fill="#1e293b">SOAP Service</text>
+        <text x="835" y="115" text-anchor="middle" font-size="11" fill="#64748b">bb-soap</text>
+
+        <!-- Return arrow -->
+        <path d="M835,140 L835,190 L70,190 L70,140" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrowhead-gray)"/>
+        <text x="450" y="207" text-anchor="middle" font-size="10" fill="#94a3b8">JSON Response (auto-converted from SOAP XML) + Latency</text>
+
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#00b894"/>
+          </marker>
+          <marker id="arrowhead-gray" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8"/>
+          </marker>
+          <marker id="arrowhead-amber" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+          </marker>
+        </defs>
+      </svg>
+      <p class="arch-caption">The consumer sends plain JSON. The Sertone wrapper converts it to a SOAP XML envelope, calls your legacy service, and converts the SOAP response back to JSON. Consumers never touch XML.</p>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why SOAP APIs on Sertone?</h2>
+      <p>Legacy SOAP services can earn revenue through Sertone. The wrapper auto-converts between JSON and SOAP XML &mdash; consumers never see XML. Your decades-old enterprise web service becomes a modern, monetizable API overnight.</p>
+      <p>Many industries &mdash; banking, healthcare, government, insurance &mdash; still rely on SOAP web services. These services contain valuable data and business logic but are difficult for modern developers to consume. Sertone bridges this gap by presenting SOAP services as clean JSON APIs.</p>
+      <p>Real-world example: A bank has a SOAP-based account balance service built in 2008. By registering it on Sertone, fintech startups can query account balances via simple JSON calls at $0.005 each. The bank monetizes a legacy asset without rewriting a single line of code.</p>
+    </section>
+
+    <!-- Live Demo -->
+    <section class="demo-interactive">
+      <h2>Try It Live</h2>
+      <div class="demo-interactive-layout">
+
+        <div class="demo-form-panel">
+          <h3>SOAP Operation</h3>
+          <div class="demo-field">
+            <label for="soap-operation">Operation Name</label>
+            <select id="soap-operation">
+              <option value="getBalance" selected>getBalance</option>
+              <option value="getAccountInfo">getAccountInfo</option>
+              <option value="listTransactions">listTransactions</option>
+            </select>
+          </div>
+          <div class="demo-field">
+            <label for="soap-account">Account ID</label>
+            <input type="text" id="soap-account" value="ACC-001234" placeholder="ACC-001234">
+          </div>
+          <div class="demo-field">
+            <label for="soap-apikey">Consumer Key</label>
+            <input type="text" id="soap-apikey" value="demo-public-key-2026" readonly>
+          </div>
+          <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.75rem;">You send JSON &mdash; the wrapper converts to SOAP XML automatically. The response shows the converted JSON output.</p>
+          <button class="demo-run-btn" id="soap-run-btn" onclick="runSoapDemo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Run Demo</span>
+          </button>
+        </div>
+
+        <div class="result-panel" id="soap-result">
+          <div class="result-placeholder">Select a SOAP operation and click "Run Demo" to see JSON&rarr;SOAP&rarr;JSON conversion in action.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Code Samples</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">cURL</button>
+        <button class="code-tab" data-tab="javascript">JavaScript</button>
+        <button class="code-tab" data-tab="python">Python</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+<span class="prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{"api_id_public": "API_UUID_FROM_CATALOG", "method": "POST", "path": "/", "params": {"operation": "getBalance", "accountId": "ACC-001234"}}'</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code><span class="comment">// Call the API through YOUR local Sertone control center</span>
+<span class="comment">// Consumer secret is in Settings &gt; Security</span>
+const response = await fetch('https://localhost:3000/internal/call', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+  },
+  body: JSON.stringify({
+    api_id_public: 'API_UUID_FROM_CATALOG',
+    method: 'POST',
+    path: '/',
+    params: { operation: 'getBalance', accountId: 'ACC-001234' }
+  })
+});
+const data = await response.json();
+console.log(data.result);
+<span class="comment">// Returns clean JSON — no XML parsing needed!</span></code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+import requests
+
+response = requests.post(
+    'https://localhost:3000/internal/call',
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+    },
+    json={
+        'api_id_public': 'API_UUID_FROM_CATALOG',
+        'method': 'POST',
+        'path': '/',
+        'params': {'operation': 'getBalance', 'accountId': 'ACC-001234'}
+    }
+)
+print(response.json()['result'])
+<span class="comment"># Returns clean JSON — no XML parsing needed!</span></code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Self-Host in Minutes</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Install the Control Center</h4>
+          <p>Run the free Sertone Docker container. No cloud account needed.</p>
+          <pre class="code-block"><code><span class="prompt">$</span> docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  sertone/wrapper:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Open the Web Console</h4>
+          <p>Go to <code>https://localhost:3002/panel</code> in your browser. Create your account, accept terms, and your wallet is generated automatically.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Browse the Catalog</h4>
+          <p>Click <strong>Catalog &amp; SDKs</strong> in the sidebar. Search for APIs, try them in demo mode (free), then switch to production when ready.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Make Your First Call</h4>
+          <p>Copy your consumer secret from <strong>Settings &gt; Security</strong>, then use the code samples above to call any API from your own code.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SEO Footer -->
+    <section class="demo-footer-cta">
+      <h2>Ready to Monetize Your SOAP Service?</h2>
+      <p>Give your legacy web service a second life. Free Docker container, automatic JSON conversion, no code changes needed.</p>
+      <a href="/try" class="btn">Get Started</a>
+      <a href="/docs/" class="btn btn-secondary" style="margin-left: 0.75rem;">Read the Docs</a>
+
+      <div class="related-demos" aria-label="Related demos">
+        <a href="/demos/rest-api/" class="related-demo-link">REST API Demo</a>
+        <a href="/demos/graphql/" class="related-demo-link">GraphQL Demo</a>
+        <a href="/demos/xml-rpc/" class="related-demo-link">XML-RPC Demo</a>
+        <a href="/demos/multi-protocol/" class="related-demo-link">Multi-Protocol</a>
+        <a href="/demos/pay-per-use/" class="related-demo-link">Pay-Per-Use Billing</a>
+        <a href="/demos/security/" class="related-demo-link">Zero-Knowledge Security</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can legacy SOAP services be monetized without code changes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The Sertone wrapper auto-converts between JSON and SOAP XML. You register your WSDL endpoint and the wrapper handles everything. No code changes to your existing SOAP service."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do consumers need to know SOAP or XML?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Consumers interact with your SOAP service using plain JSON. The Sertone wrapper converts JSON requests to SOAP XML envelopes and converts SOAP XML responses back to clean JSON."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What SOAP features are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sertone supports SOAP 1.1 and 1.2, WSDL auto-discovery, WS-Security headers, and complex type mappings. Most enterprise SOAP services work without configuration."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    async function runSoapDemo() {
+      var btn = document.getElementById('soap-run-btn');
+      var resultPanel = document.getElementById('soap-result');
+      var operation = document.getElementById('soap-operation').value;
+      var accountId = document.getElementById('soap-account').value.trim();
+
+      setLoading(btn, true);
+      resultPanel.innerHTML = '<div class="result-placeholder">Sending JSON request &mdash; wrapper converts to SOAP XML...</div>';
+
+      try {
+        var result = await callDemo('bb-soap', {
+          operation: operation,
+          accountId: accountId
+        }, { method: 'POST', path: '/' });
+        renderResult('soap-result', result);
+      } catch (err) {
+        showError('soap-result', err);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+  </script>
+
+</body>
+</html>

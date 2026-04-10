@@ -1,0 +1,647 @@
+<!--
+  delivery-methods-section.html
+  ─────────────────────────────
+  Reusable HTML snippet — Multi-Delivery Fan-Out Diagram + explanations.
+
+  HOW TO INCLUDE:
+    Drop this <section> block anywhere inside a .demo-page container.
+    Requires:  /style.css   (base)
+               /demos/style.css  (demo system)
+    No JavaScript needed — all animation is CSS only.
+
+  CONFLICT-SAFE:
+    All class names are prefixed "dm-" to avoid collision with any edits
+    from concurrent workers modifying other sections of the demo pages.
+-->
+
+<!-- ═══════════════════════════════════════════════════════════
+     DELIVERY METHODS — Fan-Out Diagram + Explanations
+     ═══════════════════════════════════════════════════════════ -->
+<section class="dm-section">
+  <style>
+    /* ── Section wrapper ─────────────────────────────────────── */
+    .dm-section {
+      padding: 5rem 0 4rem;
+      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .dm-section .container {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ── Section header ─────────────────────────────────────── */
+    .dm-header {
+      margin-bottom: 3rem;
+    }
+
+    .dm-label {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #00b894;
+      margin-bottom: 0.6rem;
+    }
+
+    .dm-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #1e293b;
+      letter-spacing: -0.03em;
+      margin: 0 0 0.75rem;
+      line-height: 1.2;
+    }
+
+    .dm-subtitle {
+      font-size: 1rem;
+      color: #64748b;
+      max-width: 44rem;
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    /* ── Fan-out diagram card ────────────────────────────────── */
+    .dm-diagram-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 3rem 2.5rem 2.5rem;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      overflow-x: auto;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── SVG fan-out ─────────────────────────────────────────── */
+    .dm-svg-wrap {
+      display: flex;
+      justify-content: center;
+      min-width: 560px;
+    }
+
+    .dm-fanout-svg {
+      width: 100%;
+      max-width: 820px;
+      height: 360px;
+      overflow: visible;
+    }
+
+    /* Source node (Sertone cloud) */
+    .dm-source-rect {
+      fill: rgba(0, 184, 148, 0.08);
+      stroke: rgba(0, 184, 148, 0.45);
+      stroke-width: 1.5;
+      rx: 10;
+    }
+
+    .dm-source-label {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      fill: #00b894;
+    }
+
+    .dm-source-sub {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 10px;
+      fill: #64748b;
+    }
+
+    /* Delivery path lines — drawn with stroke-dashoffset animation */
+    .dm-path {
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-dasharray: 400;
+      stroke-dashoffset: 400;
+    }
+
+    /* Staggered draw-in animation */
+    .dm-path-1 { stroke: #00b894; animation: dm-draw 0.6s ease forwards 0.2s; }
+    .dm-path-2 { stroke: #38bdf8; animation: dm-draw 0.6s ease forwards 0.4s; }
+    .dm-path-3 { stroke: #c084fc; animation: dm-draw 0.6s ease forwards 0.6s; }
+    .dm-path-4 { stroke: #fbbf24; animation: dm-draw 0.6s ease forwards 0.8s; }
+    .dm-path-5 { stroke: #f472b6; animation: dm-draw 0.6s ease forwards 1.0s; }
+
+    @keyframes dm-draw {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Arrowhead dots that pulse in after the line finishes */
+    .dm-dot {
+      r: 5;
+      opacity: 0;
+    }
+
+    .dm-dot-1 { fill: #00b894; animation: dm-pop 0.3s ease forwards 0.85s; }
+    .dm-dot-2 { fill: #38bdf8; animation: dm-pop 0.3s ease forwards 1.05s; }
+    .dm-dot-3 { fill: #c084fc; animation: dm-pop 0.3s ease forwards 1.25s; }
+    .dm-dot-4 { fill: #fbbf24; animation: dm-pop 0.3s ease forwards 1.45s; }
+    .dm-dot-5 { fill: #f472b6; animation: dm-pop 0.3s ease forwards 1.65s; }
+
+    @keyframes dm-pop {
+      0%   { opacity: 0; r: 2; }
+      60%  { opacity: 1; r: 7; }
+      100% { opacity: 1; r: 5; }
+    }
+
+    /* Delivery node boxes */
+    .dm-node-rect {
+      rx: 8;
+      stroke-width: 1.5;
+    }
+
+    .dm-node-rect-1 { fill: rgba(0, 184, 148, 0.06);  stroke: rgba(0, 184, 148, 0.35); }
+    .dm-node-rect-2 { fill: rgba(56, 189, 248, 0.06); stroke: rgba(56, 189, 248, 0.35); }
+    .dm-node-rect-3 { fill: rgba(192, 132, 252, 0.06);stroke: rgba(192, 132, 252, 0.35); }
+    .dm-node-rect-4 { fill: rgba(251, 191, 36, 0.06); stroke: rgba(251, 191, 36, 0.35); }
+    .dm-node-rect-5 { fill: rgba(244, 114, 182, 0.06);stroke: rgba(244, 114, 182, 0.35); }
+
+    /* Fade-slide in for delivery nodes */
+    .dm-node-group {
+      opacity: 0;
+      transform: translateX(18px);
+    }
+
+    .dm-node-group-1 { animation: dm-slide 0.4s ease forwards 0.85s; }
+    .dm-node-group-2 { animation: dm-slide 0.4s ease forwards 1.05s; }
+    .dm-node-group-3 { animation: dm-slide 0.4s ease forwards 1.25s; }
+    .dm-node-group-4 { animation: dm-slide 0.4s ease forwards 1.45s; }
+    .dm-node-group-5 { animation: dm-slide 0.4s ease forwards 1.65s; }
+
+    @keyframes dm-slide {
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .dm-node-num {
+      font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .dm-node-name {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      fill: #1e293b;
+    }
+
+    .dm-node-latency {
+      font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 10px;
+    }
+
+    .dm-node-desc {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 9.5px;
+      fill: #64748b;
+    }
+
+    /* Subtle pulse on the source cloud (ongoing) */
+    .dm-source-pulse {
+      fill: none;
+      stroke: rgba(0, 184, 148, 0.2);
+      stroke-width: 1;
+      animation: dm-pulse-ring 2.5s ease-out infinite;
+      transform-origin: 130px 180px;
+    }
+
+    @keyframes dm-pulse-ring {
+      0%   { r: 46px; opacity: 0.8; }
+      100% { r: 72px; opacity: 0; }
+    }
+
+    /* ── Legend row beneath diagram ─────────────────────────── */
+    .dm-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 2rem;
+      margin-top: 1.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #f1f5f9;
+      justify-content: center;
+    }
+
+    .dm-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    .dm-legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── Text explanation cards ──────────────────────────────── */
+    .dm-intro-text {
+      font-size: 0.975rem;
+      color: #334155;
+      line-height: 1.7;
+      margin: 0 0 2.5rem;
+      max-width: 68rem;
+    }
+
+    .dm-intro-text strong {
+      color: #1e293b;
+    }
+
+    .dm-methods-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .dm-method-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.5rem 1.4rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .dm-method-card:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    }
+
+    .dm-method-icon {
+      flex-shrink: 0;
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .dm-method-icon-1 { background: rgba(0, 184, 148, 0.1);  border: 1px solid rgba(0, 184, 148, 0.25); }
+    .dm-method-icon-2 { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); }
+    .dm-method-icon-3 { background: rgba(192, 132, 252, 0.1);border: 1px solid rgba(192, 132, 252, 0.25); }
+    .dm-method-icon-4 { background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.25); }
+    .dm-method-icon-5 { background: rgba(244, 114, 182, 0.1);border: 1px solid rgba(244, 114, 182, 0.25); }
+
+    .dm-method-body {}
+
+    .dm-method-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .dm-method-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      border-radius: 100px;
+      padding: 0.15rem 0.5rem;
+    }
+
+    .dm-method-num-1 { color: #00b894; background: rgba(0, 184, 148, 0.08);  border: 1px solid rgba(0, 184, 148, 0.2); }
+    .dm-method-num-2 { color: #0ea5e9; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); }
+    .dm-method-num-3 { color: #a855f7; background: rgba(192, 132, 252, 0.08);border: 1px solid rgba(192, 132, 252, 0.2); }
+    .dm-method-num-4 { color: #d97706; background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.2); }
+    .dm-method-num-5 { color: #ec4899; background: rgba(244, 114, 182, 0.08);border: 1px solid rgba(244, 114, 182, 0.2); }
+
+    .dm-method-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .dm-method-latency {
+      margin-left: auto;
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+
+    .dm-method-desc {
+      font-size: 0.875rem;
+      color: #475569;
+      line-height: 1.6;
+      margin: 0;
+      max-width: none;
+    }
+
+    /* 5th card spans full width */
+    .dm-method-card:nth-child(5) {
+      grid-column: 1 / -1;
+    }
+
+    /* ── Footer callout ──────────────────────────────────────── */
+    .dm-footer-callout {
+      background: rgba(0, 184, 148, 0.04);
+      border: 1px solid rgba(0, 184, 148, 0.18);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+    }
+
+    .dm-footer-callout p {
+      color: #475569;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin: 0;
+      max-width: none;
+    }
+
+    .dm-footer-callout strong {
+      color: #1e293b;
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .dm-methods-grid {
+        grid-template-columns: 1fr;
+      }
+      .dm-method-card:nth-child(5) {
+        grid-column: auto;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .dm-diagram-card {
+        padding: 2rem 1.25rem 1.5rem;
+      }
+      .dm-title {
+        font-size: 1.6rem;
+      }
+      .dm-legend {
+        gap: 0.75rem 1.25rem;
+      }
+    }
+  </style>
+
+  <div class="container">
+
+    <!-- Section header -->
+    <div class="dm-header">
+      <span class="dm-label">Delivery Methods</span>
+      <h2 class="dm-title">Five Ways to Receive Your Data</h2>
+      <p class="dm-subtitle">When an API server responds through the Sertone Global Network, you choose how that response reaches you. Enable one method or all five.</p>
+    </div>
+
+    <!-- Fan-out diagram -->
+    <div class="dm-diagram-card">
+      <div class="dm-svg-wrap">
+        <!--
+          Layout:
+            Source cloud box  →  centred left  (x 30–230, y 140–220)
+            5 bezier paths fan out to delivery node boxes on the right (x 490–820)
+            Y positions of targets: 40, 105, 180, 255, 320
+        -->
+        <svg class="dm-fanout-svg"
+             viewBox="0 0 820 360"
+             xmlns="http://www.w3.org/2000/svg"
+             role="img"
+             aria-label="Diagram: API response fans out from Sertone Global Network to five delivery methods">
+
+          <!-- ── Source node ── -->
+          <!-- Pulse ring (decorative) -->
+          <circle class="dm-source-pulse" cx="130" cy="180" r="46"/>
+
+          <!-- Source box -->
+          <rect class="dm-source-rect" x="30" y="138" width="200" height="84" rx="10"/>
+
+          <!-- Cloud icon (simple SVG path) -->
+          <g transform="translate(68, 160)" opacity="0.75">
+            <path d="M28 20 C28 14 22 9 15 10 C13 5 8 2 3 4 C0 5 -2 9 0 12 C-4 12 -6 16 -4 19 C-3 21 -1 22 2 22 L26 22 C28 22 30 20 28 18 Z"
+                  fill="none" stroke="#00b894" stroke-width="1.5" stroke-linejoin="round"/>
+          </g>
+
+          <!-- Source text -->
+          <text class="dm-source-label" x="130" y="172" text-anchor="middle">Sertone</text>
+          <text class="dm-source-label" x="130" y="186" text-anchor="middle">Global Network</text>
+          <text class="dm-source-sub"   x="130" y="202" text-anchor="middle">API server responded</text>
+
+          <!-- ── Bezier paths from source right-edge (230, 180) to each node ── -->
+          <!-- Path 1 — Direct encrypted  → y=60 -->
+          <path class="dm-path dm-path-1"
+                d="M 230,180 C 340,180 360,60 490,60"/>
+          <!-- Path 2 — Cloud storage     → y=120 -->
+          <path class="dm-path dm-path-2"
+                d="M 230,180 C 340,180 360,120 490,120"/>
+          <!-- Path 3 — Blockchain relay  → y=180 -->
+          <path class="dm-path dm-path-3"
+                d="M 230,180 C 340,180 360,180 490,180"/>
+          <!-- Path 4 — Webhook callback  → y=240 -->
+          <path class="dm-path dm-path-4"
+                d="M 230,180 C 340,180 360,240 490,240"/>
+          <!-- Path 5 — Email notification→ y=300 -->
+          <path class="dm-path dm-path-5"
+                d="M 230,180 C 340,180 360,300 490,300"/>
+
+          <!-- ── Arrowhead dots at path ends ── -->
+          <circle class="dm-dot dm-dot-1" cx="490" cy="60"/>
+          <circle class="dm-dot dm-dot-2" cx="490" cy="120"/>
+          <circle class="dm-dot dm-dot-3" cx="490" cy="180"/>
+          <circle class="dm-dot dm-dot-4" cx="490" cy="240"/>
+          <circle class="dm-dot dm-dot-5" cx="490" cy="300"/>
+
+          <!-- ── Delivery node 1 — Direct encrypted ── -->
+          <g class="dm-node-group dm-node-group-1">
+            <rect class="dm-node-rect dm-node-rect-1" x="497" y="33" width="315" height="54"/>
+            <!-- icon area -->
+            <text x="515" y="55" font-size="16" text-anchor="middle">&#128274;</text>
+            <!-- num badge -->
+            <text class="dm-node-num" x="530" y="51" fill="#00b894">&#9312;</text>
+            <!-- name + latency -->
+            <text class="dm-node-name"    x="545" y="51">Direct encrypted delivery</text>
+            <text class="dm-node-latency" x="797" y="51" text-anchor="end" fill="#00b894">~50ms</text>
+            <!-- desc -->
+            <text class="dm-node-desc"    x="545" y="66">Fastest path. End-to-end encrypted through the network.</text>
+          </g>
+
+          <!-- ── Delivery node 2 — Cloud storage ── -->
+          <g class="dm-node-group dm-node-group-2">
+            <rect class="dm-node-rect dm-node-rect-2" x="497" y="93" width="315" height="54"/>
+            <text x="515" y="115" font-size="16" text-anchor="middle">&#9729;&#65039;</text>
+            <text class="dm-node-num"     x="530" y="111" fill="#0ea5e9">&#9313;</text>
+            <text class="dm-node-name"    x="545" y="111">Cloud storage</text>
+            <text class="dm-node-latency" x="797" y="111" text-anchor="end" fill="#38bdf8">~200ms</text>
+            <text class="dm-node-desc"    x="545" y="126">S3, MinIO, or Backblaze B2. Your bucket, your data.</text>
+          </g>
+
+          <!-- ── Delivery node 3 — Blockchain relay ── -->
+          <g class="dm-node-group dm-node-group-3">
+            <rect class="dm-node-rect dm-node-rect-3" x="497" y="153" width="315" height="54"/>
+            <text x="515" y="175" font-size="16" text-anchor="middle">&#128279;</text>
+            <text class="dm-node-num"     x="530" y="171" fill="#a855f7">&#9314;</text>
+            <text class="dm-node-name"    x="545" y="171">Blockchain relay</text>
+            <text class="dm-node-latency" x="797" y="171" text-anchor="end" fill="#c084fc">~3s</text>
+            <text class="dm-node-desc"    x="545" y="186">Blockchain. Immutable, censorship-proof, tamper-evident.</text>
+          </g>
+
+          <!-- ── Delivery node 4 — Webhook callback ── -->
+          <g class="dm-node-group dm-node-group-4">
+            <rect class="dm-node-rect dm-node-rect-4" x="497" y="213" width="315" height="54"/>
+            <text x="515" y="235" font-size="16" text-anchor="middle">&#128279;</text>
+            <text class="dm-node-num"     x="530" y="231" fill="#d97706">&#9315;</text>
+            <text class="dm-node-name"    x="545" y="231">Webhook callback</text>
+            <text class="dm-node-latency" x="797" y="231" text-anchor="end" fill="#fbbf24">async</text>
+            <text class="dm-node-desc"    x="545" y="246">POST to your URL. Integrates with Zapier, n8n, and more.</text>
+          </g>
+
+          <!-- ── Delivery node 5 — Email notification ── -->
+          <g class="dm-node-group dm-node-group-5">
+            <rect class="dm-node-rect dm-node-rect-5" x="497" y="273" width="315" height="54"/>
+            <text x="515" y="295" font-size="16" text-anchor="middle">&#128231;</text>
+            <text class="dm-node-num"     x="530" y="291" fill="#ec4899">&#9316;</text>
+            <text class="dm-node-name"    x="545" y="291">Email notification</text>
+            <text class="dm-node-latency" x="797" y="291" text-anchor="end" fill="#f472b6">async</text>
+            <text class="dm-node-desc"    x="545" y="306">Data payload or alert link. Useful for monitoring.</text>
+          </g>
+
+        </svg>
+      </div>
+
+      <!-- Legend -->
+      <div class="dm-legend">
+        <span class="dm-legend-item">
+          <span class="dm-legend-dot" style="background:#00b894;"></span>
+          Direct encrypted
+        </span>
+        <span class="dm-legend-item">
+          <span class="dm-legend-dot" style="background:#38bdf8;"></span>
+          Cloud storage
+        </span>
+        <span class="dm-legend-item">
+          <span class="dm-legend-dot" style="background:#c084fc;"></span>
+          Blockchain relay
+        </span>
+        <span class="dm-legend-item">
+          <span class="dm-legend-dot" style="background:#fbbf24;"></span>
+          Webhook callback
+        </span>
+        <span class="dm-legend-item">
+          <span class="dm-legend-dot" style="background:#f472b6;"></span>
+          Email notification
+        </span>
+      </div>
+    </div>
+
+    <!-- Intro paragraph -->
+    <p class="dm-intro-text">
+      <strong>You control how you receive your data.</strong> When you register as a consumer,
+      you choose which delivery methods to enable in your Sertone web console. You can enable
+      one method or all five — Sertone tries them in order of speed until your data is delivered.
+    </p>
+
+    <!-- Method explanation cards -->
+    <div class="dm-methods-grid">
+
+      <!-- ① Direct -->
+      <div class="dm-method-card">
+        <div class="dm-method-icon dm-method-icon-1">&#128274;</div>
+        <div class="dm-method-body">
+          <div class="dm-method-header">
+            <span class="dm-method-num dm-method-num-1">&#9312;</span>
+            <span class="dm-method-name">Direct encrypted delivery</span>
+            <span class="dm-method-latency">~50ms</span>
+          </div>
+          <p class="dm-method-desc">
+            The fastest path. Your response arrives in ~50&thinsp;ms, encrypted end-to-end through
+            the Sertone Global Network. No third party sees your data.
+          </p>
+        </div>
+      </div>
+
+      <!-- ② Cloud storage -->
+      <div class="dm-method-card">
+        <div class="dm-method-icon dm-method-icon-2">&#9729;&#65039;</div>
+        <div class="dm-method-body">
+          <div class="dm-method-header">
+            <span class="dm-method-num dm-method-num-2">&#9313;</span>
+            <span class="dm-method-name">Cloud storage</span>
+            <span class="dm-method-latency">~200ms</span>
+          </div>
+          <p class="dm-method-desc">
+            Bring your own S3 bucket, MinIO instance, or Backblaze B2 account. Sertone encrypts
+            the response and uploads it to <em>your</em> storage. You control the data, you control
+            the retention. Perfect for audit trails and compliance.
+          </p>
+        </div>
+      </div>
+
+      <!-- ③ Blockchain relay -->
+      <div class="dm-method-card">
+        <div class="dm-method-icon dm-method-icon-3">&#128279;</div>
+        <div class="dm-method-body">
+          <div class="dm-method-header">
+            <span class="dm-method-num dm-method-num-3">&#9314;</span>
+            <span class="dm-method-name">Blockchain relay</span>
+            <span class="dm-method-latency">~3s</span>
+          </div>
+          <p class="dm-method-desc">
+            The response is stored via backup relay, encrypted. Permanent,
+            censorship-proof, tamper-evident. Even if every server in the world goes offline,
+            your data is preserved. Takes ~3&thinsp;seconds but provides the strongest
+            delivery guarantee.
+          </p>
+        </div>
+      </div>
+
+      <!-- ④ Webhook -->
+      <div class="dm-method-card">
+        <div class="dm-method-icon dm-method-icon-4">&#9889;</div>
+        <div class="dm-method-body">
+          <div class="dm-method-header">
+            <span class="dm-method-num dm-method-num-4">&#9315;</span>
+            <span class="dm-method-name">Webhook callback</span>
+            <span class="dm-method-latency">async</span>
+          </div>
+          <p class="dm-method-desc">
+            Sertone sends the response to a URL you specify. Great for async workflows,
+            event-driven architectures, and integrations with tools like Zapier or n8n.
+          </p>
+        </div>
+      </div>
+
+      <!-- ⑤ Email (spans full width) -->
+      <div class="dm-method-card">
+        <div class="dm-method-icon dm-method-icon-5">&#128231;</div>
+        <div class="dm-method-body">
+          <div class="dm-method-header">
+            <span class="dm-method-num dm-method-num-5">&#9316;</span>
+            <span class="dm-method-name">Email notification</span>
+            <span class="dm-method-latency">async</span>
+          </div>
+          <p class="dm-method-desc">
+            Receive a notification or the actual data payload via email. Useful for alerts,
+            monitoring, and low-frequency API calls.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer callout -->
+    <div class="dm-footer-callout">
+      <p>
+        The Sertone Global Network uses a proprietary fully encrypted protocol.
+        <strong>All traffic is end-to-end encrypted</strong> regardless of which
+        delivery method you choose. Payment is automatic — you only pay for
+        successful deliveries.
+      </p>
+    </div>
+
+  </div>
+</section>
+<!-- /delivery-methods-section.html -->

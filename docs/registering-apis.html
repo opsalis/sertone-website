@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registering APIs — Sertone Docs | Publish & Start Earning USDC</title>
+  <meta name="description" content="Publish your API on the Sertone marketplace and start earning USDC per call. No code changes required. Supports REST, GraphQL, gRPC, SOAP, JSON-RPC, and XML-RPC.">
+  <meta name="keywords" content="register API Sertone, publish API marketplace, sell API USDC, API monetization setup, list API for sale, earn USDC API owner">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/registering-apis">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/registering-apis">
+  <meta property="og:title" content="Registering APIs — Sertone Docs | Publish & Start Earning USDC">
+  <meta property="og:description" content="Publish your API on the Sertone marketplace and start earning USDC per call. No code changes required.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Registering APIs — Sertone Docs">
+  <meta name="twitter:description" content="Publish your API on the Sertone marketplace and start earning USDC per call. No code changes required.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Registering APIs — Sertone",
+    "description": "Publish your API on the Sertone marketplace and start earning USDC per call. No code changes required. Supports REST, GraphQL, gRPC, SOAP, JSON-RPC, XML-RPC.",
+    "url": "https://sertone.net/docs/registering-apis",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link active">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Registering APIs</h1>
+      <p class="lead">Publish your API on the marketplace. Start earning USDC per call.</p>
+
+      <h2 id="overview">Overview</h2>
+      <p>When you register an API, it becomes visible to all consumers on the marketplace. They can browse your API, try it in demo mode for free, and then make paid calls.</p>
+
+      <h2 id="supported-protocols">Supported protocols</h2>
+      <p>Sertone supports six API protocols. Select the one that matches your API when registering:</p>
+      <table>
+        <thead>
+          <tr><th>Protocol</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>REST / OpenAPI</strong></td><td>The most common API style. Upload an OpenAPI 3.x specification (JSON or YAML). Endpoints, parameters, and response schemas are auto-detected.</td></tr>
+          <tr><td><strong>GraphQL</strong></td><td>Query-based APIs. Upload or paste your GraphQL SDL (schema definition). Consumers see available queries, mutations, and types.</td></tr>
+          <tr><td><strong>SOAP / WSDL</strong></td><td>XML-based enterprise APIs. Upload or paste a WSDL file, or provide the WSDL URL. Optionally set a SOAPAction header.</td></tr>
+          <tr><td><strong>gRPC / Protobuf</strong></td><td>High-performance binary APIs. Upload or paste a <code>.proto</code> file. Provide the proto file path and service name so the system can locate your service definition.</td></tr>
+          <tr><td><strong>JSON-RPC</strong></td><td>Lightweight remote procedure calls over JSON. Upload or paste your method definitions.</td></tr>
+          <tr><td><strong>XML-RPC</strong></td><td>Simple remote procedure calls over XML. Upload or paste your method definitions.</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="form-fields">Registration form fields</h2>
+      <p>Go to the <strong>API Management</strong> tab in your web console and fill in the registration form:</p>
+      <table>
+        <thead>
+          <tr><th>Field</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>API Name</strong></td><td>A descriptive name for your API (e.g., "Weather Data Pro")</td></tr>
+          <tr><td><strong>Price per Call (USDC)</strong></td><td>How much you charge per API call (e.g., 0.01)</td></tr>
+          <tr><td><strong>API Protocol</strong></td><td>Select from REST/OpenAPI, GraphQL, SOAP, gRPC, JSON-RPC, or XML-RPC</td></tr>
+          <tr><td><strong>Description</strong></td><td>A short summary of what your API does (plain text, max 500 characters)</td></tr>
+          <tr><td><strong>Tags</strong></td><td>Comma-separated labels to help consumers find your API (e.g., "DeFi, Oracle, Pricing"). Up to 20 tags.</td></tr>
+          <tr><td><strong>Keywords</strong></td><td>Optional extra search terms. Keywords are also auto-extracted from the name and description.</td></tr>
+          <tr><td><strong>Real API Endpoint URL</strong></td><td>The base URL where your real API server is running. Must start with http:// or https://.</td></tr>
+          <tr><td><strong>API Specification</strong></td><td>Upload a file or paste the spec content. The format is auto-detected based on the protocol selected above.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 id="protocol-specific">Protocol-specific fields</h3>
+      <p>Some protocols require additional information:</p>
+      <ul>
+        <li><strong>gRPC:</strong> Proto File Path and Service Name (e.g., <code>package.ServiceName</code>)</li>
+        <li><strong>SOAP:</strong> WSDL URL (optional, if not pasting inline) and SOAPAction Header (optional)</li>
+      </ul>
+      <p>These fields appear automatically when you select the corresponding protocol.</p>
+
+      <h2 id="validate-publish">Validate and publish</h2>
+      <p>Registration is a two-step process:</p>
+      <ol>
+        <li><strong>Click "Validate API"</strong> &mdash; your control center checks that the API specification is valid, the endpoint is reachable, and the configuration is correct. Fix any errors shown.</li>
+        <li><strong>Click "Publish API"</strong> &mdash; this button appears after successful validation. Click it to make your API live on the marketplace.</li>
+      </ol>
+      <p>Your API is now discoverable by all consumers on the network.</p>
+
+      <h2 id="my-registered-apis">My Registered APIs</h2>
+      <p>Below the registration form, the <strong>My Registered APIs</strong> section lists every API you have published. For each API you can see:</p>
+      <ul>
+        <li>API name, protocol type, and price</li>
+        <li>Current mode (demo or live)</li>
+      </ul>
+      <p>Each API has action buttons:</p>
+      <ul>
+        <li><strong>Edit</strong> &mdash; change the name, description, price, or endpoint URL</li>
+        <li><strong>Delete</strong> &mdash; remove the API from the marketplace</li>
+        <li><strong>Set Demo / Go Live</strong> &mdash; toggle between demo mode (cached sample responses, free) and live mode (real API calls, paid). See <a href="/docs/demo-mode">Demo Mode</a> for details.</li>
+      </ul>
+
+      <h2 id="demo-samples">Demo samples</h2>
+      <p>During validation, the system calls 2&ndash;3 sample endpoints on your API and captures the real responses. These samples are shown to consumers as a free preview in <a href="/docs/demo-mode">demo mode</a>.</p>
+
+      <div class="info-box">
+        <p><strong>2&ndash;3 samples recommended.</strong> Choose endpoints that best showcase your API. Consumers will evaluate your API based on these samples.</p>
+      </div>
+
+      <h2 id="privacy">Your credentials are private</h2>
+      <p>Your API key and base URL are <strong>never</strong> shared with consumers. Only your control center knows them. Consumers interact with your API through the Sertone network, and your credentials stay on your machine.</p>
+
+      <h2 id="after-registration">After registration</h2>
+      <p>Once published, your API appears in the catalog with a live status indicator. Consumers can see that your API is online and responding. If your API goes offline, the status updates automatically.</p>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/installation" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Installation</span>
+        </a>
+        <a href="/docs/pricing-apis" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Pricing</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#overview" class="toc-link">Overview</a>
+      <a href="#supported-protocols" class="toc-link">Supported protocols</a>
+      <a href="#form-fields" class="toc-link">Registration form fields</a>
+      <a href="#protocol-specific" class="toc-link sub">Protocol-specific fields</a>
+      <a href="#validate-publish" class="toc-link">Validate and publish</a>
+      <a href="#my-registered-apis" class="toc-link">My Registered APIs</a>
+      <a href="#demo-samples" class="toc-link">Demo samples</a>
+      <a href="#privacy" class="toc-link">Your credentials are private</a>
+      <a href="#after-registration" class="toc-link">After registration</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

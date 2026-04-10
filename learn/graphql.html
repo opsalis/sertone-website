@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GraphQL — Sertone Learn</title>
+  <meta name="description" content="Learn about GraphQL and how Sertone bridges GraphQL APIs into its marketplace with automatic OpenAPI conversion.">
+  <meta name="keywords" content="GraphQL, GraphQL API, SDL, schema definition language, API monetization, query language, sell GraphQL API, API marketplace, Sertone">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/learn/graphql">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/learn/graphql">
+  <meta property="og:title" content="GraphQL — Sertone Learn | Monetize GraphQL APIs on Sertone">
+  <meta property="og:description" content="Learn about GraphQL and how Sertone bridges GraphQL APIs into its marketplace with automatic OpenAPI conversion and per-call USDC billing.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="GraphQL — Sertone Learn">
+  <meta name="twitter:description" content="Monetize your GraphQL API on the Sertone marketplace with automatic OpenAPI conversion and per-call billing.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "GraphQL — Sertone Learn",
+    "description": "Learn about GraphQL and how Sertone bridges GraphQL APIs into its marketplace with automatic OpenAPI conversion.",
+    "url": "https://sertone.net/learn/graphql",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="/style.css?v=2">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/handler">Control Center</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/security">Security</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+
+      <nav class="breadcrumb">
+        <a href="/learn/owner">Owner</a>
+        <span class="sep">/</span>
+        <span class="current">GraphQL</span>
+      </nav>
+
+      <div class="page-header">
+        <span class="protocol-icon">&#x25C8;</span>
+        <h1>GraphQL</h1>
+        <p class="lead">Query exactly what you need — client-driven queries with strong typing and introspection.</p>
+      </div>
+
+      <!-- What is GraphQL -->
+      <section class="content-section">
+        <h2>What Is GraphQL?</h2>
+
+        <p>
+          <strong>GraphQL</strong> is a query language for APIs and a runtime for executing those
+          queries against your data. Developed internally at Facebook in 2012 and released publicly
+          in 2015, GraphQL gives clients the power to ask for exactly the data they need — nothing
+          more, nothing less. Unlike REST, where each endpoint returns a fixed data structure,
+          GraphQL exposes a single endpoint and lets the client specify the shape of the response.
+        </p>
+
+        <p>
+          At the heart of every GraphQL API is a <strong>schema</strong>, written in the Schema
+          Definition Language (SDL). The schema defines every type, field, and relationship your
+          API supports. Types are strongly typed — <code>String</code>, <code>Int</code>,
+          <code>Float</code>, <code>Boolean</code>, <code>ID</code>, plus custom object types,
+          enums, interfaces, and unions. Clients can introspect the schema at runtime, discovering
+          all available operations without reading external documentation.
+        </p>
+
+        <p>
+          GraphQL operations come in three flavors: <strong>queries</strong> (read data),
+          <strong>mutations</strong> (write data), and <strong>subscriptions</strong> (real-time
+          updates via WebSocket). Each field in the schema has a <strong>resolver</strong> — a
+          function that fetches the actual data from your database, another API, or any other
+          source. This means a single GraphQL query can aggregate data from multiple backends
+          in one round trip.
+        </p>
+
+        <p>
+          The biggest advantage of GraphQL is solving the <strong>over-fetching</strong> and
+          <strong>under-fetching</strong> problems. With REST, an endpoint might return 50 fields
+          when you only need 3 (over-fetching), or you might need to call 5 different endpoints
+          to assemble one screen of data (under-fetching). GraphQL eliminates both: one query,
+          exactly the fields you need, one network round trip.
+        </p>
+      </section>
+
+      <!-- How GraphQL works with Sertone -->
+      <section class="content-section">
+        <h2>How GraphQL Works with Sertone</h2>
+
+        <p>
+          If your API speaks GraphQL, the Sertone control center knows how to work with it natively.
+          Consumers still get a standard OpenAPI interface — the control center bridges the gap
+          automatically.
+        </p>
+
+        <ol class="steps">
+          <li>
+            <strong>Owner provides a GraphQL schema (SDL).</strong> Upload your
+            <code>.graphql</code> schema file via the control center dashboard. The control center parses
+            the types, queries, and mutations to understand your API surface.
+          </li>
+          <li>
+            <strong>Control center sends queries as POST requests</strong> with a JSON body containing
+            <code>{ "query": "...", "variables": {...} }</code>. When a consumer request arrives,
+            the control center constructs the appropriate GraphQL query and sends it to your API.
+          </li>
+          <li>
+            <strong>Consumer still gets OpenAPI.</strong> The control center auto-converts your GraphQL
+            schema into OpenAPI endpoints that consumers can call with simple REST-style requests.
+            Consumers never need to learn GraphQL — the control center translates both directions.
+          </li>
+        </ol>
+
+        <div class="info-box">
+          <p>
+            <strong>No changes to your GraphQL server.</strong> Keep your existing schema,
+            resolvers, and server configuration. The control center simply acts as a GraphQL client,
+            sending queries and forwarding responses.
+          </p>
+        </div>
+      </section>
+
+      <!-- Demo info -->
+      <section class="content-section">
+        <h2>Demo API: NASA Exoplanet Archive</h2>
+
+        <p>
+          This demo uses the <strong>NASA Exoplanet Archive</strong> — a dataset of over 6,000
+          confirmed exoplanets discovered by missions like Kepler, TESS, and ground-based surveys.
+          Query planets by name, host star, discovery method, orbital period, mass, radius,
+          equilibrium temperature, and more. A scientifically rich dataset that showcases
+          GraphQL's ability to navigate complex, nested data.
+        </p>
+
+        <div class="btn-group">
+          <a href="/learn/owner" class="btn btn-outline">
+            &#8592; Owner Guide
+          </a>
+        </div>
+      </section>
+
+      <!-- Code example -->
+      <section class="content-section">
+        <h2>Code Example</h2>
+
+        <p class="code-label">Query exoplanets by discovery method</p>
+        <div class="code-block"><code><span class="comment"># GraphQL query via POST to the exoplanet API</span>
+<span class="keyword">curl</span> <span class="url">http://localhost:4002/graphql</span> \
+  <span class="string">-H</span> <span class="string">"Content-Type: application/json"</span> \
+  <span class="string">-d</span> <span class="string">'{
+    "query": "{ planets(discoveryMethod: \"Transit\", limit: 3) { name hostStar mass radius orbitalPeriod discoveryYear } }"
+  }'</span></code></div>
+
+        <p class="code-label">Response</p>
+        <div class="code-block"><code>{
+  <span class="string">"data"</span>: {
+    <span class="string">"planets"</span>: [
+      {
+        <span class="string">"name"</span>: <span class="string">"Kepler-22 b"</span>,
+        <span class="string">"hostStar"</span>: <span class="string">"Kepler-22"</span>,
+        <span class="string">"mass"</span>: null,
+        <span class="string">"radius"</span>: 2.38,
+        <span class="string">"orbitalPeriod"</span>: 289.86,
+        <span class="string">"discoveryYear"</span>: 2011
+      },
+      ...
+    ]
+  }
+}</code></div>
+
+        <p class="code-label">Introspect the schema</p>
+        <div class="code-block"><code><span class="comment"># Discover all available types and fields</span>
+<span class="keyword">curl</span> <span class="url">http://localhost:4002/graphql</span> \
+  <span class="string">-H</span> <span class="string">"Content-Type: application/json"</span> \
+  <span class="string">-d</span> <span class="string">'{ "query": "{ __schema { types { name fields { name type { name } } } } }" }'</span></code></div>
+      </section>
+
+      <!-- Key concepts table -->
+      <section class="content-section">
+        <h2>GraphQL at a Glance</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Concept</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Transport</td>
+              <td>HTTP POST (typically), WebSocket for subscriptions</td>
+            </tr>
+            <tr>
+              <td>Data format</td>
+              <td>JSON</td>
+            </tr>
+            <tr>
+              <td>Spec format</td>
+              <td>Schema Definition Language (SDL / .graphql)</td>
+            </tr>
+            <tr>
+              <td>Operations</td>
+              <td>Query, Mutation, Subscription</td>
+            </tr>
+            <tr>
+              <td>Strongly typed</td>
+              <td>Yes — schema enforces types at runtime</td>
+            </tr>
+            <tr>
+              <td>Best for</td>
+              <td>Complex data graphs, mobile apps, aggregation layers</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms of Service</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy Policy</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cross-Geography API Calls — New York to London — Sertone</title>
+  <meta name="description" content="Sertone delivers API calls across countries in under 100ms. See real latencies from New York to London across 6 protocols on a live map.">
+  <meta name="keywords" content="cross-geography API, global API marketplace, low-latency API, Sertone, international API">
+  <link rel="canonical" href="https://sertone.net/demos/cross-geography/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/cross-geography/">
+  <meta property="og:title" content="Cross-Geography API Calls — New York to London in 50ms">
+  <meta property="og:description" content="No central server in the data path. Direct encrypted connections across countries. See real latencies on a live map.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Cross-Geography API Calls — New York to London in 50ms">
+  <meta name="twitter:description" content="No central server in the data path. Direct encrypted connections across countries. See real latencies on a live map.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Sertone Cross-Geography",
+    "description": "API marketplace with direct encrypted connections across geographies. No central server in the data path.",
+    "url": "https://sertone.net/demos/cross-geography/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free self-hosted Docker container"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to make cross-geography API calls with Sertone",
+    "description": "Connect API consumers and owners across countries with direct encrypted connections.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Deploy nodes in each geography",
+        "text": "Run Sertone Docker containers on your servers in different regions."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Register APIs",
+        "text": "API owners register their endpoints in the control center."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Subscribe and call",
+        "text": "Consumers subscribe and call APIs — direct connections are established automatically."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Monitor latency",
+        "text": "View real-time latency metrics in the control center dashboard."
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+  <style>
+    .geo-map-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      background: #0f172a;
+      border-radius: 16px;
+      border: 1px solid #1e293b;
+      padding: 2rem;
+      overflow: hidden;
+    }
+    .geo-map-svg {
+      width: 100%;
+      height: auto;
+    }
+    .geo-latency-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .geo-latency-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+    .geo-latency-card.active {
+      border-color: rgba(0,184,148,0.4);
+    }
+    .geo-latency-card .protocol-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+      margin-bottom: 0.35rem;
+    }
+    .geo-latency-card .latency-value {
+      font-family: "SF Mono", SFMono-Regular, Consolas, monospace;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #475569;
+    }
+    .geo-latency-card .latency-value.measured {
+      color: #10b981;
+    }
+    @media (max-width: 768px) {
+      .geo-latency-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 480px) {
+      .geo-latency-grid {
+        grid-template-columns: 1fr;
+      }
+      .geo-map-container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <nav class="demo-breadcrumb demo-container" aria-label="Breadcrumb">
+    <a href="/">Home</a> <span>&rsaquo;</span>
+    <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+    <a href="/demos/">Delivery</a> <span>&rsaquo;</span>
+    Cross-Geography
+  </nav>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Cross-Geography</p>
+      <h1>New York to London in Under 100ms</h1>
+      <p class="demo-tagline">Sertone works globally. No central server in the data path — direct encrypted connections between consumer and API owner.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="Cross-geography architecture diagram">
+      <h2>How Cross-Geography Routing Works</h2>
+
+      <style>
+        .arch-vertical { display: flex; flex-direction: column; align-items: stretch; gap: 0; max-width: 680px; margin: 0 auto; font-family: inherit; }
+        .arch-row { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1.1rem 1.5rem 1rem; background: #f1f5f9; border: 1px solid #e2e8f0; }
+        .arch-row.arch-consumer { border-radius: 14px 14px 0 0; border-bottom: none; }
+        .arch-row.arch-owner { border-radius: 0 0 14px 14px; border-top: none; }
+        .arch-row-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #94a3b8; }
+        .arch-row-sublabel { font-size: 0.72rem; color: #94a3b8; font-style: italic; }
+        .arch-flow-h { display: flex; align-items: center; gap: 0.6rem; }
+        .arch-box { background: #fff; border: 1.5px solid #cbd5e1; border-radius: 9px; padding: 0.55rem 0.9rem; font-size: 0.82rem; font-weight: 600; color: #1e293b; text-align: center; line-height: 1.35; white-space: nowrap; }
+        .arch-box-user { background: #fff; border: 2px solid #1e293b; border-radius: 12px; padding: 0.9rem 1.3rem; font-size: 1rem; font-weight: 700; color: #1e293b; text-align: center; line-height: 1.35; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .arch-box-sertone { background: linear-gradient(135deg, rgba(0,184,148,0.08), rgba(0,184,148,0.03)); border: 1.5px solid rgba(0,184,148,0.4); border-radius: 9px; padding: 0.5rem 0.8rem; font-size: 0.78rem; font-weight: 600; color: #047857; text-align: center; line-height: 1.35; }
+        .arch-arrow-h { font-size: 1.1rem; color: #94a3b8; flex-shrink: 0; }
+        .arch-arrow-v { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0.15rem 0; position: relative; z-index: 2; }
+        .arch-arrow-v .arrow-down, .arch-arrow-v .arrow-up { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; padding: 0.18rem 0.65rem; border-radius: 20px; }
+        .arch-arrow-v .arrow-down { color: #00b894; background: #e6faf4; border: 1px solid #b2edd8; }
+        .arch-arrow-v .arrow-up { color: #0ea5e9; background: #e0f4fd; border: 1px solid #b3e4f9; }
+        .arch-network { position: relative; overflow: hidden; border-radius: 24px; background: linear-gradient(135deg, #00b894 0%, #00a381 55%, #007d65 100%); border: none; padding: 2rem 1.5rem; min-height: 160px; justify-content: center; box-shadow: 0 4px 32px rgba(0,184,148,0.22), 0 1px 4px rgba(0,0,0,0.06); }
+        .particle { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.12); animation: floatUp 6s ease-in-out infinite; }
+        .particle.p1 { width: 48px; height: 48px; left: 8%; bottom: -20px; animation-duration: 7s; animation-delay: 0s; }
+        .particle.p2 { width: 28px; height: 28px; left: 28%; bottom: -14px; animation-duration: 5s; animation-delay: 1.4s; }
+        .particle.p3 { width: 64px; height: 64px; left: 58%; bottom: -28px; animation-duration: 9s; animation-delay: 0.7s; }
+        .particle.p4 { width: 20px; height: 20px; left: 80%; bottom: -10px; animation-duration: 6s; animation-delay: 2.5s; }
+        .particle.p5 { width: 36px; height: 36px; left: 45%; bottom: -18px; animation-duration: 8s; animation-delay: 3.2s; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0.10; } 40% { transform: translateY(-70px) scale(1.08); opacity: 0.18; } 80% { transform: translateY(-130px) scale(0.95); opacity: 0.07; } 100% { transform: translateY(-160px) scale(0.9); opacity: 0; } }
+        .arch-network::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 180px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.15); animation: pulseRing 3.5s ease-out infinite; }
+        .arch-network::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 280px; height: 280px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.08); animation: pulseRing 3.5s ease-out infinite 0.8s; }
+        @keyframes pulseRing { 0% { opacity: 0.6; transform: translate(-50%,-50%) scale(0.7); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.4); } }
+        .arch-network-content { position: relative; z-index: 3; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+        .arch-network-title { font-size: 1.15rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,0.18); }
+        .arch-network-features { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+        .arch-network-features span { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.92); background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 0.22rem 0.7rem; }
+        .arch-network-tagline { font-size: 0.72rem; color: rgba(255,255,255,0.72); max-width: 340px; line-height: 1.4; }
+        @media (max-width: 480px) { .arch-box { font-size: 0.75rem; padding: 0.45rem 0.65rem; white-space: normal; max-width: 110px; } .arch-network-title { font-size: 0.95rem; } .arch-network-features span { font-size: 0.7rem; } }
+      </style>
+
+      <div class="arch-vertical">
+        <div class="arch-row arch-consumer">
+          <div class="arch-row-label">Consumer Premises</div>
+          <div class="arch-flow-h">
+            <div class="arch-box arch-box-sertone">Your Sertone<br>Control Center</div>
+          </div>
+          <div class="arch-row-sublabel">New York</div>
+        </div>
+        <div class="arch-arrow-v">
+          <span class="arrow-down">&#9660; Request</span>
+          <span class="arrow-up">&#9650; Response</span>
+        </div>
+        <div class="arch-row arch-network">
+          <div class="particle p1"></div><div class="particle p2"></div><div class="particle p3"></div><div class="particle p4"></div><div class="particle p5"></div>
+          <div class="arch-network-content">
+            <div class="arch-network-title">Sertone Global Network</div>
+            <div class="arch-network-features">
+              <span>&#128274; Encrypted</span>
+              <span>&#128279; Automatic Payment</span>
+              <span>&#127760; 5 Delivery Methods</span>
+            </div>
+            <div class="arch-network-tagline">Proprietary fully encrypted protocol with automatic payment settlement</div>
+          </div>
+        </div>
+        <div class="arch-arrow-v">
+          <span class="arrow-down">&#9660; Request</span>
+          <span class="arrow-up">&#9650; Response</span>
+        </div>
+        <div class="arch-row arch-owner">
+          <div class="arch-row-label">Owner Premises</div>
+          <div class="arch-flow-h">
+            <div class="arch-box arch-box-sertone">Their Sertone<br>Control Center</div>
+          </div>
+          <div class="arch-row-sublabel">Paris</div>
+        </div>
+      </div><!-- /arch-vertical -->
+
+      <p class="arch-caption" style="margin-top:1.25rem;">New York to Paris in under 100ms. No central server — routed through the Sertone Global Network, paid automatically.</p>
+      <div style="margin:1.25rem auto 0;max-width:44rem;background:linear-gradient(135deg,rgba(0,184,148,0.06),rgba(0,184,148,0.02));border:1px solid rgba(0,184,148,0.15);border-radius:12px;padding:1rem 1.5rem;">
+        <p style="font-size:0.85rem;color:#475569;line-height:1.65;margin:0;">
+          <strong style="color:#1e293b;">What is the Sertone control center?</strong> A single Docker container you run on your own machine — a laptop, a Raspberry Pi, a cloud server. It connects you to the Sertone Global Network. Through its built-in web console, you browse services, register your own, manage your wallet, and monitor your earnings. Installation takes minutes. It is completely free, forever.
+        </p>
+        <div style="margin-top:0.75rem;">
+          <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why Cross-Geography Matters</h2>
+      <p>Traditional API marketplaces route every call through a central server. That server becomes a bottleneck, a single point of failure, and a data surveillance point. Sertone eliminates the middleman: consumer and owner establish a direct encrypted connection, regardless of where they are in the world.</p>
+      <p>In this demo, the API owner's Sertone runs in New York, US, and the consumer's Sertone runs in London, UK. Despite crossing international borders, API calls complete in under 100ms — because there's no third-party server adding latency in the middle.</p>
+      <p>This architecture is ideal for latency-sensitive applications (trading, IoT, gaming), data sovereignty requirements (data never touches a third country), and enterprise deployments where compliance mandates direct data flows between known endpoints.</p>
+    </section>
+
+    <!-- Live Demo -->
+    <section class="demo-interactive">
+      <h2>Live Demo — Run All 6 Protocols Across Borders</h2>
+      <div class="demo-interactive-layout">
+
+        <div class="demo-form-panel">
+          <h3>Multi-Protocol Latency Test</h3>
+          <p style="color:#64748b;font-size:0.9rem;margin-bottom:1.25rem;">Run all 6 protocol APIs simultaneously from London to New York. See real latencies for each protocol on the map.</p>
+          <div class="demo-field">
+            <label>Protocols to test</label>
+            <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+              <label style="display:inline-flex;align-items:center;gap:0.35rem;font-size:0.85rem;color:#64748b;text-transform:none;font-weight:400;letter-spacing:0;">
+                <input type="checkbox" checked value="rest"> REST
+              </label>
+              <label style="display:inline-flex;align-items:center;gap:0.35rem;font-size:0.85rem;color:#64748b;text-transform:none;font-weight:400;letter-spacing:0;">
+                <input type="checkbox" checked value="graphql"> GraphQL
+              </label>
+              <label style="display:inline-flex;align-items:center;gap:0.35rem;font-size:0.85rem;color:#64748b;text-transform:none;font-weight:400;letter-spacing:0;">
+                <input type="checkbox" checked value="soap"> SOAP
+              </label>
+              <label style="display:inline-flex;align-items:center;gap:0.35rem;font-size:0.85rem;color:#64748b;text-transform:none;font-weight:400;letter-spacing:0;">
+                <input type="checkbox" checked value="xmlrpc"> XML-RPC
+              </label>
+              <label style="display:inline-flex;align-items:center;gap:0.35rem;font-size:0.85rem;color:#64748b;text-transform:none;font-weight:400;letter-spacing:0;">
+                <input type="checkbox" checked value="sse"> SSE
+              </label>
+              <label style="display:inline-flex;align-items:center;gap:0.35rem;font-size:0.85rem;color:#64748b;text-transform:none;font-weight:400;letter-spacing:0;">
+                <input type="checkbox" checked value="jsonrpc"> JSON-RPC
+              </label>
+            </div>
+          </div>
+          <button class="demo-run-btn" id="run-geo-demo" onclick="runGeoDemo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Run All Protocols</span>
+          </button>
+          <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+            Live call through the Sertone Global Network. Install your own Sertone to make unlimited calls.
+          </div>
+        </div>
+
+        <div>
+          <div class="geo-map-container">
+            <div class="geo-latency-grid" id="latency-grid">
+              <div class="geo-latency-card" id="card-rest">
+                <div class="protocol-name">REST</div>
+                <div class="latency-value" id="lat-rest">—</div>
+              </div>
+              <div class="geo-latency-card" id="card-graphql">
+                <div class="protocol-name">GraphQL</div>
+                <div class="latency-value" id="lat-graphql">—</div>
+              </div>
+              <div class="geo-latency-card" id="card-soap">
+                <div class="protocol-name">SOAP</div>
+                <div class="latency-value" id="lat-soap">—</div>
+              </div>
+              <div class="geo-latency-card" id="card-xmlrpc">
+                <div class="protocol-name">XML-RPC</div>
+                <div class="latency-value" id="lat-xmlrpc">—</div>
+              </div>
+              <div class="geo-latency-card" id="card-sse">
+                <div class="protocol-name">SSE</div>
+                <div class="latency-value" id="lat-sse">—</div>
+              </div>
+              <div class="geo-latency-card" id="card-jsonrpc">
+                <div class="protocol-name">JSON-RPC</div>
+                <div class="latency-value" id="lat-jsonrpc">—</div>
+              </div>
+            </div>
+            <div style="text-align:center;margin-top:1rem;">
+              <span style="font-size:0.8rem;color:#64748b;" id="geo-avg-latency"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Code Samples</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">curl</button>
+        <button class="code-tab" data-tab="javascript">JavaScript</button>
+        <button class="code-tab" data-tab="python">Python</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code><span class="comment"># Call REST API via your local Sertone wrapper</span>
+<span class="prompt">$ </span>curl -w "\nLatency: %{time_total}s\n" \
+  -X POST https://localhost:3000/internal/call \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{"api_id_public": "bb-webhook-receiver", "method": "GET", "path": "/status"}'
+
+<span class="comment"># Run all 6 protocols in parallel</span>
+<span class="prompt">$ </span>for api in bb-webhook-receiver bb-graphql bb-soap bb-xmlrpc bb-sse-ticker bb-jsonrpc; do
+  curl -s -o /dev/null -w "$api: %{time_total}s\n" \
+    -X POST https://localhost:3000/internal/call \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+    -d "{\"api_id_public\": \"$api\", \"method\": \"GET\", \"path\": \"/\"}" &amp;
+done
+wait</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code><span class="comment">// JavaScript — parallel cross-geography calls</span>
+const protocols = [
+  { name: 'REST',     api_id_public: 'bb-webhook-receiver', path: '/status' },
+  { name: 'GraphQL',  api_id_public: 'bb-graphql',          path: '/',       params: { query: '{ users { id } }' } },
+  { name: 'SOAP',     api_id_public: 'bb-soap',             path: '/balance' },
+  { name: 'XML-RPC',  api_id_public: 'bb-xmlrpc',           path: '/' },
+  { name: 'SSE',      api_id_public: 'bb-sse-ticker',       path: '/quote/AAPL' },
+  { name: 'JSON-RPC', api_id_public: 'bb-jsonrpc',          path: '/' }
+];
+
+const results = await Promise.all(
+  protocols.map(async (p) =&gt; {
+    const start = performance.now();
+    const res = await fetch('https://localhost:3000/internal/call', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+      },
+      body: JSON.stringify({ api_id_public: p.api_id_public, method: 'GET', path: p.path, params: p.params })
+    });
+    return { name: p.name, latency: Math.round(performance.now() - start), status: res.status };
+  })
+);
+
+results.forEach(r =&gt; console.log(`${r.name}: ${r.latency}ms (HTTP ${r.status})`));</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code><span class="comment"># Python — parallel cross-geography latency test</span>
+import asyncio
+import aiohttp
+import time
+
+protocols = [
+    ("REST",     "bb-webhook-receiver", "/status",     {}),
+    ("GraphQL",  "bb-graphql",          "/",           {"query": "{ users { id } }"}),
+    ("SOAP",     "bb-soap",             "/balance",    {}),
+    ("XML-RPC",  "bb-xmlrpc",           "/",           {}),
+    ("SSE",      "bb-sse-ticker",       "/quote/AAPL", {}),
+    ("JSON-RPC", "bb-jsonrpc",          "/",           {}),
+]
+
+async def call(session, name, api_id, path, params):
+    start = time.monotonic()
+    async with session.post(
+        "https://localhost:3000/internal/call",
+        json={"api_id_public": api_id, "method": "GET", "path": path, "params": params},
+        headers={"Authorization": "Bearer YOUR_CONSUMER_SECRET"}
+    ) as resp:
+        ms = round((time.monotonic() - start) * 1000)
+        return f"{name}: {ms}ms (HTTP {resp.status})"
+
+async def main():
+    async with aiohttp.ClientSession() as s:
+        tasks = [call(s, *p) for p in protocols]
+        for result in await asyncio.gather(*tasks):
+            print(result)
+
+asyncio.run(main())</code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Deploy Globally in Minutes</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Run the Docker Container</h4>
+          <p>Pull and run the free Sertone wrapper on your own infrastructure. One command sets everything up.</p>
+          <pre class="code-block"><code>docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  sertone/wrapper:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Open the Web Console</h4>
+          <p>Navigate to <strong>https://localhost:3002/panel</strong> to access your Sertone control center. Create your account and connect your wallet on first launch.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Browse the Catalog</h4>
+          <p>Click <strong>Catalog &amp; SDKs</strong> in the sidebar. Search for APIs, try them in demo mode (free), then switch to production when ready.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Make Your First Call</h4>
+          <p>Copy your consumer secret from <strong>Settings &gt; Security</strong>, then use the code samples above to call any API from your own code.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SEO Footer -->
+    <section class="demo-footer-cta">
+      <h2>Go Global with Zero Infrastructure</h2>
+      <p>No central servers to manage. No CDN to configure. Just Docker containers that find each other and connect directly.</p>
+      <a href="/try" class="btn">Get Started</a>
+      <a href="/docs/" class="btn btn-secondary" style="margin-left: 0.75rem;">Read the Docs</a>
+
+      <div class="related-demos">
+        <a href="/demos/s3-delivery/" class="related-demo-link">BYO-Cloud / S3</a>
+        <a href="/demos/failover/" class="related-demo-link">Delivery Failover</a>
+        <a href="/demos/security/" class="related-demo-link">Zero-Knowledge Security</a>
+        <a href="/demos/multi-protocol/" class="related-demo-link">Multi-Protocol</a>
+        <a href="/demos/rest-api/" class="related-demo-link">REST API</a>
+        <a href="/demos/sse-streaming/" class="related-demo-link">SSE Streaming</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does Sertone achieve low latency across countries?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sertone uses direct encrypted connections between consumer and API owner. There is no central server in the data path, so latency depends only on the network path between the two control centers. New York to London typically completes in under 100ms."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does cross-geography API data touch a central server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Sertone establishes direct encrypted connections between nodes. API request and response data flows directly between consumer and owner — no central proxy, no third-party server sees the data."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What regions does Sertone support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sertone is geography-agnostic. You can deploy nodes anywhere in the world. The test infrastructure includes nodes in New York and London, but any server with Docker support and internet connectivity can participate in the network."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    var protocolApis = {
+      rest:    { api: 'bb-webhook-receiver', body: { action: 'getStatus' } },
+      graphql: { api: 'bb-graphql',          body: { query: '{ users { id name } }' } },
+      soap:    { api: 'bb-soap',             body: { operation: 'getBalance', account: 'demo-001' } },
+      xmlrpc:  { api: 'bb-xmlrpc',           body: { method: 'wp.getPost', id: 1 } },
+      sse:     { api: 'bb-sse-ticker',        body: { symbol: 'AAPL' } },
+      jsonrpc: { api: 'bb-jsonrpc',           body: { jsonrpc: '2.0', method: 'getBlock', params: [], id: 1 } }
+    };
+
+    async function runGeoDemo() {
+      var btn = document.getElementById('run-geo-demo');
+      setLoading(btn, true);
+
+      // Reset cards
+      Object.keys(protocolApis).forEach(function(key) {
+        var el = document.getElementById('lat-' + key);
+        if (el) {
+          el.textContent = '...';
+          el.classList.remove('measured');
+        }
+        var card = document.getElementById('card-' + key);
+        if (card) card.classList.remove('active');
+      });
+      document.getElementById('geo-avg-latency').textContent = '';
+
+      // Get selected protocols
+      var checkboxes = document.querySelectorAll('.demo-form-panel input[type="checkbox"]');
+      var selected = [];
+      checkboxes.forEach(function(cb) { if (cb.checked) selected.push(cb.value); });
+
+      if (selected.length === 0) {
+        showError('latency-grid', 'Select at least one protocol');
+        setLoading(btn, false);
+        return;
+      }
+
+      var latencies = [];
+      var promises = selected.map(function(key) {
+        var config = protocolApis[key];
+        if (!config) return Promise.resolve();
+
+        return callDemo(config.api, config.body, { method: 'POST', path: '/' })
+          .then(function(result) {
+            var el = document.getElementById('lat-' + key);
+            if (el) {
+              el.textContent = result.latency + 'ms';
+              el.classList.add('measured');
+            }
+            var card = document.getElementById('card-' + key);
+            if (card) card.classList.add('active');
+            latencies.push(result.latency);
+          })
+          .catch(function(err) {
+            var el = document.getElementById('lat-' + key);
+            if (el) {
+              el.textContent = 'ERR';
+              el.style.color = '#ef4444';
+            }
+          });
+      });
+
+      Promise.all(promises).then(function() {
+        if (latencies.length > 0) {
+          var avg = Math.round(latencies.reduce(function(a, b) { return a + b; }, 0) / latencies.length);
+          var min = Math.min.apply(null, latencies);
+          var max = Math.max.apply(null, latencies);
+          document.getElementById('geo-avg-latency').textContent =
+            'Average: ' + avg + 'ms | Min: ' + min + 'ms | Max: ' + max + 'ms';
+
+          var mapLabel = document.getElementById('map-latency');
+          if (mapLabel) mapLabel.textContent = avg + 'ms avg';
+        }
+        setLoading(btn, false);
+      });
+    }
+  </script>
+
+</body>
+</html>

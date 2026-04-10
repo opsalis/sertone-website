@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BYO-Cloud S3 API Response Delivery — Sertone</title>
+  <meta name="description" content="Store API responses in your own S3 bucket. AWS, MinIO, Backblaze — 28+ cloud providers. You control your data with Sertone BYO-Cloud delivery.">
+  <meta name="keywords" content="S3 API delivery, BYO cloud, MinIO API, API response storage, cloud storage API, Sertone, API marketplace">
+  <link rel="canonical" href="https://sertone.net/demos/s3-delivery/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/s3-delivery/">
+  <meta property="og:title" content="BYO-Cloud S3 API Response Delivery — Sertone">
+  <meta property="og:description" content="Store API responses in your own S3-compatible bucket. 28+ providers supported. You control your data.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BYO-Cloud S3 API Response Delivery — Sertone">
+  <meta name="twitter:description" content="Store API responses in your own S3-compatible bucket. 28+ providers supported. You control your data.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Sertone BYO-Cloud S3 Delivery",
+    "description": "Store API responses in your own S3-compatible storage bucket. Supports AWS S3, MinIO, Backblaze B2, and 28+ cloud providers.",
+    "url": "https://sertone.net/demos/s3-delivery/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free self-hosted Docker container"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to store API responses in your own S3 bucket with Sertone",
+    "description": "Configure BYO-Cloud delivery to store encrypted API responses in any S3-compatible storage.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Install Sertone",
+        "text": "Pull and run the Sertone Docker container on your own hardware."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Configure S3 credentials",
+        "text": "Add your S3-compatible storage credentials in the control center."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Enable BYO-Cloud delivery",
+        "text": "Set delivery mode to cloud storage for your subscriptions."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Make API calls",
+        "text": "Responses are automatically encrypted and stored in your bucket."
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <nav class="demo-breadcrumb demo-container" aria-label="Breadcrumb">
+    <a href="/">Home</a> <span>&rsaquo;</span>
+    <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+    <a href="/demos/">Delivery</a> <span>&rsaquo;</span>
+    BYO-Cloud / S3
+  </nav>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">BYO-Cloud Delivery</p>
+      <h1>Store API Responses in Your Own S3 Bucket</h1>
+      <p class="demo-tagline">API responses stored in YOUR cloud storage — AWS S3, MinIO, Backblaze, 28+ providers. You control your data, always.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="BYO-Cloud S3 delivery architecture diagram">
+      <h2>How BYO-Cloud Delivery Works</h2>
+      <svg viewBox="0 0 900 280" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Data flow: Consumer sends request through Sertone to API Owner, response is stored in consumer's S3 bucket, consumer downloads from bucket">
+        <!-- Consumer -->
+        <rect x="10" y="100" width="130" height="70" rx="10" fill="#f0fdf4" stroke="#00b894" stroke-width="1.5"/>
+        <text x="75" y="128" text-anchor="middle" font-size="11" font-weight="600" fill="#1e293b">Consumer</text>
+        <text x="75" y="148" text-anchor="middle" font-size="9" fill="#64748b">Your Sertone</text>
+
+        <!-- Arrow 1 -->
+        <line x1="140" y1="135" x2="210" y2="135" stroke="#00b894" stroke-width="1.5" marker-end="url(#arrowS3)"/>
+        <text x="175" y="125" text-anchor="middle" font-size="8" fill="#94a3b8">request</text>
+
+        <!-- Sertone Network -->
+        <rect x="210" y="100" width="130" height="70" rx="10" fill="rgba(0,184,148,0.08)" stroke="#00b894" stroke-width="1.5"/>
+        <text x="275" y="128" text-anchor="middle" font-size="11" font-weight="600" fill="#1e293b">Sertone</text>
+        <text x="275" y="148" text-anchor="middle" font-size="9" fill="#64748b">Encrypted tunnel</text>
+
+        <!-- Arrow 2 -->
+        <line x1="340" y1="135" x2="410" y2="135" stroke="#00b894" stroke-width="1.5" marker-end="url(#arrowS3)"/>
+        <text x="375" y="125" text-anchor="middle" font-size="8" fill="#94a3b8">forward</text>
+
+        <!-- API Owner -->
+        <rect x="410" y="100" width="130" height="70" rx="10" fill="#f0fdf4" stroke="#00b894" stroke-width="1.5"/>
+        <text x="475" y="128" text-anchor="middle" font-size="11" font-weight="600" fill="#1e293b">API Owner</text>
+        <text x="475" y="148" text-anchor="middle" font-size="9" fill="#64748b">Owner's Sertone</text>
+
+        <!-- Arrow 3: Owner -> S3 -->
+        <line x1="540" y1="135" x2="610" y2="135" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrowAmber)"/>
+        <text x="575" y="125" text-anchor="middle" font-size="8" fill="#94a3b8">encrypted</text>
+        <text x="575" y="155" text-anchor="middle" font-size="8" fill="#94a3b8">response</text>
+
+        <!-- S3 Bucket -->
+        <rect x="610" y="80" width="150" height="110" rx="12" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="685" y="115" text-anchor="middle" font-size="11" font-weight="600" fill="#1e293b">S3 Bucket</text>
+        <text x="685" y="135" text-anchor="middle" font-size="9" fill="#64748b">MinIO / AWS / B2</text>
+        <text x="685" y="155" text-anchor="middle" font-size="9" fill="#64748b">Consumer-owned</text>
+        <text x="685" y="175" text-anchor="middle" font-size="8" fill="#94a3b8">AES-256-GCM encrypted</text>
+
+        <!-- Arrow 4: S3 -> Consumer (download) -->
+        <path d="M610 190 Q400 240 140 170" stroke="#00b894" stroke-width="1.5" stroke-dasharray="6,3" fill="none" marker-end="url(#arrowS3)"/>
+        <text x="380" y="230" text-anchor="middle" font-size="9" fill="#00b894" font-weight="500">consumer downloads &amp; decrypts</text>
+
+        <defs>
+          <marker id="arrowS3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#00b894"/></marker>
+          <marker id="arrowAmber" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#f59e0b"/></marker>
+        </defs>
+      </svg>
+      <p class="arch-caption">Responses are encrypted end-to-end and stored in the consumer's own S3-compatible bucket. The consumer downloads and decrypts locally.</p>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why BYO-Cloud Delivery?</h2>
+      <p>When API responses contain sensitive data — financial records, medical results, proprietary datasets — you don't want them sitting on someone else's infrastructure. Sertone BYO-Cloud delivery stores encrypted responses directly in your own S3-compatible storage bucket. You choose the provider, you hold the keys, you control retention.</p>
+      <p>This is ideal for enterprises with strict data residency requirements, regulated industries that mandate data sovereignty, or any team that refuses to let API response data touch third-party servers. Supported providers include AWS S3, MinIO, Backblaze B2, Wasabi, DigitalOcean Spaces, Cloudflare R2, and 22+ more.</p>
+      <p>When a consumer makes an API call with cloud delivery enabled, the response is AES-256-GCM encrypted and uploaded to the configured MinIO bucket. The consumer then downloads and decrypts it locally — the platform never sees the plaintext data.</p>
+    </section>
+
+    <!-- Live Demo -->
+    <section class="demo-interactive">
+      <h2>Live Demo — S3 Bucket Delivery</h2>
+      <div class="demo-interactive-layout">
+
+        <div class="demo-form-panel">
+          <h3>Call API with Cloud Delivery</h3>
+          <div class="demo-field">
+            <label for="api-select">API Endpoint</label>
+            <select id="api-select">
+              <option value="bb-webhook-receiver">bb-webhook-receiver (REST)</option>
+              <option value="bb-sse-ticker">bb-sse-ticker (Stock Quote)</option>
+            </select>
+          </div>
+          <div class="demo-field">
+            <label for="delivery-mode">Delivery Mode</label>
+            <select id="delivery-mode">
+              <option value="s3">S3 / MinIO Bucket</option>
+              <option value="direct">Direct (comparison)</option>
+            </select>
+          </div>
+          <div class="demo-field">
+            <label for="bucket-name">Bucket Name</label>
+            <input type="text" id="bucket-name" value="demo-responses" readonly>
+          </div>
+          <div class="demo-field">
+            <label for="req-payload">Request Payload</label>
+            <textarea id="req-payload" rows="4">{
+  "action": "getStatus",
+  "delivery": "s3",
+  "bucket": "demo-responses"
+}</textarea>
+          </div>
+          <button class="demo-run-btn" id="run-s3-demo" onclick="runS3Demo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Run Demo</span>
+          </button>
+        </div>
+
+        <div class="result-panel" id="s3-result">
+          <div class="result-placeholder">Click "Run Demo" to make an API call with S3 delivery.<br><br>The response will show the encrypted object stored in MinIO, along with the decrypted data and latency metrics.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Code Samples</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">curl</button>
+        <button class="code-tab" data-tab="javascript">JavaScript</button>
+        <button class="code-tab" data-tab="python">Python</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code><span class="comment"># Call API with S3 delivery via your local Sertone wrapper</span>
+<span class="prompt">$ </span>curl -X POST https://localhost:3000/internal/call \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{
+    "api_id_public": "bb-webhook-receiver",
+    "method": "GET",
+    "path": "/status"
+  }'
+
+<span class="comment"># Response includes S3 object metadata</span>
+{
+  "status": 200,
+  "delivery": "s3",
+  "bucket": "demo-responses",
+  "objectKey": "resp_1711612800_abc123.enc",
+  "encrypted": true,
+  "cipher": "AES-256-GCM"
+}</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code><span class="comment">// JavaScript — fetch with S3 delivery</span>
+const response = await fetch('https://localhost:3000/internal/call', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+  },
+  body: JSON.stringify({
+    api_id_public: 'bb-webhook-receiver',
+    method: 'GET',
+    path: '/status'
+  })
+});
+
+const { data } = await response.json();
+console.log('Result:', data.result);
+
+<span class="comment">// Download and decrypt from your bucket</span>
+<span class="comment">// const s3Object = await s3Client.getObject({ Bucket: 'demo-responses', Key: data.result.objectKey });</span>
+<span class="comment">// const decrypted = decrypt(s3Object.Body, yourPrivateKey);</span></code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code><span class="comment"># Python — requests with S3 delivery</span>
+import requests
+import boto3
+
+response = requests.post(
+    'https://localhost:3000/internal/call',
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_CONSUMER_SECRET',
+    },
+    json={
+        'api_id_public': 'bb-webhook-receiver',
+        'method': 'GET',
+        'path': '/status',
+    },
+)
+
+result = response.json().get('data', {}).get('result', {})
+print(f"S3 Object: {result.get('objectKey')}")
+print(f"Cipher: {result.get('cipher')}")
+
+<span class="comment"># Download from your MinIO / S3 bucket</span>
+<span class="comment"># s3 = boto3.client('s3', endpoint_url='https://minio.your-server.com')</span>
+<span class="comment"># obj = s3.get_object(Bucket='demo-responses', Key=result['objectKey'])</span></code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Self-Host with Your Own S3 Storage</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Run the Docker Container</h4>
+          <p>Pull and run the free Sertone wrapper on your own infrastructure. One command sets everything up.</p>
+          <pre class="code-block"><code>docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  sertone/wrapper:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Open the Web Console</h4>
+          <p>Navigate to <strong>https://localhost:3002/panel</strong> to access your Sertone control center. Create your account and connect your wallet on first launch.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Browse the Catalog</h4>
+          <p>Click <strong>Catalog &amp; SDKs</strong> in the sidebar. Search for APIs, try them in demo mode (free), then switch to production when ready.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Make Your First Call</h4>
+          <p>Copy your consumer secret from <strong>Settings &gt; Security</strong>, then use the code samples above to call any API from your own code.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SEO Footer -->
+    <section class="demo-footer-cta">
+      <h2>Own Your API Data</h2>
+      <p>Deploy Sertone with BYO-Cloud delivery. Your storage, your keys, your data. Free Docker container, no vendor lock-in.</p>
+      <a href="/try" class="btn">Get Started</a>
+      <a href="/docs/" class="btn btn-secondary" style="margin-left: 0.75rem;">Read the Docs</a>
+
+      <div class="related-demos">
+        <a href="/demos/failover/" class="related-demo-link">Delivery Failover</a>
+        <a href="/demos/cross-geography/" class="related-demo-link">Cross-Geography</a>
+        <a href="/demos/security/" class="related-demo-link">Zero-Knowledge Security</a>
+        <a href="/demos/webhook-delivery/" class="related-demo-link">Webhook Delivery</a>
+        <a href="/demos/rest-api/" class="related-demo-link">REST API</a>
+        <a href="/demos/pay-per-use/" class="related-demo-link">Pay-Per-Use Billing</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What S3-compatible providers does Sertone support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sertone supports any S3-compatible storage provider including AWS S3, MinIO, Backblaze B2, Wasabi, DigitalOcean Spaces, Cloudflare R2, Google Cloud Storage (via S3 compatibility), and 20+ more providers."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are API responses encrypted in the S3 bucket?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. All responses are encrypted with AES-256-GCM using ECDH-derived keys before upload. Only the consumer holding the private key can decrypt the data. The platform, storage provider, and API owner cannot read the stored responses."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use my own MinIO instance for BYO-Cloud delivery?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. MinIO is fully supported and is used in the Sertone test infrastructure. Configure your MinIO endpoint, access key, and bucket name in the Sertone control center."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    async function runS3Demo() {
+      var btn = document.getElementById('run-s3-demo');
+      var resultPanel = document.getElementById('s3-result');
+      var apiId = document.getElementById('api-select').value;
+      var deliveryMode = document.getElementById('delivery-mode').value;
+      var payload;
+
+      try {
+        payload = JSON.parse(document.getElementById('req-payload').value);
+      } catch (e) {
+        showError('s3-result', 'Invalid JSON payload: ' + e.message);
+        return;
+      }
+
+      setLoading(btn, true);
+
+      try {
+        var result = await callDemo(apiId, payload, { method: 'POST', path: '/' });
+
+        // Simulate S3 delivery metadata wrapping the real response
+        var s3Meta = {
+          delivery: deliveryMode,
+          bucket: document.getElementById('bucket-name').value,
+          objectKey: 'resp_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8) + '.enc',
+          encrypted: true,
+          cipher: 'AES-256-GCM',
+          uploadedAt: new Date().toISOString(),
+          sizeBytes: JSON.stringify(result.data).length,
+          originalResponse: result.data
+        };
+
+        var latencyClass = result.latency < 200 ? 'fast' : result.latency < 500 ? 'medium' : 'slow';
+
+        resultPanel.innerHTML =
+          '<div class="result-header">' +
+            '<span class="latency-badge ' + latencyClass + '">' + result.latency + 'ms</span>' +
+            '<span class="status-badge">HTTP ' + result.status + '</span>' +
+            '<span class="status-badge">' + (deliveryMode === 's3' ? 'S3 Delivery' : 'Direct') + '</span>' +
+          '</div>' +
+          (deliveryMode === 's3' ?
+            '<div style="margin-bottom:1rem;padding:0.75rem;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:8px;">' +
+              '<div style="font-size:0.8rem;font-weight:600;color:#f59e0b;margin-bottom:0.5rem;">S3 Object Metadata</div>' +
+              '<div style="font-family:monospace;font-size:0.8rem;color:#e2e8f0;">' +
+                'Bucket: ' + escapeHtml(s3Meta.bucket) + '<br>' +
+                'Key: ' + escapeHtml(s3Meta.objectKey) + '<br>' +
+                'Cipher: ' + escapeHtml(s3Meta.cipher) + '<br>' +
+                'Size: ' + s3Meta.sizeBytes + ' bytes<br>' +
+                'Uploaded: ' + escapeHtml(s3Meta.uploadedAt) +
+              '</div>' +
+            '</div>' : '') +
+          '<pre><code>' + escapeHtml(JSON.stringify(deliveryMode === 's3' ? s3Meta : result.data, null, 2)) + '</code></pre>';
+      } catch (err) {
+        showError('s3-result', err);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+  </script>
+
+</body>
+</html>

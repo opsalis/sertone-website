@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Sertone API Marketplace",
+  "name_for_model": "sertone",
+  "description_for_human": "Decentralized peer-to-peer API marketplace — sell and use APIs with instant USDC payments. No central server. API owners earn 95% of every call.",
+  "description_for_model": "Sertone is free software that turns any API, AI model, or data feed into a revenue stream. Users install a Docker container, register their services, set a price, and get paid automatically. Supports REST, GraphQL, gRPC, SOAP, JSON-RPC, XML-RPC. AI-native: MCP, LangChain, CrewAI, AutoGen. 18 auto-generated SDKs. Per-call or subscription billing. Self-hosted, encrypted, non-custodial.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://sertone.net/docs/sdks"
+  },
+  "logo_url": "https://sertone.net/logo.png",
+  "contact_email": "",
+  "legal_info_url": "https://sertone.net/terms"
+}

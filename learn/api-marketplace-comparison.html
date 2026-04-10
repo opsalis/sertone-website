@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Marketplace Comparison — Sertone vs RapidAPI vs AWS</title>
+  <meta name="description" content="Compare Sertone with RapidAPI, AWS API Gateway, and Stripe per-API billing. See how per-call pricing, zero revenue share, and privacy-first design differ.">
+  <meta name="keywords" content="API marketplace comparison, RapidAPI alternative, AWS API marketplace, API platform, best API marketplace, compare API marketplaces, Sertone vs RapidAPI, Stripe alternative">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/learn/api-marketplace-comparison">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/learn/api-marketplace-comparison">
+  <meta property="og:title" content="API Marketplace Comparison — Sertone vs RapidAPI vs AWS">
+  <meta property="og:description" content="Compare Sertone with RapidAPI, AWS, and Stripe. Per-call pricing, zero revenue share, privacy-first design.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="API Marketplace Comparison — Sertone vs RapidAPI vs AWS">
+  <meta name="twitter:description" content="Compare Sertone with RapidAPI, AWS, and Stripe. Per-call pricing, zero revenue share, privacy-first.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "API Marketplace Comparison — Sertone vs RapidAPI vs AWS",
+    "description": "Compare Sertone with RapidAPI, AWS API Gateway, and Stripe. Per-call pricing, zero revenue share, privacy-first design.",
+    "url": "https://sertone.net/learn/api-marketplace-comparison",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="/style.css?v=2">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/handler">Control Center</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/security">Security</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1>How Sertone Compares</h1>
+      <p class="subheadline">A fair, side-by-side look at how Sertone differs from traditional API platforms.</p>
+    </div>
+  </section>
+
+  <!-- Comparison Table -->
+  <section>
+    <div class="container text-center">
+      <span class="section-label">Side by Side</span>
+      <h2 class="section-title">Feature Comparison</h2>
+      <p class="section-desc">See the differences at a glance.</p>
+
+      <div style="max-width: 900px; margin: 0 auto; overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; min-width: 650px;">
+          <thead>
+            <tr style="border-bottom: 2px solid #e2e8f0;">
+              <th style="padding: 14px 16px; color: #1e293b; font-size: 0.9rem; width: 22%;">Feature</th>
+              <th style="padding: 14px 16px; color: #00b894; font-size: 0.9rem; font-weight: 700; width: 20%;">Sertone</th>
+              <th style="padding: 14px 16px; color: #64748b; font-size: 0.9rem; width: 20%;">RapidAPI</th>
+              <th style="padding: 14px 16px; color: #64748b; font-size: 0.9rem; width: 20%;">AWS API Gateway</th>
+              <th style="padding: 14px 16px; color: #64748b; font-size: 0.9rem; width: 18%;">Stripe Billing</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 14px 16px; color: #475569; font-weight: 500;">Monthly fee</td>
+              <td style="padding: 14px 16px; color: #1e293b; font-weight: 600;">None</td>
+              <td style="padding: 14px 16px; color: #64748b;">Free tier, then $20+/mo</td>
+              <td style="padding: 14px 16px; color: #64748b;">Pay-as-you-go</td>
+              <td style="padding: 14px 16px; color: #64748b;">2.9% + $0.30/txn</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 14px 16px; color: #475569; font-weight: 500;">Revenue share</td>
+              <td style="padding: 14px 16px; color: #1e293b; font-weight: 600;">5% from owner (keeps 95%)</td>
+              <td style="padding: 14px 16px; color: #64748b;">20% of revenue</td>
+              <td style="padding: 14px 16px; color: #64748b;">3&ndash;5% listing fee</td>
+              <td style="padding: 14px 16px; color: #64748b;">Per-transaction fee</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 14px 16px; color: #475569; font-weight: 500;">Sign-up required</td>
+              <td style="padding: 14px 16px; color: #1e293b; font-weight: 600;">No</td>
+              <td style="padding: 14px 16px; color: #64748b;">Yes (email, name)</td>
+              <td style="padding: 14px 16px; color: #64748b;">Yes (AWS account)</td>
+              <td style="padding: 14px 16px; color: #64748b;">Yes (full KYC)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 14px 16px; color: #475569; font-weight: 500;">Your data visible?</td>
+              <td style="padding: 14px 16px; color: #1e293b; font-weight: 600;">No &mdash; end-to-end encrypted</td>
+              <td style="padding: 14px 16px; color: #64748b;">Yes &mdash; proxied through them</td>
+              <td style="padding: 14px 16px; color: #64748b;">Depends on setup</td>
+              <td style="padding: 14px 16px; color: #64748b;">N/A (billing only)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 14px 16px; color: #475569; font-weight: 500;">They hold your money?</td>
+              <td style="padding: 14px 16px; color: #1e293b; font-weight: 600;">Never</td>
+              <td style="padding: 14px 16px; color: #64748b;">Yes (30-day payout)</td>
+              <td style="padding: 14px 16px; color: #64748b;">Yes (monthly payout)</td>
+              <td style="padding: 14px 16px; color: #64748b;">Yes (rolling payouts)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 14px 16px; color: #475569; font-weight: 500;">Self-hosted</td>
+              <td style="padding: 14px 16px; color: #1e293b; font-weight: 600;">Yes &mdash; your server</td>
+              <td style="padding: 14px 16px; color: #64748b;">No &mdash; their cloud</td>
+              <td style="padding: 14px 16px; color: #64748b;">No &mdash; AWS cloud</td>
+              <td style="padding: 14px 16px; color: #64748b;">Billing only</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 14px 16px; color: #475569; font-weight: 500;">AI agent support</td>
+              <td style="padding: 14px 16px; color: #1e293b; font-weight: 600;">MCP + LangChain + CrewAI</td>
+              <td style="padding: 14px 16px; color: #64748b;">Limited</td>
+              <td style="padding: 14px 16px; color: #64748b;">Via Bedrock</td>
+              <td style="padding: 14px 16px; color: #64748b;">None</td>
+            </tr>
+            <tr>
+              <td style="padding: 14px 16px; color: #475569; font-weight: 500;">Lock-in</td>
+              <td style="padding: 14px 16px; color: #1e293b; font-weight: 600;">None &mdash; withdraw and leave</td>
+              <td style="padding: 14px 16px; color: #64748b;">Migration effort</td>
+              <td style="padding: 14px 16px; color: #64748b;">AWS ecosystem lock-in</td>
+              <td style="padding: 14px 16px; color: #64748b;">Billing migration</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Differences -->
+  <section>
+    <div class="container text-center">
+      <span class="section-label">What Makes Sertone Different</span>
+      <h2 class="section-title">Four Fundamental Differences</h2>
+      <p class="section-desc">These are not features we added. They are how the system was designed from day one.</p>
+
+      <div class="card-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 740px; margin: 0 auto;">
+        <div class="card">
+          <h3>Your Data Is Invisible</h3>
+          <p>Traditional platforms proxy your traffic through their servers &mdash; they see everything. Sertone encrypts everything end-to-end. We cannot see your data even if we wanted to.</p>
+        </div>
+        <div class="card">
+          <h3>Your Money Is Yours</h3>
+          <p>Traditional platforms collect payments, hold the money for 30+ days, then pay you after taking their cut. Sertone sends money directly to your account. We never hold it.</p>
+        </div>
+        <div class="card">
+          <h3>Your Server Is Private</h3>
+          <p>Traditional platforms require you to expose your API to their infrastructure. With Sertone, your service stays on your server, behind your firewall. Only your Sertone node talks to it.</p>
+        </div>
+        <div class="card">
+          <h3>No Personal Data Required</h3>
+          <p>Traditional platforms require email, name, company, and payment details. Sertone requires nothing. We do not know who you are and we do not want to.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- When to Use What -->
+  <section>
+    <div class="container text-center">
+      <span class="section-label">Honest Take</span>
+      <h2 class="section-title">When Sertone Might Not Be Right</h2>
+      <p class="section-desc">We believe in being honest. Here is when other options might work better for you.</p>
+
+      <div style="max-width: 640px; margin: 0 auto; text-align: left;">
+        <div style="padding: 1.5rem 0; border-bottom: 1px solid #e2e8f0;">
+          <h4>You want managed hosting</h4>
+          <p style="color: #64748b; margin-top: 0.5rem;">Sertone requires you to run your own server. If you want someone else to host your API, a traditional cloud platform might be simpler.</p>
+        </div>
+        <div style="padding: 1.5rem 0; border-bottom: 1px solid #e2e8f0;">
+          <h4>Your customers can only pay with credit cards</h4>
+          <p style="color: #64748b; margin-top: 0.5rem;">All payments are in USDC (digital dollars). If your customers can only pay with credit cards, Sertone is not the right fit today.</p>
+        </div>
+        <div style="padding: 1.5rem 0;">
+          <h4>You need a built-in customer directory</h4>
+          <p style="color: #64748b; margin-top: 0.5rem;">Because we collect no personal data, there is no customer list to export. If you need to know who is using your API by name or email, a traditional platform gives you that.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);">
+    <div class="container text-center">
+      <h2 class="section-title">See for Yourself</h2>
+      <p class="section-desc">Install in 60 seconds. Free forever. No commitment.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/learn/owner" class="btn">I Want to Sell Services</a>
+        <a href="/learn/consumer" class="btn btn-secondary">I Want to Use Services</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms of Service</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy Policy</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+</body>
+</html>

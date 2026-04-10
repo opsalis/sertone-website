@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Start — Sertone Docs | Set Up in 5 Minutes</title>
+  <meta name="description" content="Get started with Sertone in three simple steps. Install the Docker container, fund your wallet, and start selling or using APIs in under 5 minutes.">
+  <meta name="keywords" content="Sertone quick start, API marketplace setup, install Sertone, Docker API gateway, get started API monetization">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/quick-start">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/quick-start">
+  <meta property="og:title" content="Quick Start — Sertone Docs | Set Up in 5 Minutes">
+  <meta property="og:description" content="Get started with Sertone in three simple steps. Install the Docker container, fund your wallet, and start selling or using APIs in under 5 minutes.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Quick Start — Sertone Docs">
+  <meta name="twitter:description" content="Get started with Sertone in three simple steps. Install the Docker container, fund your wallet, and start earning.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Quick Start — Sertone",
+    "description": "Get started with Sertone in three simple steps. Install the Docker container, fund your wallet, and start selling or using APIs in under 5 minutes.",
+    "url": "https://sertone.net/docs/quick-start",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link active">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Quick Start</h1>
+      <p class="lead">Three steps to get started.</p>
+
+      <h2 id="step-1">1. Install the control center</h2>
+      <p>Make sure Docker is installed and running, then pull and start the Sertone control center:</p>
+      <pre><code>docker run -d --name sertone sertone/dag:latest</code></pre>
+      <p>That is it. One command. See <a href="/docs/installation">Installation</a> for detailed options.</p>
+      <p><strong>HTTPS:</strong> Your control center runs on HTTPS automatically. If you have a domain name pointing to this server, a free Let's Encrypt certificate is obtained within 24 hours &mdash; no configuration needed.</p>
+
+      <h2 id="step-2">2. Log in to the web console</h2>
+      <p>Open the web console in your browser. The address is shown in the Docker output when the container starts.</p>
+      <p>Create your account with email and password. Your wallet is generated automatically &mdash; you will see your deposit address on the Settings page.</p>
+
+      <h2 id="step-3">3. Register an API or browse the catalog</h2>
+      <p><strong>To sell your API:</strong> Go to the <strong>API Management</strong> tab, fill in the form with your API details, and click Publish.</p>
+      <p><strong>To use APIs:</strong> Go to the <strong>Catalog</strong> tab, browse available APIs, and click any API to try it in demo mode for free.</p>
+
+      <div class="info-box">
+        <p><strong>Demo mode is free.</strong> You can try any API in demo mode without funding your wallet. Real calls require USDC.</p>
+      </div>
+
+      <h2 id="whats-next">What's next</h2>
+      <ul>
+        <li><a href="/docs/browsing-apis">Browse the full catalog</a></li>
+        <li><a href="/docs/sdks">Use auto-generated SDKs</a> in your code</li>
+        <li><a href="/docs/registering-apis">Publish your own API</a></li>
+        <li><a href="/docs/funding">Fund your wallet</a> to make real calls</li>
+      </ul>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Overview</span>
+        </a>
+        <a href="/docs/installation" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Installation</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#step-1" class="toc-link">1. Install the control center</a>
+      <a href="#step-2" class="toc-link">2. Log in to the web console</a>
+      <a href="#step-3" class="toc-link">3. Register or browse</a>
+      <a href="#whats-next" class="toc-link">What's next</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

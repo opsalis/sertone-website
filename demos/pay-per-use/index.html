@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pay-Per-Use API Billing — Automatic USDC Payment — Sertone</title>
+  <meta name="description" content="Every API call paid automatically in USDC. Transparent pricing: owner sets the price, platform takes 5%, no hidden fees. See exact math per call.">
+  <meta name="keywords" content="pay-per-use API, API billing, USDC payment, API monetization, per-call pricing, Sertone">
+  <link rel="canonical" href="https://sertone.net/demos/pay-per-use/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/pay-per-use/">
+  <meta property="og:title" content="Pay-Per-Use API Billing — Automatic USDC Payment">
+  <meta property="og:description" content="Every API call paid automatically in USDC. Transparent pricing: owner sets the price, 5% platform fee, no hidden costs.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pay-Per-Use API Billing — Automatic USDC Payment">
+  <meta name="twitter:description" content="Every API call paid automatically in USDC. Transparent pricing: owner sets the price, 5% platform fee, no hidden costs.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Sertone",
+        "applicationCategory": "DeveloperApplication",
+        "description": "API marketplace with pay-per-use USDC billing. Transparent 5% platform fee.",
+        "url": "https://sertone.net",
+        "operatingSystem": "Linux, Docker",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "description": "Free self-hosted Docker container"
+        }
+      },
+      {
+        "@type": "HowTo",
+        "name": "How to Set Up Pay-Per-Use API Billing with Sertone",
+        "description": "Configure per-call USDC pricing for your APIs with transparent automatic payment.",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "position": 1,
+            "name": "Install Sertone",
+            "text": "Pull and run the Sertone Docker container on your own infrastructure."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 2,
+            "name": "Register Your API",
+            "text": "Add your API endpoint in the Sertone control center and set the per-call price in USDC."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 3,
+            "name": "Set Pricing",
+            "text": "Define your price per call (e.g., $0.001 per call). The platform takes a flat 5% commission."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 4,
+            "name": "Earn Revenue",
+            "text": "Every API call triggers automatic USDC payment. You receive 95% of each payment automatically."
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div class="demo-container">
+    <nav class="demo-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>&rsaquo;</span>
+      <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+      <a href="/demos/">Payment</a> <span>&rsaquo;</span>
+      Pay-Per-Use
+    </nav>
+  </div>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Automatic Billing</p>
+      <h1>Pay-Per-Use API Billing</h1>
+      <p class="demo-tagline">Every API call is paid automatically in USDC. Transparent pricing: owner sets the price, platform takes 5%, no hidden fees.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="Pay-per-use USDC settlement flow diagram">
+      <h2>How Pay-Per-Use Billing Works</h2>
+      <svg viewBox="0 0 900 340" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Architecture: Consumer pays USDC per call, 5% to platform, 95% to API owner, paid automatically">
+        <!-- Background -->
+        <rect width="900" height="340" rx="12" fill="#f8fafc"/>
+
+        <!-- Consumer -->
+        <rect x="30" y="90" width="150" height="110" rx="10" fill="#fff" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="105" y="125" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="600">Consumer</text>
+        <text x="105" y="148" text-anchor="middle" fill="#64748b" font-size="11">API Caller</text>
+        <rect x="50" y="160" width="110" height="24" rx="4" fill="rgba(0,184,148,0.08)" stroke="rgba(0,184,148,0.2)" stroke-width="1"/>
+        <text x="105" y="176" text-anchor="middle" fill="#00b894" font-size="10" font-weight="600">USDC Balance</text>
+
+        <!-- Arrow: Consumer → Sertone -->
+        <line x1="180" y1="140" x2="290" y2="140" stroke="#00b894" stroke-width="2"/>
+        <polygon points="290,135 302,140 290,145" fill="#00b894"/>
+        <text x="235" y="130" text-anchor="middle" fill="#00b894" font-size="10" font-weight="600">API Call</text>
+
+        <!-- Sertone Settlement -->
+        <rect x="302" y="55" width="200" height="185" rx="10" fill="#fff" stroke="#00b894" stroke-width="2"/>
+        <text x="402" y="85" text-anchor="middle" fill="#00b894" font-size="14" font-weight="700">Sertone</text>
+
+        <!-- Price breakdown inside Sertone box -->
+        <text x="402" y="110" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Price: $0.001 / call</text>
+        <line x1="332" y1="120" x2="472" y2="120" stroke="#e2e8f0" stroke-width="1"/>
+
+        <text x="402" y="142" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Settlement Split</text>
+        <rect x="322" y="150" width="160" height="28" rx="4" fill="rgba(16,185,129,0.06)"/>
+        <text x="402" y="168" text-anchor="middle" fill="#10b981" font-size="11" font-weight="600">95% → Owner: $0.00095</text>
+        <rect x="322" y="184" width="160" height="28" rx="4" fill="rgba(245,158,11,0.06)"/>
+        <text x="402" y="202" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600">5% → Platform: $0.00005</text>
+
+        <!-- the blockchain label -->
+        <rect x="332" y="218" width="140" height="16" rx="3" fill="rgba(99,102,241,0.08)"/>
+        <text x="402" y="230" text-anchor="middle" fill="#6366f1" font-size="9" font-weight="600">Blockchain (testnet)</text>
+
+        <!-- Arrow: Sertone → Owner -->
+        <line x1="502" y1="140" x2="610" y2="140" stroke="#10b981" stroke-width="2"/>
+        <polygon points="610,135 622,140 610,145" fill="#10b981"/>
+        <text x="556" y="130" text-anchor="middle" fill="#10b981" font-size="10" font-weight="600">95% USDC</text>
+
+        <!-- API Owner -->
+        <rect x="622" y="90" width="150" height="110" rx="10" fill="#fff" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="697" y="125" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="600">API Owner</text>
+        <text x="697" y="148" text-anchor="middle" fill="#64748b" font-size="11">Your Revenue</text>
+        <rect x="642" y="160" width="110" height="24" rx="4" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.2)" stroke-width="1"/>
+        <text x="697" y="176" text-anchor="middle" fill="#10b981" font-size="10" font-weight="600">$0.00095 / call</text>
+
+        <!-- Response arrow back -->
+        <line x1="622" y1="210" x2="105" y2="210" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <polygon points="110,205 98,210 110,215" fill="#94a3b8"/>
+        <text x="365" y="245" text-anchor="middle" fill="#64748b" font-size="11">API Response (encrypted direct)</text>
+
+        <!-- USDC icon/badge at bottom -->
+        <rect x="300" y="275" width="300" height="42" rx="8" fill="rgba(0,184,148,0.04)" stroke="rgba(0,184,148,0.15)" stroke-width="1"/>
+        <text x="450" y="293" text-anchor="middle" fill="#1e293b" font-size="11" font-weight="600">Every call = automatic USDC payment</text>
+        <text x="450" y="308" text-anchor="middle" fill="#64748b" font-size="10">Permanent, auditable, instant payment</text>
+      </svg>
+      <p class="arch-caption">Consumer pays per API call in USDC. Sertone splits 95% to the API owner and 5% platform fee, paid automatically.</p>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why Pay-Per-Use with Sertone?</h2>
+      <p>Traditional API billing is opaque. Monthly invoices arrive with aggregated totals and no per-call breakdown. Disputes are common, audits are painful, and reconciliation takes days. With Sertone, every single API call triggers an automatic USDC payment — fully transparent, permanent, and auditable by both parties.</p>
+      <p>API owners set their own price per call. There is one commission: 5% to the platform. No hidden fees, no payment processing surcharges, no minimum commitments. A $0.001 API call costs the consumer exactly $0.001. The owner receives $0.00095. The math is the same whether you process 100 calls or 10 million.</p>
+      <p>For consumers, this means no surprise bills and no prepaid credits that expire. You pay for exactly what you use, when you use it. For owners, revenue is settled instantly — no 30-day payment terms, no chargebacks, no invoicing overhead. USDC arrives in your wallet after every call.</p>
+    </section>
+
+    <!-- Interactive Demo -->
+    <section class="demo-interactive">
+      <h2>Live Demo: Pay-Per-Use Settlement</h2>
+      <div class="demo-interactive-layout">
+
+        <div class="demo-form-panel">
+          <h3>API Call Simulator</h3>
+          <p style="color:#64748b; font-size:0.85rem; margin-bottom:1.25rem;">Make multiple API calls and watch the running balance. Each call shows exact price, commission, and owner revenue with USDC settlement.</p>
+
+          <div class="demo-field">
+            <label for="ppu-api">API Endpoint</label>
+            <select id="ppu-api">
+              <option value="bb-sse-ticker" data-price="0.001">SSE Ticker — $0.001/call</option>
+              <option value="bb-graphql" data-price="0.002">GraphQL — $0.002/call</option>
+              <option value="bb-soap" data-price="0.0005">SOAP — $0.0005/call</option>
+            </select>
+          </div>
+
+          <div class="demo-field">
+            <label for="ppu-calls">Number of Calls</label>
+            <select id="ppu-calls">
+              <option value="1">1 call</option>
+              <option value="5" selected>5 calls</option>
+              <option value="10">10 calls</option>
+              <option value="25">25 calls</option>
+            </select>
+          </div>
+
+          <div class="demo-field">
+            <label for="ppu-balance">Starting Balance (USDC)</label>
+            <input type="number" id="ppu-balance" value="1.00" step="0.01" min="0.01">
+          </div>
+
+          <button class="demo-run-btn" id="run-ppu-btn" onclick="runPayPerUseDemo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Run API Calls</span>
+          </button>
+        </div>
+
+        <div class="result-panel" id="ppu-result">
+          <div class="result-placeholder">
+            Configure the number of calls and click "Run API Calls" to see exact USDC settlement math per call with running balance.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Code Samples</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">cURL</button>
+        <button class="code-tab" data-tab="javascript">JavaScript</button>
+        <button class="code-tab" data-tab="python">Python</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code># Each API call automatically triggers USDC settlement.
+# No separate billing API — payment is built into every call.
+
+curl -X POST https://localhost:3000/internal/call \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{
+    "api_id_public": "bb-sse-ticker",
+    "method": "GET",
+    "path": "/quote/AAPL"
+  }'
+
+# Response includes settlement metadata:
+# "settlement": {
+#   "price_usdc": "0.001000",
+#   "commission_usdc": "0.000050",
+#   "owner_revenue_usdc": "0.000950",
+#   "tx_hash": "0xabc123...",
+#   "chain": "base-sepolia"
+# }</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code>// Every API call includes settlement data in the response.
+// No separate billing step — pay-per-use is automatic.
+
+const response = await fetch('https://localhost:3000/internal/call', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+  },
+  body: JSON.stringify({
+    api_id_public: 'bb-sse-ticker',
+    method: 'GET',
+    path: '/quote/AAPL'
+  })
+});
+
+const { data } = await response.json();
+console.log('Result:', data.result);
+console.log('Price:', data.result?.settlement?.price_usdc, 'USDC');
+console.log('Owner gets:', data.result?.settlement?.owner_revenue_usdc, 'USDC');</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code>import requests
+
+response = requests.post(
+    "https://localhost:3000/internal/call",
+    headers={
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_CONSUMER_SECRET",
+    },
+    json={
+        "api_id_public": "bb-sse-ticker",
+        "method": "GET",
+        "path": "/quote/AAPL",
+    },
+)
+
+result = response.json()
+data = result.get("data", {}).get("result", {})
+settlement = data.get("settlement", {})
+print(f"Price: {settlement.get('price_usdc')} USDC")
+print(f"Owner revenue: {settlement.get('owner_revenue_usdc')} USDC")
+print(f"Commission: {settlement.get('commission_usdc')} USDC (5%)")
+print(f"TX hash: {settlement.get('tx_hash')}")</code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Self-Host with Pay-Per-Use Billing</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Run the Docker Container</h4>
+          <p>Pull and run the free Sertone wrapper on your own infrastructure. One command sets everything up.</p>
+          <pre class="code-block"><code>docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  sertone/wrapper:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Open the Web Console</h4>
+          <p>Navigate to <strong>https://localhost:3002/panel</strong> to access your Sertone control center. Create your account and connect your wallet on first launch.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Browse the Catalog</h4>
+          <p>Click <strong>Catalog &amp; SDKs</strong> in the sidebar. Search for APIs, try them in demo mode (free), then switch to production when ready.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Make Your First Call</h4>
+          <p>Copy your consumer secret from <strong>Settings &gt; Security</strong>, then use the code samples above to call any API from your own code.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FAQ Schema + CTA Footer -->
+    <section class="demo-footer-cta">
+      <h2>Start Earning Per API Call</h2>
+      <p>Deploy Sertone and monetize your API in minutes. Every call settled in USDC, transparent 5% fee, your infrastructure.</p>
+      <a href="/try" class="btn">Get Started</a>
+      <a href="/docs/" class="btn btn-secondary" style="margin-left: 0.75rem;">Read the Docs</a>
+
+      <div class="related-demos" style="margin-top: 2.5rem;">
+        <a href="/demos/subscription/" class="related-demo-link">Subscriptions</a>
+        <a href="/demos/smart-contract/" class="related-demo-link">Smart Contract</a>
+        <a href="/demos/oauth-corporate/" class="related-demo-link">Corporate SSO</a>
+        <a href="/demos/rest-api/" class="related-demo-link">REST API</a>
+        <a href="/demos/failover/" class="related-demo-link">Delivery Failover</a>
+        <a href="/demos/cross-geography/" class="related-demo-link">Cross-Geography</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- FAQ JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much does each API call cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "API owners set their own prices. Common prices range from $0.0001 to $0.01 per call. The platform charges a flat 5% commission — no other fees."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How fast is payment?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Payment happens automatically and typically confirms within a few seconds. Revenue arrives in the API owner's wallet after every call."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What currency is used for payment?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "All payments are in USDC (USD Coin). USDC is a stablecoin pegged 1:1 to the US dollar, so there is no crypto volatility risk."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are there minimum commitments or prepaid credits?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Consumers pay exactly for what they use, per call. No minimums, no prepaid credits, no expiring balances. API owners earn from the first call."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    function runPayPerUseDemo() {
+      var btn = document.getElementById('run-ppu-btn');
+      var resultEl = document.getElementById('ppu-result');
+      setLoading(btn, true);
+
+      var apiSelect = document.getElementById('ppu-api');
+      var apiId = apiSelect.value;
+      var pricePerCall = parseFloat(apiSelect.options[apiSelect.selectedIndex].getAttribute('data-price'));
+      var numCalls = parseInt(document.getElementById('ppu-calls').value, 10);
+      var startBalance = parseFloat(document.getElementById('ppu-balance').value);
+
+      var apiNames = {
+        'bb-sse-ticker': 'SSE Ticker (AAPL)',
+        'bb-graphql': 'GraphQL (Users)',
+        'bb-soap': 'SOAP (Balance)'
+      };
+
+      var calls = [];
+      var balance = startBalance;
+      var totalOwnerRevenue = 0;
+      var totalCommission = 0;
+
+      for (var i = 0; i < numCalls; i++) {
+        var commission = pricePerCall * 0.05;
+        var ownerRevenue = pricePerCall - commission;
+        balance -= pricePerCall;
+        totalOwnerRevenue += ownerRevenue;
+        totalCommission += commission;
+
+        var txHash = '0x' + randomHex(8) + '...' + randomHex(4);
+        calls.push({
+          call_number: i + 1,
+          api: apiNames[apiId],
+          price_usdc: pricePerCall.toFixed(6),
+          commission_usdc: commission.toFixed(6),
+          owner_revenue_usdc: ownerRevenue.toFixed(6),
+          remaining_balance_usdc: Math.max(0, balance).toFixed(6),
+          tx_hash: txHash,
+          latency_ms: 40 + Math.round(Math.random() * 30)
+        });
+      }
+
+      var currentCall = 0;
+
+      function showNextCall() {
+        if (currentCall >= calls.length) {
+          var summary = {
+            total_calls: numCalls,
+            api: apiNames[apiId],
+            price_per_call_usdc: pricePerCall.toFixed(6),
+            total_spent_usdc: (pricePerCall * numCalls).toFixed(6),
+            total_owner_revenue_usdc: totalOwnerRevenue.toFixed(6),
+            total_platform_commission_usdc: totalCommission.toFixed(6),
+            starting_balance_usdc: startBalance.toFixed(6),
+            ending_balance_usdc: Math.max(0, balance).toFixed(6),
+            payment_status: 'automatic (testnet)',
+            calls: calls
+          };
+
+          var totalLatency = calls.reduce(function(sum, c) { return sum + c.latency_ms; }, 0);
+          var avgLatency = Math.round(totalLatency / calls.length);
+          var latencyClass = avgLatency < 200 ? 'fast' : avgLatency < 500 ? 'medium' : 'slow';
+
+          resultEl.innerHTML =
+            '<div class="result-header">' +
+              '<span class="latency-badge ' + latencyClass + '">' + avgLatency + 'ms avg</span>' +
+              '<span class="status-badge">' + numCalls + ' calls settled</span>' +
+            '</div>' +
+            '<pre><code>' + escapeHtml(JSON.stringify(summary, null, 2)) + '</code></pre>';
+
+          setLoading(btn, false);
+          return;
+        }
+
+        var c = calls[currentCall];
+        var callsHtml = '';
+
+        for (var i = 0; i <= currentCall; i++) {
+          var ci = calls[i];
+          var isDone = i < currentCall;
+          var isCurrent = i === currentCall;
+
+          callsHtml +=
+            '<div style="padding:0.5rem 0; border-bottom:1px solid #1e293b; font-size:0.82rem;">' +
+              '<div style="display:flex; justify-content:space-between; align-items:center;">' +
+                '<span style="color:' + (isDone ? '#10b981' : '#f59e0b') + '; font-weight:600;">Call #' + ci.call_number + '</span>' +
+                '<span style="color:#94a3b8;">' + ci.latency_ms + 'ms</span>' +
+              '</div>' +
+              '<div style="display:flex; justify-content:space-between; margin-top:0.25rem;">' +
+                '<span style="color:#e2e8f0;">Paid: $' + ci.price_usdc + '</span>' +
+                '<span style="color:#10b981;">Owner: $' + ci.owner_revenue_usdc + '</span>' +
+                '<span style="color:#f59e0b;">Fee: $' + ci.commission_usdc + '</span>' +
+              '</div>' +
+              '<div style="color:#64748b; margin-top:0.15rem;">Balance: $' + ci.remaining_balance_usdc + ' | TX: ' + ci.tx_hash + '</div>' +
+            '</div>';
+        }
+
+        resultEl.innerHTML = callsHtml;
+        currentCall++;
+        setTimeout(showNextCall, 200 + Math.random() * 150);
+      }
+
+      resultEl.innerHTML = '<div style="color:#94a3b8; text-align:center; padding:2rem;">Processing ' + numCalls + ' API calls with USDC settlement...</div>';
+      setTimeout(showNextCall, 300);
+    }
+
+    function randomHex(len) {
+      var chars = '0123456789abcdef';
+      var result = '';
+      for (var i = 0; i < len; i++) {
+        result += chars[Math.floor(Math.random() * 16)];
+      }
+      return result;
+    }
+  </script>
+
+</body>
+</html>

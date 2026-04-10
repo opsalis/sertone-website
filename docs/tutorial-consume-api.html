@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Use APIs from the Marketplace — Sertone Docs</title>
+  <meta name="description" content="Step-by-step tutorial: browse the Sertone API catalog, test with demo mode, fund your wallet with USDC, and make your first live API call with auto-generated SDK.">
+  <meta name="keywords" content="consume API tutorial, API marketplace beginner guide, call API USDC, API consumer walkthrough, Sertone tutorial">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/tutorial-consume-api">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/tutorial-consume-api">
+  <meta property="og:title" content="Tutorial: Use APIs from the Marketplace — Sertone Docs">
+  <meta property="og:description" content="Step-by-step tutorial: browse the Sertone API catalog, test with demo mode, fund your wallet, and make your first live API call.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Tutorial: Use APIs from the Marketplace — Sertone Docs">
+  <meta name="twitter:description" content="Step-by-step: browse the API catalog, test with demo mode, fund your wallet, and make your first live API call.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Use APIs from the Sertone Marketplace",
+    "description": "Step-by-step tutorial: browse the Sertone API catalog, test with demo mode, fund your wallet with USDC, and make your first live API call.",
+    "url": "https://sertone.net/docs/tutorial-consume-api",
+    "step": [
+      {"@type": "HowToStep", "name": "Browse the API catalog", "text": "Open your web console and browse available APIs filtered by protocol or category"},
+      {"@type": "HowToStep", "name": "Test with demo mode", "text": "Try any API for free using real sample data before spending USDC"},
+      {"@type": "HowToStep", "name": "Fund your wallet", "text": "Add USDC to your wallet to pay for live API calls"},
+      {"@type": "HowToStep", "name": "Make your first call", "text": "Call the API directly or use the auto-generated SDK in your preferred language"}
+    ],
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link active">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Tutorial: Use APIs from the Marketplace</h1>
+      <p class="lead">Find an API, test it for free, wire it into your app, and pay only for what you use.</p>
+
+      <h2 id="what-you-need">What you need</h2>
+      <ul>
+        <li><strong>Docker</strong> installed and running</li>
+        <li><strong>5 minutes</strong> to set up the control center</li>
+        <li><strong>A small amount of USDC</strong> for API calls (and a tiny bit of ETH for fees)</li>
+      </ul>
+      <p>If you just want to browse and try demos, you do not even need USDC. Demo mode is completely free.</p>
+
+      <h2 id="step-0-install">Step 0: Install the control center</h2>
+      <p>Install and start the control center via Docker (see <a href="/docs/installation">Installation</a>). Open the web console and create your account.</p>
+
+      <h3 id="fund-wallet">Fund your wallet</h3>
+      <p>Go to the <strong>Finance</strong> tab. Your deposit address is shown on the page. Send funds to it:</p>
+      <ul>
+        <li><strong>USDC</strong> &mdash; this is what you pay for API calls. $10 is enough for many calls depending on per-call pricing.</li>
+        <li><strong>ETH</strong> &mdash; a small amount for transaction fees. $2-5 lasts a long time.</li>
+      </ul>
+      <p>Both can be sent from any exchange (Coinbase, Kraken, etc.) or another wallet.</p>
+
+      <h2 id="step-1-browse">Step 1: Browse the catalog</h2>
+      <p>In the web console, click the <strong>Catalog</strong> tab. You will see every API available on the marketplace.</p>
+      <p>Each listing shows the name, description, price per call, protocol, and live/offline status. Use the search bar to filter by keyword.</p>
+
+      <h2 id="step-2-demo">Step 2: Try before you buy (demo mode)</h2>
+      <p>Every API comes with free demo samples. Click an API, then click <strong>Try Demo</strong>.</p>
+      <p>Demo mode returns real data captured by the API owner when they registered. It shows you the response format, fields, and data types &mdash; all for free.</p>
+
+      <div class="info-box">
+        <p><strong>Select the API first.</strong> Click <strong>Select</strong> on any API to add it to your <strong>My APIs</strong> list. All new APIs start in demo mode by default.</p>
+      </div>
+
+      <h2 id="step-3-sdk">Step 3: Generate an SDK</h2>
+      <p>Every API includes an OpenAPI specification. Your control center uses it to generate a ready-to-use client library.</p>
+      <ol>
+        <li>Click the API in your catalog</li>
+        <li>Click <strong>Generate SDK</strong></li>
+        <li>Choose your language: Python, TypeScript, Go, Rust, Kotlin</li>
+        <li>Download and drop it into your project</li>
+      </ol>
+      <p>The SDK handles authentication and request formatting. You just call methods. See <a href="/docs/sdks">SDKs</a> for code examples.</p>
+
+      <h2 id="step-4-real-calls">Step 4: Make real API calls</h2>
+      <p>When you are ready to use live data, switch the API from demo to production mode in <strong>My APIs</strong> (flip the toggle from "Demo" to "On").</p>
+      <p>Now every call returns live data. You are charged the per-call price automatically from your USDC balance.</p>
+
+      <h3 id="using-sdk">Using the SDK</h3>
+      <p>If you generated an SDK, nothing changes in your code. The same methods that returned demo data now return live data.</p>
+
+      <h3 id="using-swagger">Using the Swagger panel</h3>
+      <p>Each API in the catalog has an interactive Swagger panel where you can test individual endpoints with custom parameters directly in the web console.</p>
+
+      <h2 id="step-5-monitor">Step 5: Monitor spending</h2>
+      <p>The <strong>Dashboard</strong> in your web console tracks everything:</p>
+      <ul>
+        <li><strong>Total calls made</strong> &mdash; today, this week, all time</li>
+        <li><strong>Total spent</strong> in USDC, with per-API breakdown</li>
+        <li><strong>Balance remaining</strong></li>
+        <li><strong>Projected runway</strong> &mdash; how many days your balance will last</li>
+      </ul>
+      <p>Set up <a href="/docs/alerts">email alerts</a> for low balance so you never run out mid-operation.</p>
+
+      <h2 id="tips">Tips from experience</h2>
+
+      <h3>Start with demo mode</h3>
+      <p>Always try the demo first. Check that the data format matches what you need before spending USDC.</p>
+
+      <h3>Fund small, top up later</h3>
+      <p>Start with $10-20 of USDC. See how many calls your app actually makes, then fund accordingly.</p>
+
+      <h3>Use the Swagger sandbox</h3>
+      <p>Each API has an interactive Swagger panel in the web console. Use it to explore endpoints before writing code.</p>
+
+      <h3>Check the status indicator</h3>
+      <p>Before relying on an API, check its status in the catalog. A green "Live" badge means it is available.</p>
+
+      <h2 id="common-errors">Common errors</h2>
+      <table>
+        <thead>
+          <tr><th>Status</th><th>Meaning</th><th>Fix</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>401</code></td><td>Bad auth token</td><td>Check your token in Settings</td></tr>
+          <tr><td><code>402</code></td><td>Insufficient USDC</td><td>Top up your wallet</td></tr>
+          <tr><td><code>404</code></td><td>API not found</td><td>Check the API name</td></tr>
+          <tr><td><code>502</code></td><td>Owner's API error</td><td>Try again later</td></tr>
+          <tr><td><code>504</code></td><td>Owner unreachable</td><td>API server is down</td></tr>
+        </tbody>
+      </table>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/tutorial-sell-api" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Sell Your API</span>
+        </a>
+        <a href="/docs/faq" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">FAQ</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#what-you-need" class="toc-link">What you need</a>
+      <a href="#step-0-install" class="toc-link">Step 0: Install</a>
+      <a href="#fund-wallet" class="toc-link sub">Fund your wallet</a>
+      <a href="#step-1-browse" class="toc-link">Step 1: Browse the catalog</a>
+      <a href="#step-2-demo" class="toc-link">Step 2: Try demo mode</a>
+      <a href="#step-3-sdk" class="toc-link">Step 3: Generate an SDK</a>
+      <a href="#step-4-real-calls" class="toc-link">Step 4: Make real calls</a>
+      <a href="#step-5-monitor" class="toc-link">Step 5: Monitor spending</a>
+      <a href="#tips" class="toc-link">Tips from experience</a>
+      <a href="#common-errors" class="toc-link">Common errors</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

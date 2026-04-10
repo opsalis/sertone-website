@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Installation — Sertone Docs | Install in One Docker Command</title>
+  <meta name="description" content="Install the Sertone control center with a single Docker command on Linux, Windows, or macOS. Step-by-step setup instructions with first-run configuration guide.">
+  <meta name="keywords" content="Sertone installation, Docker API gateway setup, install API marketplace, self-hosted API monetization, API control center Docker">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/installation">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/installation">
+  <meta property="og:title" content="Installation — Sertone Docs | Install in One Docker Command">
+  <meta property="og:description" content="Install the Sertone control center with a single Docker command on Linux, Windows, or macOS.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Installation — Sertone Docs">
+  <meta name="twitter:description" content="Install the Sertone control center with a single Docker command on Linux, Windows, or macOS.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Installation — Sertone",
+    "description": "Install the Sertone control center with a single Docker command. Works on Linux, Windows, and macOS. Step-by-step setup instructions.",
+    "url": "https://sertone.net/docs/installation",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link active">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Installation</h1>
+      <p class="lead">One Docker command. Free to install. Runs on your own hardware under your sole supervision.</p>
+
+      <p>The Sertone control center is a Docker container that runs entirely on your machine. Sertone has no access to it &mdash; your data, your wallet, and your API keys never leave your hardware.</p>
+
+      <h2 id="requirements">Requirements</h2>
+      <ul>
+        <li><strong>Docker</strong> 20.10+ installed and running</li>
+        <li><strong>2 GB RAM</strong> minimum (4 GB recommended)</li>
+        <li><strong>1 GB disk</strong> for the image and persistent data</li>
+      </ul>
+
+      <h2 id="install">Install and start</h2>
+      <p>Pull and run the control center:</p>
+      <pre><code>docker run -d --name sertone sertone/dag:latest</code></pre>
+      <p>The container starts and the web console becomes available. The console address is shown in the container logs.</p>
+
+      <h2 id="first-login">First login</h2>
+      <p>Open the web console in your browser and sign in with the default credentials shown in the container logs. On your very first login, you are prompted to change the default password.</p>
+
+      <h2 id="first-run-wizard">First-run setup wizard</h2>
+      <p>After signing in for the first time, the control center guides you through three setup steps before you can use the console:</p>
+      <ol>
+        <li><strong>Accept Terms of Use</strong> &mdash; read and accept the Sertone Terms of Use. You can open the terms in a new tab if needed. You must check the confirmation box and click "Accept &amp; Continue" to proceed.</li>
+        <li><strong>Set admin email</strong> &mdash; enter the email address where you want to receive encrypted backups and critical alerts. This is stored locally and never shared.</li>
+        <li><strong>Create a backup password and download your first backup</strong> &mdash; choose a strong password (minimum 6 characters) to encrypt your backups. The control center creates an encrypted backup file, saves it to disk, and emails it to you. A copy is also downloaded to your browser. This backup contains your wallet, API registrations, configuration, and call history.</li>
+      </ol>
+
+      <div class="warn-box">
+        <p><strong>Store your backup safely.</strong> Your control center is the only place your wallet and data exist. If you lose access to it without a backup, your funds and configuration cannot be recovered.</p>
+      </div>
+
+      <p>After completing these three steps, the Dashboard loads and you can start using Sertone.</p>
+
+      <h2 id="verify">Verify installation</h2>
+      <p>Once logged in, you should see the <strong>Dashboard</strong> with your balance and system status. If the dashboard loads, your installation is working correctly.</p>
+
+      <h2 id="updating">Updating</h2>
+      <p>Pull the latest image and restart. Your data persists across updates.</p>
+      <pre><code>docker pull sertone/dag:latest
+docker stop sertone &amp;&amp; docker rm sertone
+# Re-run the docker run command above</code></pre>
+
+      <div class="info-box">
+        <p><strong>Data persists across updates.</strong> Your wallet, configuration, and API registrations are stored on a Docker volume and survive image updates.</p>
+      </div>
+
+      <h2 id="https">HTTPS Certificate</h2>
+      <p>Your control center always runs on HTTPS &mdash; even without configuration. Here is how it works:</p>
+
+      <ol>
+        <li><strong>Out of the box:</strong> your control center generates a self-signed certificate. HTTPS works immediately. Your browser will show a security warning &mdash; this is normal for self-signed certificates.</li>
+        <li><strong>With a domain name:</strong> point a domain at your server (e.g. <code>my-node.example.com</code>). Your control center detects the domain and automatically requests a free Let's Encrypt certificate. No configuration needed &mdash; it just works.</li>
+        <li><strong>Automatic renewal:</strong> certificates are renewed automatically 30 days before expiry. You never need to touch it.</li>
+      </ol>
+
+      <div class="info-box">
+        <p><strong>That's it.</strong> Point a domain at your server. Within 24 hours, your control center upgrades from self-signed to a real Let's Encrypt certificate. If you don't have a domain, the self-signed certificate keeps everything encrypted.</p>
+      </div>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/quick-start" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Quick Start</span>
+        </a>
+        <a href="/docs/registering-apis" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Registering APIs</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#requirements" class="toc-link">Requirements</a>
+      <a href="#install" class="toc-link">Install and start</a>
+      <a href="#first-login" class="toc-link">First login</a>
+      <a href="#first-run-wizard" class="toc-link">First-run setup wizard</a>
+      <a href="#verify" class="toc-link">Verify installation</a>
+      <a href="#updating" class="toc-link">Updating</a>
+      <a href="#https" class="toc-link">HTTPS Certificate</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

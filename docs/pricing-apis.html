@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Pricing — Sertone Docs | How Billing Works</title>
+  <meta name="description" content="How API pricing works on Sertone. Owners set their price. Consumer pays that price. 5% is deducted from the owner. Per-call or monthly subscription.">
+  <meta name="keywords" content="API pricing model, per call billing, USDC API price, set API price, API fee structure, API marketplace commission, Sertone pricing">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/pricing-apis">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/pricing-apis">
+  <meta property="og:title" content="API Pricing — Sertone Docs | How Billing Works">
+  <meta property="og:description" content="Consumer pays owner's price. 5% deducted from owner. Per-call or subscription.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="API Pricing — Sertone Docs">
+  <meta name="twitter:description" content="Consumer pays owner's price. 5% deducted from owner. Per-call or subscription.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "API Pricing — Sertone",
+    "description": "How API pricing works on Sertone. Consumer pays owner's price. 5% deducted from owner. Per-call or monthly subscription.",
+    "url": "https://sertone.net/docs/pricing-apis",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link active">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Pricing</h1>
+      <p class="lead">Consumer pays the owner's price. Owner keeps 95%. Per-call or subscription.</p>
+
+      <h2 id="pricing-model">Pricing model</h2>
+      <p>The owner sets a price per call. The consumer pays exactly that amount. From that payment, 5% is deducted and goes to the platform. The owner receives the remaining 95%.</p>
+
+      <pre><code>consumer pays = owner's price
+owner receives = owner's price × 95%
+platform fee   = owner's price × 5%</code></pre>
+
+      <h2 id="example">Example breakdown</h2>
+      <table>
+        <thead>
+          <tr><th>Owner's Price</th><th>Consumer Pays</th><th>Owner Receives</th><th>Platform</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>$0.01</td><td>$0.01</td><td>$0.0095</td><td>$0.0005</td></tr>
+          <tr><td>$0.10</td><td>$0.10</td><td>$0.095</td><td>$0.005</td></tr>
+          <tr><td>$1.00</td><td>$1.00</td><td>$0.95</td><td>$0.05</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="setting-price">Setting your price (owners)</h2>
+      <p>When you register your API, you set the price per call in USDC. This is visible to consumers in the catalog. You can update your price at any time from the web console.</p>
+
+      <h2 id="subscriptions">Subscriptions</h2>
+      <p>Owners can also offer monthly subscription plans for unlimited access. The same 95/5 split applies to subscription payments.</p>
+
+      <div class="info-box">
+        <p><strong>No hidden fees.</strong> The consumer pays the owner's stated price. The 5% platform fee is deducted from the owner's side. Plus a small network transaction fee.</p>
+      </div>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/registering-apis" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Registering APIs</span>
+        </a>
+        <a href="/docs/demo-mode" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Demo Mode</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#pricing-model" class="toc-link">Pricing model</a>
+      <a href="#example" class="toc-link">Example breakdown</a>
+      <a href="#setting-price" class="toc-link">Setting your price</a>
+      <a href="#subscriptions" class="toc-link">Subscriptions</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

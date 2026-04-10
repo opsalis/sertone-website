@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Sell Your API — Sertone Docs | Start Earning USDC Today</title>
+  <meta name="description" content="Step-by-step tutorial: install the Sertone control center, register your existing API, set your per-call price in USDC, and start earning from day one. No code changes.">
+  <meta name="keywords" content="sell API tutorial, monetize API guide, API marketplace seller, earn USDC API, API business setup, Sertone seller tutorial">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/tutorial-sell-api">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/tutorial-sell-api">
+  <meta property="og:title" content="Tutorial: Sell Your API — Sertone Docs | Start Earning USDC Today">
+  <meta property="og:description" content="Step-by-step tutorial: install the control center, register your API, set your price, and start earning USDC. No code changes.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Tutorial: Sell Your API — Sertone Docs">
+  <meta name="twitter:description" content="Step-by-step: install the control center, register your API, set your price, and start earning USDC.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Sell Your API on Sertone",
+    "description": "Step-by-step tutorial to publish your API on the Sertone marketplace and earn USDC per call. No code changes required.",
+    "url": "https://sertone.net/docs/tutorial-sell-api",
+    "step": [
+      {"@type": "HowToStep", "name": "Install the control center", "text": "Run one Docker command to install the Sertone control center on your server"},
+      {"@type": "HowToStep", "name": "Register your API", "text": "Point the control center at your existing API endpoint — no code changes required"},
+      {"@type": "HowToStep", "name": "Set your price", "text": "Choose a per-call price in USDC. You receive 95% of every call."},
+      {"@type": "HowToStep", "name": "Go live", "text": "Your API is now published to the Sertone marketplace and earns automatically"}
+    ],
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link active">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Tutorial: Sell Your API</h1>
+      <p class="lead">You built an API. Now put it on the marketplace and get paid every time someone calls it.</p>
+
+      <h2 id="what-you-need">What you need</h2>
+      <ul>
+        <li><strong>An API server</strong> &mdash; any language, any framework, responding to HTTP requests</li>
+        <li><strong>A public IP or domain</strong> &mdash; your server must be reachable from the internet</li>
+        <li><strong>Docker</strong> installed somewhere (your server, your laptop, anywhere)</li>
+      </ul>
+      <p>That is it. No SDK to install in your API code. No Sertone library to import. Your API stays exactly as it is.</p>
+
+      <h2 id="step-1-build">Step 1: Build your API server</h2>
+      <p>If you already have an API running, skip to <a href="#step-2-deploy">Step 2</a>. Your API can be built in any language &mdash; Go, Python, Node.js, Java, Rust, anything. As long as it responds to HTTP requests, it works with Sertone.</p>
+
+      <div class="info-box">
+        <p><strong>Best practice: include a <code>/health</code> endpoint.</strong> It helps you verify your server is running, and the system uses it during validation.</p>
+      </div>
+
+      <h2 id="step-2-deploy">Step 2: Deploy it</h2>
+      <p>Your API server needs to be reachable from the internet. Common options:</p>
+      <ul>
+        <li><strong>VPS</strong> &mdash; DigitalOcean, Hetzner, Vultr, OVH ($5-10/month)</li>
+        <li><strong>Cloud</strong> &mdash; AWS EC2, GCP Compute, Azure VM</li>
+        <li><strong>Home server</strong> &mdash; any machine with port forwarding or a tunnel</li>
+      </ul>
+      <p>Verify your API is reachable by testing it from a different network (e.g., your phone on cellular data).</p>
+
+      <div class="warn-box">
+        <p><strong>Sertone does not host your API.</strong> Your server runs independently. Sertone connects paying consumers to it.</p>
+      </div>
+
+      <h2 id="step-3-control-center">Step 3: Set up your control center</h2>
+      <p>Install the control center via Docker (see <a href="/docs/installation">Installation</a>). Open the web console, create your account, and fund your wallet with a small amount of ETH for transaction fees. $5-10 is enough for months.</p>
+
+      <h2 id="step-4-register">Step 4: Register your API</h2>
+      <p>In the web console, go to the <strong>API Management</strong> tab and click <strong>Register API</strong>.</p>
+      <ol>
+        <li>Fill in the form: name, description, your API's URL, protocol, price per call, and OpenAPI spec</li>
+        <li>Click <strong>Validate API</strong> &mdash; the system checks your API is reachable and captures demo samples</li>
+        <li>Review the preview</li>
+        <li>Click <strong>Publish</strong></li>
+      </ol>
+      <p>Your API is now live on the marketplace.</p>
+
+      <h2 id="step-5-monitor">Step 5: Monitor sales</h2>
+      <p>The <strong>Dashboard</strong> in your web console shows real-time stats:</p>
+      <ul>
+        <li><strong>Calls served</strong> &mdash; today, this week, all time</li>
+        <li><strong>Revenue earned</strong> in USDC</li>
+        <li><strong>Per-API breakdown</strong> if you have multiple APIs</li>
+        <li><strong>Response times</strong></li>
+      </ul>
+      <p>Set up <a href="/docs/alerts">alerts</a> so you get an email if your ETH runs low.</p>
+
+      <h2 id="pricing-tips">Pricing tips</h2>
+      <table>
+        <thead>
+          <tr><th>API type</th><th>Suggested price per call</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Simple lookups (IP geolocation, currency rates)</td><td>$0.0001 &ndash; $0.001</td></tr>
+          <tr><td>Standard queries (weather, stock quotes, search)</td><td>$0.001 &ndash; $0.005</td></tr>
+          <tr><td>Complex operations (AI inference, image processing)</td><td>$0.005 &ndash; $0.02</td></tr>
+          <tr><td>Premium data (financial feeds, proprietary datasets)</td><td>$0.01 &ndash; $0.10</td></tr>
+        </tbody>
+      </table>
+      <p>Start low and raise prices as demand grows &mdash; you can update pricing at any time from the web console.</p>
+
+      <div class="info-box">
+        <p><strong>All prices are in USDC</strong>, a stablecoin worth $1 USD. No crypto volatility &mdash; $0.005 today is $0.005 tomorrow.</p>
+      </div>
+
+      <h2 id="common-mistakes">Common mistakes</h2>
+
+      <h3>1. API not reachable from the internet</h3>
+      <p>The most common issue. Your API must be on a public IP or domain. Test it from a different network before registering.</p>
+
+      <h3>2. Missing or incomplete OpenAPI spec</h3>
+      <p>Consumers rely on your spec to generate SDKs and understand your endpoints. A good spec means more buyers.</p>
+
+      <h3>3. Skipping demo samples</h3>
+      <p>Demo samples are the first thing consumers see. Without them, buyers have no way to preview your data format. Include 2-3 samples.</p>
+
+      <h3>4. API goes down after registration</h3>
+      <p>Use a process manager to keep your API running. Set up monitoring so you know when it goes down.</p>
+
+      <h3>5. Pricing too high on day one</h3>
+      <p>Price low to attract early users. A $0.001 call that gets 10,000 calls/day earns $10/day. A $0.05 call with zero usage earns nothing.</p>
+
+      <h2 id="whats-next">What happens next</h2>
+      <p>Once your API is live:</p>
+      <ul>
+        <li>Consumers discover it in the catalog and try the demo for free</li>
+        <li>When they switch to production mode, real calls hit your API server</li>
+        <li>You get paid per call &mdash; USDC appears in your wallet automatically</li>
+        <li>The catalog shows your API as "live" so consumers know it is available</li>
+      </ul>
+      <p>Keep your API server running and watch the revenue grow.</p>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/alerts" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Alerts</span>
+        </a>
+        <a href="/docs/tutorial-consume-api" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Use APIs</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#what-you-need" class="toc-link">What you need</a>
+      <a href="#step-1-build" class="toc-link">Step 1: Build your API</a>
+      <a href="#step-2-deploy" class="toc-link">Step 2: Deploy it</a>
+      <a href="#step-3-control-center" class="toc-link">Step 3: Control center</a>
+      <a href="#step-4-register" class="toc-link">Step 4: Register your API</a>
+      <a href="#step-5-monitor" class="toc-link">Step 5: Monitor sales</a>
+      <a href="#pricing-tips" class="toc-link">Pricing tips</a>
+      <a href="#common-mistakes" class="toc-link">Common mistakes</a>
+      <a href="#whats-next" class="toc-link">What happens next</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

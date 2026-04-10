@@ -1,0 +1,16 @@
+Worker 3 complete. Created 3 demo pages:
+- demos/smart-contract/index.html
+- demos/webhook-delivery/index.html
+- demos/multi-protocol/index.html
+
+All pages include:
+- Full SEO tags (title, meta description, keywords, OG, Twitter Card, canonical, JSON-LD)
+- Inline SVG architecture diagrams
+- Business case sections
+- Interactive live demo with JavaScript (callDemo via common.js)
+- Code samples (cURL, JavaScript, Python) with tab switcher
+- Self-host instructions with numbered steps
+- FAQ schema for SEO
+- Related demos footer links
+- Responsive layout using demos/style.css
+- Nav + footer matching site template

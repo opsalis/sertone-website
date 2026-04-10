@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOAP — Sertone Learn</title>
+  <meta name="description" content="Learn about SOAP web services, WSDL contracts, and XML envelopes. See how Sertone bridges SOAP APIs into its marketplace.">
+  <meta name="keywords" content="SOAP, SOAP API, WSDL, XML web services, WS-Security, enterprise API, API monetization, sell SOAP API, API marketplace, Sertone">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/learn/soap">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/learn/soap">
+  <meta property="og:title" content="SOAP — Sertone Learn | Monetize SOAP APIs on Sertone">
+  <meta property="og:description" content="Learn about SOAP web services, WSDL contracts, and XML envelopes. See how Sertone bridges SOAP APIs into its marketplace.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="SOAP — Sertone Learn">
+  <meta name="twitter:description" content="Monetize your SOAP/WSDL API on the Sertone marketplace with per-call per-call billing.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "SOAP — Sertone Learn",
+    "description": "Learn about SOAP web services, WSDL contracts, and XML envelopes. See how Sertone bridges SOAP APIs into its marketplace.",
+    "url": "https://sertone.net/learn/soap",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="/style.css?v=2">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/handler">Control Center</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/security">Security</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+
+      <nav class="breadcrumb">
+        <a href="/learn/owner">Owner</a>
+        <span class="sep">/</span>
+        <span class="current">SOAP</span>
+      </nav>
+
+      <div class="page-header">
+        <span class="protocol-icon">&#x1F3E2;</span>
+        <h1>SOAP</h1>
+        <p class="lead">Enterprise XML web services — strict contracts, WS-Security, and built-in transaction support.</p>
+      </div>
+
+      <!-- What is SOAP -->
+      <section class="content-section">
+        <h2>What Is SOAP?</h2>
+
+        <p>
+          <strong>SOAP</strong> (Simple Object Access Protocol) is a messaging protocol for
+          exchanging structured information between systems. Standardized by the W3C in the
+          early 2000s, SOAP dominated enterprise integration for over a decade and remains
+          deeply embedded in banking, healthcare, government, and insurance systems.
+          If you have ever interacted with a payment gateway, ERP system, or government
+          filing service, there is a good chance SOAP was involved.
+        </p>
+
+        <p>
+          Every SOAP message is an <strong>XML envelope</strong> with a specific structure:
+          an outer <code>&lt;Envelope&gt;</code> element containing an optional
+          <code>&lt;Header&gt;</code> (for metadata like authentication tokens, transaction
+          IDs, and routing information) and a mandatory <code>&lt;Body&gt;</code> (containing
+          the actual request or response data). This rigid structure ensures that every
+          participant in a message exchange knows exactly what to expect.
+        </p>
+
+        <p>
+          SOAP APIs are described by <strong>WSDL</strong> (Web Services Description Language)
+          files — XML documents that specify every operation, input message, output message,
+          data type, and binding. A WSDL is a complete, machine-readable contract. Tools can
+          generate client code in Java, C#, Python, or any language directly from a WSDL,
+          with full type safety and compile-time checking.
+        </p>
+
+        <p>
+          Where SOAP truly distinguishes itself is in its <strong>WS-* extensions</strong>:
+          WS-Security for message-level encryption and digital signatures, WS-ReliableMessaging
+          for guaranteed delivery, WS-AtomicTransaction for distributed transactions, and
+          WS-Addressing for complex routing. These features make SOAP the protocol of choice
+          when compliance, auditability, and reliability are non-negotiable.
+        </p>
+      </section>
+
+      <!-- How SOAP works with Sertone -->
+      <section class="content-section">
+        <h2>How SOAP Works with Sertone</h2>
+
+        <p>
+          Many organizations have invested years building SOAP services they cannot (and should
+          not) rewrite. Sertone lets them monetize those services without touching a single line
+          of SOAP code.
+        </p>
+
+        <ol class="steps">
+          <li>
+            <strong>Owner provides a WSDL file.</strong> Upload your WSDL via the control center
+            dashboard. The control center parses all operations, message types, and bindings to
+            understand your API surface.
+          </li>
+          <li>
+            <strong>Control center converts JSON parameters to SOAP XML envelopes.</strong> When a
+            consumer request arrives (as simple JSON), the control center constructs the proper SOAP
+            envelope, adds the required namespace declarations, and sends it to your SOAP
+            endpoint via HTTP POST.
+          </li>
+          <li>
+            <strong>Response XML is parsed back to JSON.</strong> The control center strips the SOAP
+            envelope, extracts the response body, and converts the XML data into clean JSON
+            that the consumer receives. The consumer never sees XML.
+          </li>
+        </ol>
+
+        <div class="info-box">
+          <p>
+            <strong>Your SOAP server stays untouched.</strong> Keep your WSDL, your WS-Security
+            configuration, your existing endpoints. The control center does all the protocol translation
+            — consumers interact with a clean REST-style OpenAPI interface.
+          </p>
+        </div>
+      </section>
+
+      <!-- Demo info -->
+      <section class="content-section">
+        <h2>Demo API: Periodic Table</h2>
+
+        <p>
+          This demo uses the <strong>Periodic Table SOAP service</strong> — all 118 chemical
+          elements with over 30 properties each: atomic number, symbol, name, atomic mass,
+          electron configuration, electronegativity, melting and boiling points, density,
+          discovery year, and more. A structured, hierarchical dataset that plays to SOAP's
+          strengths in typed, schema-validated data exchange.
+        </p>
+
+        <div class="btn-group">
+          <a href="/learn/owner" class="btn btn-outline">
+            &#8592; Owner Guide
+          </a>
+        </div>
+      </section>
+
+      <!-- Code example -->
+      <section class="content-section">
+        <h2>Code Example</h2>
+
+        <p class="code-label">Get element details via SOAP (Hydrogen)</p>
+        <div class="code-block"><code><span class="comment"># SOAP request wrapped in an XML envelope</span>
+<span class="keyword">curl</span> <span class="url">http://localhost:4003/soap</span> \
+  <span class="string">-H</span> <span class="string">"Content-Type: text/xml; charset=utf-8"</span> \
+  <span class="string">-H</span> <span class="string">"SOAPAction: GetElement"</span> \
+  <span class="string">-d</span> <span class="string">'&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope
+  xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:pt="http://sertone.net/demo/periodic-table"&gt;
+  &lt;soap:Body&gt;
+    &lt;pt:GetElement&gt;
+      &lt;pt:symbol&gt;H&lt;/pt:symbol&gt;
+    &lt;/pt:GetElement&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;'</span></code></div>
+
+        <p class="code-label">Response (XML)</p>
+        <div class="code-block"><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;soap:Body&gt;
+    &lt;GetElementResponse xmlns="http://sertone.net/demo/periodic-table"&gt;
+      &lt;element&gt;
+        &lt;atomicNumber&gt;1&lt;/atomicNumber&gt;
+        &lt;symbol&gt;H&lt;/symbol&gt;
+        &lt;name&gt;Hydrogen&lt;/name&gt;
+        &lt;atomicMass&gt;1.008&lt;/atomicMass&gt;
+        &lt;category&gt;Nonmetal&lt;/category&gt;
+        &lt;discoveryYear&gt;1766&lt;/discoveryYear&gt;
+      &lt;/element&gt;
+    &lt;/GetElementResponse&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></div>
+
+        <p>
+          The consumer never writes XML. Through the Sertone control center, the same call looks like:
+        </p>
+
+        <p class="code-label">Same call via the Sertone control center (JSON)</p>
+        <div class="code-block"><code><span class="comment"># Consumer sends simple JSON — control center builds the SOAP envelope</span>
+<span class="keyword">curl</span> <span class="url">http://localhost:3000/api/periodic-table/GetElement</span> \
+  <span class="string">-H</span> <span class="string">"Content-Type: application/json"</span> \
+  <span class="string">-d</span> <span class="string">'{ "symbol": "H" }'</span></code></div>
+      </section>
+
+      <!-- Key concepts table -->
+      <section class="content-section">
+        <h2>SOAP at a Glance</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Concept</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Transport</td>
+              <td>HTTP, SMTP, JMS, or any transport</td>
+            </tr>
+            <tr>
+              <td>Data format</td>
+              <td>XML (exclusively)</td>
+            </tr>
+            <tr>
+              <td>Spec format</td>
+              <td>WSDL (Web Services Description Language)</td>
+            </tr>
+            <tr>
+              <td>Message structure</td>
+              <td>Envelope &gt; Header (optional) &gt; Body</td>
+            </tr>
+            <tr>
+              <td>Strongly typed</td>
+              <td>Yes — XML Schema (XSD) enforces types</td>
+            </tr>
+            <tr>
+              <td>Best for</td>
+              <td>Enterprise integration, financial systems, compliance-heavy industries</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms of Service</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy Policy</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+</body>
+</html>

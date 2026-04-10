@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Sertone Docs | Configure Your Control Center</title>
+  <meta name="description" content="Configure your Sertone control center: appearance (light/dark mode), security (2FA, passkeys), email alerts, encrypted backup, multi-user roles, and more.">
+  <meta name="keywords" content="Sertone settings, API gateway configuration, 2FA setup, multi-user API, backup API config, dark mode API console">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/settings">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/settings">
+  <meta property="og:title" content="Settings — Sertone Docs | Configure Your Control Center">
+  <meta property="og:description" content="Configure your Sertone control center: appearance, security, email, backup, users, and more.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Settings — Sertone Docs">
+  <meta name="twitter:description" content="Configure your Sertone control center: appearance, security, email, backup, multi-user roles, and more.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Settings — Sertone",
+    "description": "Configure your Sertone control center: appearance (light/dark mode), security (2FA, passkeys), email alerts, encrypted backup, multi-user roles.",
+    "url": "https://sertone.net/docs/settings",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link active">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Settings</h1>
+      <p class="lead">Configure every aspect of your control center from the Settings tab.</p>
+
+      <p>The Settings tab is organized into 11 sub-tabs. Click any sub-tab to jump to that section. Settings are available to admin users.</p>
+
+      <h2 id="users">Users</h2>
+      <p>Manage user accounts on your control center. The Users sub-tab shows a table of all users with their name, email, assigned roles, and an optional comment.</p>
+      <p>Roles determine what each user can access:</p>
+      <table>
+        <thead>
+          <tr><th>Role</th><th>Access</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Admin</strong></td><td>Full access to all tabs and settings</td></tr>
+          <tr><td><strong>API Owner</strong></td><td>API Management tab and Catalog</td></tr>
+          <tr><td><strong>Consumer</strong></td><td>Catalog and API calling</td></tr>
+          <tr><td><strong>Finance</strong></td><td>Dashboard and Finance tab</td></tr>
+        </tbody>
+      </table>
+      <p>To add a new user, fill in the form at the bottom: first name, last name, email, a temporary password, an optional recovery email, an optional comment, and select roles. Click <strong>Create User</strong>. The new user must change their password on first login.</p>
+      <p>You can edit or delete existing users, and unlock accounts that have been locked after too many failed login attempts.</p>
+
+      <h2 id="email">Email / SMTP</h2>
+      <p>Configure how your control center sends email notifications and backup files.</p>
+      <p>By default, a <strong>built-in mail sender</strong> works out of the box with no configuration needed. If you prefer better deliverability, toggle <strong>Use external SMTP server</strong> and enter your SMTP details (host, port, TLS, username, password).</p>
+      <p>Set the <strong>From Address</strong> and <strong>Notification Email</strong> where alerts and backups should be sent.</p>
+      <p>Click <strong>Send Test Email</strong> to verify your configuration. A <strong>Local Mailbox</strong> section at the bottom shows emails that were sent using the built-in sender.</p>
+
+      <h2 id="cloud">Cloud Storage</h2>
+      <p>Configure your own cloud storage for large API responses. When enabled, large payloads are uploaded directly to your bucket instead of being transferred inline.</p>
+      <p>Select a cloud provider from the dropdown:</p>
+      <ul>
+        <li><strong>AWS (S3)</strong> &mdash; enter your Access Key ID, Secret Access Key, Region, and Bucket Name</li>
+        <li><strong>Google Cloud Storage (GCP)</strong> &mdash; enter your Client Email, Service Account Key, and Bucket Name</li>
+        <li><strong>None</strong> &mdash; disable cloud storage (default)</li>
+      </ul>
+      <p>Click <strong>Save Cloud Credentials</strong> to apply. Your credentials are stored locally and never shared.</p>
+
+      <h2 id="security">Security</h2>
+      <p>The Security sub-tab shows your <strong>Consumer API Secret</strong> &mdash; the authentication token that protects your API call endpoint. This secret is auto-generated at first boot and embedded in all generated SDKs.</p>
+      <p>You can:</p>
+      <ul>
+        <li><strong>Copy</strong> the secret to your clipboard</li>
+        <li><strong>Rotate</strong> the secret if you suspect a security breach (note: all existing SDKs must be regenerated after rotation)</li>
+      </ul>
+
+      <h2 id="network">Network</h2>
+      <p>Configure how your control center connects to the network.</p>
+      <h3 id="connectivity-modes">Connectivity modes</h3>
+      <p>Select how consumers reach your control center (WAN mode) and how your control center reaches your backend APIs (LAN mode). Click <strong>Auto-Detect</strong> to probe which modes are available on your machine.</p>
+      <p>WAN modes:</p>
+      <ul>
+        <li><strong>Direct</strong> &mdash; public IP or open port</li>
+        <li><strong>Tunnel</strong> &mdash; Cloudflare tunnel</li>
+        <li><strong>BYO Relay</strong> &mdash; cloud bucket relay</li>
+        <li><strong>Fallback</strong> &mdash; built-in relay (always available)</li>
+      </ul>
+      <p>LAN modes:</p>
+      <ul>
+        <li><strong>Direct</strong> &mdash; HTTP to backend</li>
+        <li><strong>Agent</strong> &mdash; reverse WebSocket agent</li>
+        <li><strong>Polling</strong> &mdash; backend polls a queue</li>
+      </ul>
+      <p>Each mode shows a green check or red cross indicating availability. Select your preferred mode and click <strong>Apply</strong>.</p>
+      <h3 id="delivery-methods">Delivery preferences</h3>
+      <p>Reorder your preferred delivery methods. The control center will negotiate the cheapest enabled method that the API owner also supports.</p>
+
+      <h3 id="tls">Domain &amp; TLS</h3>
+      <p>Your control center handles HTTPS certificates automatically:</p>
+      <ul>
+        <li><strong>No domain:</strong> self-signed certificate (always encrypted, browser shows warning)</li>
+        <li><strong>With domain:</strong> free Let's Encrypt certificate (no warning, fully trusted)</li>
+        <li>Certificate renews automatically every 60 days</li>
+        <li>You can check the certificate status in Settings &gt; Network</li>
+      </ul>
+      <p>To use a custom domain: point a DNS A record at your server's IP address. The control center detects it automatically within 24 hours and requests a certificate.</p>
+
+      <h2 id="appearance">Appearance</h2>
+      <p>Toggle between <strong>day mode</strong> (light theme) and <strong>night mode</strong> (dark theme). Your preference is saved in your browser and persists across sessions.</p>
+
+      <h2 id="backup">Backup</h2>
+      <p>Manage encrypted backups of your entire control center configuration, wallet, and data.</p>
+      <p>Actions:</p>
+      <ul>
+        <li><strong>Download Backup</strong> &mdash; download an encrypted backup file to your computer</li>
+        <li><strong>Backup Now</strong> &mdash; trigger an immediate backup (saved to disk and emailed)</li>
+        <li><strong>Import</strong> &mdash; restore a previous backup by uploading a <code>.sertone-backup</code> or <code>.json</code> file</li>
+      </ul>
+      <h3 id="auto-backup">Auto-backup settings</h3>
+      <p>Configure automatic backups:</p>
+      <ul>
+        <li><strong>Enable/disable</strong> auto-backup</li>
+        <li><strong>Interval</strong> &mdash; choose 1, 3, 6, 12, or 24 hours</li>
+        <li><strong>Backup directory</strong> &mdash; where files are saved on disk</li>
+        <li><strong>Email backups</strong> &mdash; toggle sending encrypted backups to your admin email</li>
+      </ul>
+      <p>You can also <strong>change the backup password</strong> and view <strong>backup history</strong> showing when each backup was created.</p>
+
+      <h2 id="updates">Updates</h2>
+      <p>View your current version and check for available updates. Pull the latest Docker image and restart to update.</p>
+
+      <h2 id="provision">Provision</h2>
+      <p>Configure fast-path mode for faster API call delivery.</p>
+      <p>When enabled, API calls are dispatched immediately while payment processing runs in the background. A frozen balance is reserved as a safety deposit.</p>
+      <p>Settings:</p>
+      <ul>
+        <li><strong>Enable/disable</strong> fast-path mode</li>
+        <li><strong>Frozen amount</strong> &mdash; USDC floor reserved as a safety deposit</li>
+        <li><strong>Auto top-up threshold</strong> &mdash; automatically top up when balance drops below this</li>
+        <li><strong>Auto top-up amount</strong> &mdash; how much USDC to top up each time</li>
+      </ul>
+      <h3 id="adaptive">Smart adaptive provision</h3>
+      <p>Enable adaptive mode to automatically scale top-up amounts based on your wallet balance and spending rate. The system adjusts the ceiling, floor, and top-up amounts for you. Uncheck "Let system adjust" on any field to pin a manual value.</p>
+
+      <h2 id="decommission">Decommission</h2>
+      <p>Safely shut down your control center and transfer all remaining funds to an external wallet.</p>
+
+      <div class="warn-box">
+        <p><strong>Always decommission before uninstalling.</strong> If you delete the control center without decommissioning first, any deposited funds may be permanently lost.</p>
+      </div>
+
+      <p>Steps:</p>
+      <ol>
+        <li>Click <strong>Check Balances &amp; Estimate Gas</strong> to see your current holdings</li>
+        <li>Enter the external wallet address where you want all funds sent</li>
+        <li>Confirm with your admin password</li>
+        <li>Click <strong>Decommission &amp; Transfer All Funds</strong></li>
+      </ol>
+      <p>This action is irreversible. All USDC and ETH are transferred out and the control center is marked as decommissioned.</p>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/funding" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Funding &amp; Withdrawing</span>
+        </a>
+        <a href="/docs/alerts" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Alerts</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#users" class="toc-link">Users</a>
+      <a href="#email" class="toc-link">Email / SMTP</a>
+      <a href="#cloud" class="toc-link">Cloud Storage</a>
+      <a href="#security" class="toc-link">Security</a>
+      <a href="#network" class="toc-link">Network</a>
+      <a href="#tls" class="toc-link">Domain &amp; TLS</a>
+      <a href="#appearance" class="toc-link">Appearance</a>
+      <a href="#backup" class="toc-link">Backup</a>
+      <a href="#updates" class="toc-link">Updates</a>
+      <a href="#provision" class="toc-link">Provision</a>
+      <a href="#decommission" class="toc-link">Decommission</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

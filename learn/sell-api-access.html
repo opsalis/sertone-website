@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sell API Access — Sertone | Step-by-Step Guide</title>
+  <meta name="description" content="Step-by-step guide to selling access to your API on Sertone. No code changes, no billing system, no sign-up needed. Start earning in minutes.">
+  <meta name="keywords" content="sell API access, API marketplace, monetize API, sell API calls, API business, API revenue, developer tools, Sertone">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/learn/sell-api-access">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/learn/sell-api-access">
+  <meta property="og:title" content="Sell API Access — Sertone | Step-by-Step Guide">
+  <meta property="og:description" content="Step-by-step guide to selling access to your API. No code changes, no billing system, no sign-up needed.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sell API Access — Sertone">
+  <meta name="twitter:description" content="Step-by-step guide to selling access to your API. No code changes, no billing. Start earning in minutes.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Sell API Access — Step-by-Step Guide",
+    "description": "Step-by-step guide to selling access to your API on Sertone. No code changes, no billing system, no sign-up needed.",
+    "url": "https://sertone.net/learn/sell-api-access",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="/style.css?v=2">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/handler">Control Center</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/security">Security</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1>Sell Access to Your API</h1>
+      <p class="subheadline">A step-by-step guide. From zero to earning revenue on your API in under five minutes.</p>
+    </div>
+  </section>
+
+  <!-- What You Need -->
+  <section>
+    <div class="container text-center">
+      <span class="section-label">Before You Start</span>
+      <h2 class="section-title">What You Need</h2>
+      <p class="section-desc">Two things. That is all.</p>
+
+      <div class="card-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 600px; margin: 0 auto;">
+        <div class="card">
+          <div class="card-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          </div>
+          <h3>A Running API</h3>
+          <p>Any API that works over HTTP. REST, GraphQL, SOAP, gRPC, JSON-RPC, XML-RPC. It can be on any server &mdash; your laptop, a cloud VM, or your office server.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <h3>A Spec File</h3>
+          <p>An OpenAPI file (YAML/JSON), GraphQL SDL, WSDL, .proto file, or a simple method list. This describes what your API does.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step by Step -->
+  <section>
+    <div class="container">
+      <div class="text-center">
+        <span class="section-label">Guide</span>
+        <h2 class="section-title">Step by Step</h2>
+        <p class="section-desc">Follow these steps and you will be selling API access in minutes.</p>
+      </div>
+
+      <div class="setup-steps">
+
+        <div class="setup-step">
+          <div class="setup-step-number">1</div>
+          <h3>Install and Run Sertone</h3>
+          <p>One command: <code>docker pull sertone/dag</code>. The Sertone node sits in front of your API and handles all payment and encryption logic.</p>
+          <p>Run it on the same machine as your API (or on the same network). Takes about 60 seconds.</p>
+        </div>
+
+        <div class="setup-step">
+          <div class="setup-step-number">2</div>
+          <h3>Open the Web Console</h3>
+          <p>Once running, open your browser and go to the web console. This is where you manage everything &mdash; no command line needed.</p>
+        </div>
+
+        <div class="setup-step">
+          <div class="setup-step-number">3</div>
+          <h3>Register Your API</h3>
+          <p>In the console, click "Register API" and fill in:</p>
+          <ul>
+            <li>Your API's address on your network (for example, <code>http://localhost:4001</code>)</li>
+            <li>Your spec file (drag and drop)</li>
+            <li>Your per-call price</li>
+          </ul>
+          <p>Sertone validates your API is reachable, parses your spec file, and publishes your service to the catalog.</p>
+        </div>
+
+        <div class="setup-step">
+          <div class="setup-step-number">4</div>
+          <h3>Done &mdash; You Are Live</h3>
+          <p>Your API is now visible in the Sertone catalog. Consumers can find it, call it, and pay per call. Money goes directly to your account.</p>
+          <p>Monitor calls, earnings, and status from the web console.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="container text-center">
+      <span class="section-label">Common Questions</span>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-desc">Quick answers to the most common questions.</p>
+
+      <div style="max-width: 640px; margin: 0 auto; text-align: left;">
+        <div style="padding: 1.5rem 0; border-bottom: 1px solid #e2e8f0;">
+          <h4>Do I need to change my API code?</h4>
+          <p style="color: #64748b; margin-top: 0.5rem;">No. Your API stays exactly as it is. Sertone sits in front and handles everything.</p>
+        </div>
+        <div style="padding: 1.5rem 0; border-bottom: 1px solid #e2e8f0;">
+          <h4>Can I use any programming language?</h4>
+          <p style="color: #64748b; margin-top: 0.5rem;">Yes. Sertone talks to your API over HTTP. It does not matter what language your API is written in.</p>
+        </div>
+        <div style="padding: 1.5rem 0; border-bottom: 1px solid #e2e8f0;">
+          <h4>How fast do I get paid?</h4>
+          <p style="color: #64748b; margin-top: 0.5rem;">After each API call, payment settles within minutes. Money goes directly to your account &mdash; not to us, then to you.</p>
+        </div>
+        <div style="padding: 1.5rem 0; border-bottom: 1px solid #e2e8f0;">
+          <h4>What if my API goes offline?</h4>
+          <p style="color: #64748b; margin-top: 0.5rem;">No problem. Your API is simply marked as unavailable in the catalog. When it comes back, it is available again. No penalty.</p>
+        </div>
+        <div style="padding: 1.5rem 0;">
+          <h4>Can I stop selling at any time?</h4>
+          <p style="color: #64748b; margin-top: 0.5rem;">Yes. Just stop Sertone. Your API disappears from the catalog. No cancellation process, no contract to break.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);">
+    <div class="container text-center">
+      <h2 class="section-title">Ready to Start Selling?</h2>
+      <p class="section-desc">Install in 60 seconds and start earning from your API.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/learn/owner" class="btn">Full Owner Guide</a>
+        <a href="/pricing" class="btn btn-secondary">View Pricing</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms of Service</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy Policy</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+</body>
+</html>

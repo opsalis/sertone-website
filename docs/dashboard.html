@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Sertone Docs | API Activity & Earnings at a Glance</title>
+  <meta name="description" content="The Sertone Dashboard shows your KPIs, call volume, earnings, and system status at a glance. Real-time monitoring for API owners and consumers.">
+  <meta name="keywords" content="API dashboard, API monitoring, earnings dashboard, USDC earnings tracker, API call volume, Sertone web console">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/dashboard">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/dashboard">
+  <meta property="og:title" content="Dashboard — Sertone Docs | API Activity & Earnings at a Glance">
+  <meta property="og:description" content="The Sertone Dashboard shows your KPIs, call volume, earnings, and system status at a glance. Real-time monitoring.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Dashboard — Sertone Docs">
+  <meta name="twitter:description" content="The Sertone Dashboard shows your KPIs, call volume, earnings, and system status at a glance.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Dashboard — Sertone",
+    "description": "The Sertone Dashboard shows your KPIs, call volume, earnings, and system status at a glance. Real-time monitoring for API owners and consumers.",
+    "url": "https://sertone.net/docs/dashboard",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link active">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Dashboard</h1>
+      <p class="lead">Your at-a-glance overview of activity, balances, and system health.</p>
+
+      <h2 id="overview">Overview</h2>
+      <p>The Dashboard is the first screen you see after logging in. It shows real-time key performance indicators, a call-rate chart, a per-API breakdown, and an event log. The dashboard refreshes automatically every 30 seconds.</p>
+      <p>An <strong>uptime badge</strong> in the top-right corner shows how long your control center has been running since last restart.</p>
+
+      <h2 id="kpi-cards">KPI cards</h2>
+      <p>The top of the dashboard shows a row of KPI cards. The exact cards depend on your role:</p>
+
+      <h3 id="buyer-kpis">For buyers (consumers)</h3>
+      <table>
+        <thead>
+          <tr><th>Card</th><th>What it shows</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>USDC Balance</strong></td><td>Your current USDC balance</td></tr>
+          <tr><td><strong>Gas Balance</strong></td><td>Your current ETH balance (used for transaction fees)</td></tr>
+          <tr><td><strong>Calls (24h)</strong></td><td>Number of API calls you made in the last 24 hours, with success rate</td></tr>
+          <tr><td><strong>Avg Latency</strong></td><td>Average response time for calls over the last 24 hours</td></tr>
+          <tr><td><strong>USDC Spent (24h)</strong></td><td>How much USDC you spent on API calls in the last 24 hours</td></tr>
+          <tr><td><strong>Total Calls Ever</strong></td><td>Lifetime call count and total USDC spent</td></tr>
+        </tbody>
+      </table>
+
+      <h3 id="seller-kpis">For sellers (API owners)</h3>
+      <p>When you have registered APIs and are receiving calls, the dashboard switches to seller mode. The KPI cards change:</p>
+      <table>
+        <thead>
+          <tr><th>Card</th><th>What it shows</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Calls Served (24h)</strong></td><td>Number of calls served to consumers in the last 24 hours</td></tr>
+          <tr><td><strong>Success Rate</strong></td><td>Percentage of successful responses</td></tr>
+          <tr><td><strong>Revenue (24h)</strong></td><td>USDC earned from API calls in the last 24 hours</td></tr>
+          <tr><td><strong>Calls Served (7d)</strong></td><td>Total calls served and revenue over the last 7 days</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="call-rate-chart">Call rate chart</h2>
+      <p>Below the KPI cards, a bar chart shows your call volume over the last 48 hours. Green bars represent successful calls and red bars represent errors. Hour labels appear along the bottom axis. This gives you a quick visual of traffic patterns and any error spikes.</p>
+
+      <h2 id="api-breakdown">API breakdown table</h2>
+      <p>The <strong>API Breakdown</strong> table lists every API you have used (or served, in seller mode) with all-time statistics:</p>
+      <ul>
+        <li>API name</li>
+        <li>Total calls</li>
+        <li>Success / error count</li>
+        <li>USDC cost (buyer) or USDC revenue (seller)</li>
+        <li>Average latency (buyer) or success rate percentage (seller)</li>
+      </ul>
+
+      <h2 id="event-log">Event log</h2>
+      <p>At the bottom of the dashboard, the <strong>Event Log</strong> displays recent system events such as startups, catalog syncs, and any errors. Each event shows a timestamp, event type, severity icon (blue for info, yellow for warning, red for error), and a short description.</p>
+
+      <h2 id="auto-pause-banner">Auto-pause banner</h2>
+      <p>If your balance drops critically low, a yellow banner appears at the top of the dashboard:</p>
+      <p><em>"API SERVING PAUSED &mdash; Low balance. Click to manage."</em></p>
+      <p>Clicking the banner takes you to the <a href="/docs/funding">Finance</a> tab where you can deposit funds and resume serving. Demo mode continues to work while paused.</p>
+
+      <h2 id="backup-warning">Backup overdue warning</h2>
+      <p>If your last backup was more than 30 days ago, a red warning banner appears on the dashboard reminding you to create a new backup. Click the link in the banner to go directly to <a href="/docs/settings">Settings &gt; Backup</a>.</p>
+
+      <h2 id="empty-state">Empty state</h2>
+      <p>If you have not made any API calls yet and have no balance, the dashboard shows a message suggesting you browse the Catalog to discover APIs or register your own in the API Management tab.</p>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/demo-mode" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Demo Mode</span>
+        </a>
+        <a href="/docs/browsing-apis" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Browsing APIs</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#overview" class="toc-link">Overview</a>
+      <a href="#kpi-cards" class="toc-link">KPI cards</a>
+      <a href="#buyer-kpis" class="toc-link sub">For buyers</a>
+      <a href="#seller-kpis" class="toc-link sub">For sellers</a>
+      <a href="#call-rate-chart" class="toc-link">Call rate chart</a>
+      <a href="#api-breakdown" class="toc-link">API breakdown table</a>
+      <a href="#event-log" class="toc-link">Event log</a>
+      <a href="#auto-pause-banner" class="toc-link">Auto-pause banner</a>
+      <a href="#backup-warning" class="toc-link">Backup overdue warning</a>
+      <a href="#empty-state" class="toc-link">Empty state</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

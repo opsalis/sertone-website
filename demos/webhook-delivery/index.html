@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webhook API Delivery — Async Response Delivery — Sertone</title>
+  <meta name="description" content="Asynchronous API response delivery via webhook callback. For long-running operations, get results pushed to your endpoint instead of blocking.">
+  <meta name="keywords" content="webhook API, async API delivery, webhook callback, API marketplace, Sertone, asynchronous response">
+  <link rel="canonical" href="https://sertone.net/demos/webhook-delivery/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/webhook-delivery/">
+  <meta property="og:title" content="Webhook API Delivery — Async Response Delivery">
+  <meta property="og:description" content="Asynchronous API response delivery via webhook callback. Results pushed to your endpoint for long-running operations.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Webhook API Delivery — Async Response Delivery">
+  <meta name="twitter:description" content="Asynchronous API response delivery via webhook callback. Results pushed to your endpoint for long-running operations.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Sertone Webhook Delivery Demo",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "description": "Deliver API responses asynchronously via webhook callbacks through the Sertone marketplace.",
+        "url": "https://sertone.net/demos/webhook-delivery/",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "HowTo",
+        "name": "How to Set Up Webhook API Delivery",
+        "description": "Configure webhook callback URLs so API responses are delivered asynchronously to your endpoint.",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "position": 1,
+            "name": "Install Sertone",
+            "text": "Pull the Sertone Docker container on your own server."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 2,
+            "name": "Configure your webhook endpoint",
+            "text": "Set a callback URL in your subscription configuration."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 3,
+            "name": "Make API calls with async delivery",
+            "text": "Send requests and receive responses at your webhook endpoint."
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div class="demo-container">
+    <nav class="demo-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>&rsaquo;</span>
+      <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+      <a href="/demos/">Delivery</a> <span>&rsaquo;</span>
+      Webhook Delivery
+    </nav>
+  </div>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Async Delivery</p>
+      <h1>Webhook API Delivery</h1>
+      <p class="demo-tagline">For long-running API operations, responses are delivered via webhook callback instead of blocking the connection. Fire and forget.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="Architecture diagram">
+      <h2>How It Works</h2>
+      <svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Data flow: Consumer sends API call to Sertone, which routes to the API Owner. The owner processes the request and sends the response back via webhook callback to the consumer's endpoint.">
+        <!-- Consumer -->
+        <rect x="20" y="50" width="150" height="80" rx="12" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="95" y="80" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">CONSUMER</text>
+        <text x="95" y="98" text-anchor="middle" font-size="10" fill="#94a3b8">API call + webhook URL</text>
+
+        <!-- Arrow 1: Request -->
+        <line x1="170" y1="90" x2="280" y2="90" stroke="#00b894" stroke-width="2" marker-end="url(#arrowhead-wh)"/>
+        <text x="225" y="80" text-anchor="middle" font-size="9" fill="#00b894">1. Request</text>
+
+        <!-- Sertone -->
+        <rect x="280" y="50" width="140" height="80" rx="12" fill="rgba(0,184,148,0.08)" stroke="#00b894" stroke-width="1.5"/>
+        <text x="350" y="80" text-anchor="middle" font-size="11" fill="#00b894" font-weight="600">SERTONE</text>
+        <text x="350" y="98" text-anchor="middle" font-size="10" fill="#64748b">Route + Settle</text>
+
+        <!-- Arrow 2: Forward -->
+        <line x1="420" y1="90" x2="530" y2="90" stroke="#00b894" stroke-width="2" marker-end="url(#arrowhead-wh)"/>
+        <text x="475" y="80" text-anchor="middle" font-size="9" fill="#00b894">2. Forward</text>
+
+        <!-- Owner -->
+        <rect x="530" y="50" width="150" height="80" rx="12" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="605" y="80" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">API OWNER</text>
+        <text x="605" y="98" text-anchor="middle" font-size="10" fill="#94a3b8">Long-running process</text>
+
+        <!-- Arrow 3: ACK -->
+        <line x1="350" y1="130" x2="350" y2="165" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4"/>
+        <line x1="350" y1="165" x2="95" y2="165" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#arrowhead-wh-gray)"/>
+        <text x="225" y="158" text-anchor="middle" font-size="9" fill="#94a3b8">3. ACK (202 Accepted)</text>
+
+        <!-- Arrow 4: Async response via webhook -->
+        <line x1="605" y1="130" x2="605" y2="210" stroke="#f59e0b" stroke-width="2"/>
+        <text x="660" y="175" text-anchor="middle" font-size="9" fill="#f59e0b">4. Processing...</text>
+
+        <!-- Webhook callback -->
+        <rect x="480" y="210" width="200" height="50" rx="10" fill="rgba(245,158,11,0.08)" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="580" y="233" text-anchor="middle" font-size="10" fill="#f59e0b" font-weight="600">Response Ready</text>
+        <text x="580" y="249" text-anchor="middle" font-size="9" fill="#94a3b8">Result payload</text>
+
+        <!-- Arrow 5: Webhook delivery -->
+        <line x1="480" y1="235" x2="170" y2="235" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead-wh-gold)"/>
+        <text x="325" y="252" text-anchor="middle" font-size="9" fill="#f59e0b">5. Webhook callback → consumer endpoint</text>
+
+        <!-- Consumer webhook endpoint -->
+        <rect x="20" y="210" width="150" height="50" rx="10" fill="rgba(245,158,11,0.04)" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4"/>
+        <text x="95" y="233" text-anchor="middle" font-size="10" fill="#f59e0b" font-weight="600">WEBHOOK ENDPOINT</text>
+        <text x="95" y="249" text-anchor="middle" font-size="9" fill="#94a3b8">https://your-app.com/hook</text>
+
+        <defs>
+          <marker id="arrowhead-wh" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#00b894"/>
+          </marker>
+          <marker id="arrowhead-wh-gray" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#94a3b8"/>
+          </marker>
+          <marker id="arrowhead-wh-gold" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#f59e0b"/>
+          </marker>
+        </defs>
+      </svg>
+      <p class="arch-caption">Consumer sends a request with a webhook callback URL. The API owner processes the request asynchronously and delivers the response to the consumer's webhook endpoint.</p>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why Webhook Delivery?</h2>
+      <p>Not every API call returns in milliseconds. Machine learning inference, batch data processing, report generation — these operations can take seconds or minutes. Holding an HTTP connection open that long is fragile and wasteful.</p>
+      <p>With Sertone webhook delivery, the consumer fires a request and immediately gets a 202 Accepted response. When the owner finishes processing, the result is pushed to the consumer's webhook endpoint. No polling, no timeouts, no dropped connections.</p>
+      <p>Real-world example: a data analytics platform subscribes to a heavy-compute API that generates financial reports. Each report takes 30-60 seconds. With webhook delivery, the platform submits requests and processes results as they arrive — no long-polling infrastructure needed.</p>
+    </section>
+
+    <!-- Interactive Demo -->
+    <section class="demo-interactive">
+      <h2>Live Demo — Webhook Delivery Flow</h2>
+      <div class="demo-interactive-layout">
+
+        <!-- Form Panel -->
+        <div class="demo-form-panel">
+          <h3>Webhook Delivery Test</h3>
+
+          <div class="demo-field">
+            <label for="wh-url">Webhook Callback URL</label>
+            <input type="url" id="wh-url" value="https://webhook.site/demo-example" placeholder="https://your-endpoint.com/hook">
+          </div>
+
+          <div class="demo-field">
+            <label for="wh-api">API to Call</label>
+            <select id="wh-api">
+              <option value="bb-webhook-receiver" selected>bb-webhook-receiver (no auth)</option>
+              <option value="bb-sse-ticker">bb-sse-ticker (stock data)</option>
+            </select>
+          </div>
+
+          <div class="demo-field">
+            <label for="wh-payload">Request Payload</label>
+            <textarea id="wh-payload">{
+  "action": "generate-report",
+  "format": "json",
+  "webhook_url": "https://webhook.site/demo-example"
+}</textarea>
+          </div>
+
+          <button class="demo-run-btn" id="wh-run-btn" onclick="runWebhookDemo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Run Demo</span>
+          </button>
+        </div>
+
+        <!-- Result Panel -->
+        <div class="result-panel" id="wh-result">
+          <div class="result-placeholder">Click "Run Demo" to submit a request with webhook delivery. You'll see the immediate ACK response and the simulated webhook callback.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Code Samples</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">cURL</button>
+        <button class="code-tab" data-tab="javascript">JavaScript</button>
+        <button class="code-tab" data-tab="python">Python</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+<span class="prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{"api_id_public": "API_UUID_FROM_CATALOG", "method": "POST", "path": "/", "params": {"action": "generate-report", "format": "json", "webhook_url": "https://your-app.com/hook"}}'
+
+<span class="comment"># Response: 202 Accepted with request ID</span>
+<span class="comment"># Webhook callback hits your endpoint when ready</span></code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code><span class="comment">// Call the API through YOUR local Sertone control center</span>
+<span class="comment">// Consumer secret is in Settings &gt; Security</span>
+const response = await fetch('https://localhost:3000/internal/call', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+  },
+  body: JSON.stringify({
+    api_id_public: 'API_UUID_FROM_CATALOG',
+    method: 'POST',
+    path: '/',
+    params: {
+      action: 'generate-report',
+      format: 'json',
+      webhook_url: 'https://your-app.com/hook'
+    }
+  })
+});
+const ack = await response.json();
+console.log('Request accepted:', ack.result.requestId);
+
+<span class="comment">// Your webhook endpoint receives the result</span>
+<span class="comment">// Express.js example:</span>
+app.post('/hook', (req, res) => {
+  const result = req.body;
+  console.log('Webhook received:', result);
+  res.sendStatus(200);
+});</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+import requests
+
+response = requests.post(
+    'https://localhost:3000/internal/call',
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+    },
+    json={
+        'api_id_public': 'API_UUID_FROM_CATALOG',
+        'method': 'POST',
+        'path': '/',
+        'params': {
+            'action': 'generate-report',
+            'format': 'json',
+            'webhook_url': 'https://your-app.com/hook'
+        }
+    }
+)
+print(response.json()['result'])</code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Self-Host: Configure Webhook Delivery</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Install the Control Center</h4>
+          <p>Run the free Sertone Docker container. No cloud account needed.</p>
+          <pre class="code-block"><code><span class="prompt">$</span> docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  sertone/wrapper:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Open the Web Console</h4>
+          <p>Go to <code>https://localhost:3002/panel</code> in your browser. Create your account, accept terms, and your wallet is generated automatically.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Browse the Catalog</h4>
+          <p>Click <strong>Catalog &amp; SDKs</strong> in the sidebar. Search for APIs, try them in demo mode (free), then switch to production when ready.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Make Your First Call</h4>
+          <p>Copy your consumer secret from <strong>Settings &gt; Security</strong>, then use the code samples above to call any API from your own code.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SEO Footer -->
+    <section class="demo-footer-cta">
+      <h2>Build Async APIs with Webhook Delivery</h2>
+      <p>Long-running operations deserve reliable delivery. Fire, forget, and receive results at your webhook endpoint.</p>
+      <a href="/try" class="btn">Get Started</a>
+      <a href="/docs/" class="btn btn-secondary" style="margin-left: 0.75rem;">Read the Docs</a>
+
+      <div class="related-demos">
+        <a href="/demos/rest-api/" class="related-demo-link">REST API</a>
+        <a href="/demos/s3-delivery/" class="related-demo-link">BYO-Cloud / S3</a>
+        <a href="/demos/failover/" class="related-demo-link">Delivery Failover</a>
+        <a href="/demos/smart-contract/" class="related-demo-link">Smart Contract</a>
+        <a href="/demos/multi-protocol/" class="related-demo-link">Multi-Protocol</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does webhook delivery work in Sertone?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The consumer includes a webhook callback URL in their API request. The API owner processes the request asynchronously and POSTs the result to the consumer's webhook endpoint when ready. The consumer immediately receives a 202 Accepted response so they don't block."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What if my webhook endpoint is down when the response arrives?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sertone includes delivery failover. If the webhook delivery fails, the response can be stored in S3-compatible cloud storage or via backup relay. The consumer can retrieve it later."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is webhook delivery billed differently than synchronous calls?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Webhook delivery uses the same per-call USDC pricing as synchronous calls. The billing happens when the request is submitted, not when the response is delivered."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    async function runWebhookDemo() {
+      var btn = document.getElementById('wh-run-btn');
+      var resultEl = document.getElementById('wh-result');
+      setLoading(btn, true);
+
+      var webhookUrl = document.getElementById('wh-url').value;
+      var apiId = document.getElementById('wh-api').value;
+      var payload;
+
+      try {
+        payload = JSON.parse(document.getElementById('wh-payload').value);
+      } catch (e) {
+        showError('wh-result', 'Invalid JSON payload. Please check your input.');
+        setLoading(btn, false);
+        return;
+      }
+
+      payload.webhook_url = webhookUrl;
+
+      try {
+        // Step 1: Send the request
+        var result = await callDemo(apiId, payload, { method: 'POST', path: '/' });
+
+        // Show ACK response
+        resultEl.innerHTML =
+          '<div class="result-header">' +
+            '<span class="latency-badge ' + (result.latency < 200 ? 'fast' : result.latency < 500 ? 'medium' : 'slow') + '">' + result.latency + 'ms</span>' +
+            '<span class="status-badge">HTTP ' + result.status + '</span>' +
+          '</div>' +
+          '<div style="color:#f59e0b;font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;">Step 1: Request Accepted</div>' +
+          '<pre><code>' + escapeHtml(JSON.stringify(result.data, null, 2)) + '</code></pre>' +
+          '<div style="color:#94a3b8;font-size:0.85rem;margin-top:1.25rem;padding-top:1rem;border-top:1px solid #1e293b;">' +
+            '<span class="spinner" style="display:inline-block;width:0.8rem;height:0.8rem;border:2px solid rgba(245,158,11,0.3);border-top-color:#f59e0b;border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;margin-right:0.5rem;"></span>' +
+            'Simulating async processing...' +
+          '</div>';
+
+        // Step 2: Simulate async webhook callback after delay
+        setTimeout(function() {
+          var webhookPayload = {
+            requestId: result.data.requestId || 'req_' + Date.now(),
+            status: 'completed',
+            result: {
+              report: 'Financial summary Q1 2026',
+              records: 1247,
+              generated_at: new Date().toISOString()
+            },
+            delivered_to: webhookUrl,
+            delivery_latency_ms: 1850
+          };
+
+          resultEl.innerHTML =
+            '<div class="result-header">' +
+              '<span class="latency-badge ' + (result.latency < 200 ? 'fast' : result.latency < 500 ? 'medium' : 'slow') + '">' + result.latency + 'ms</span>' +
+              '<span class="status-badge">HTTP ' + result.status + '</span>' +
+            '</div>' +
+            '<div style="color:#f59e0b;font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;">Step 1: Request Accepted</div>' +
+            '<pre><code>' + escapeHtml(JSON.stringify(result.data, null, 2)) + '</code></pre>' +
+            '<div style="border-top:1px solid #1e293b;margin-top:1.25rem;padding-top:1rem;">' +
+              '<div style="color:#10b981;font-size:0.85rem;font-weight:600;margin-bottom:0.75rem;">Step 2: Webhook Callback Delivered</div>' +
+              '<pre><code>' + escapeHtml(JSON.stringify(webhookPayload, null, 2)) + '</code></pre>' +
+            '</div>';
+        }, 2000);
+
+      } catch (err) {
+        showError('wh-result', err);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+  </script>
+
+</body>
+</html>

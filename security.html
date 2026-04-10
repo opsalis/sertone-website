@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security and Privacy — Sertone</title>
+  <meta name="description" content="Self-hosted, end-to-end encrypted, non-custodial, private. We cannot see your data, we cannot touch your money.">
+  <meta name="keywords" content="API security, end-to-end encryption, anonymous API, privacy first, self-hosted, non-custodial, data privacy, no tracking, no logs, Sertone security">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/security">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/security">
+  <meta property="og:title" content="Security and Privacy — Sertone">
+  <meta property="og:description" content="Self-hosted. End-to-end encrypted. Non-custodial. We cannot see your data and we cannot touch your money.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Security and Privacy — Sertone">
+  <meta name="twitter:description" content="Self-hosted, end-to-end encrypted, non-custodial, private.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Security and Privacy — Sertone",
+    "description": "How Sertone protects your data, your money, and your privacy. Self-hosted, end-to-end encrypted, non-custodial, private.",
+    "url": "https://sertone.net/security",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Sertone",
+      "url": "https://sertone.net"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="/style.css?v=2">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/handler">Control Center</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/security" class="active">Security</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1>Four Facts</h1>
+      <p class="subheadline">Not policies. Architecture.</p>
+    </div>
+  </section>
+
+  <!-- Four Facts -->
+  <section>
+    <div class="container text-center">
+      <div class="card-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 740px; margin: 0 auto;">
+        <div class="card">
+          <div class="card-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          </div>
+          <h3>Self-Hosted</h3>
+          <p>Runs on your machine. We have no access to your infrastructure.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <h3>Encrypted</h3>
+          <p>End-to-end. We cannot read your data even if we wanted to.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Non-Custodial</h3>
+          <p>We never hold your funds. Deposit and withdraw anytime.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="17" y1="8" x2="23" y2="8"/></svg>
+          </div>
+          <h3>Private</h3>
+          <p>No account required. An admin email is stored on your machine only.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Report Security Issues -->
+  <section>
+    <div class="container text-center">
+      <span class="section-label">Security Reports</span>
+      <h2 class="section-title">Found Something?</h2>
+      <div class="pricing-box" style="text-align: left;">
+        <p>Report security issues via our <a href="https://github.com/sertone/sertone/security/advisories/new" rel="noopener">GitHub Security Advisory</a> page.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);">
+    <div class="container text-center">
+      <h2 class="section-title">Questions?</h2>
+      <p class="section-desc">Read our <a href="/terms" data-modal>Terms of Service</a> and <a href="/privacy" data-modal>Privacy Policy</a>.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/docs/quick-start" class="btn">Quick Start Guide</a>
+        <a href="/handler" class="btn btn-secondary">See the Control Center</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/docs/" style="color:#64748b;font-size:0.85rem;">Docs</a>
+        <a href="/pricing" style="color:#64748b;font-size:0.85rem;">Pricing</a>
+        <a href="/security" style="color:#64748b;font-size:0.85rem;">Security</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy</a>
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+</body>
+</html>

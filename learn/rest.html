@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REST / OpenAPI — Sertone Learn</title>
+  <meta name="description" content="Learn about REST APIs and the OpenAPI specification. Understand how Sertone bridges REST APIs into the Sertone marketplace.">
+  <meta name="keywords" content="REST API, OpenAPI, Swagger, API monetization, HTTP API, JSON API, RESTful, sell REST API, API marketplace, Sertone">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/learn/rest">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/learn/rest">
+  <meta property="og:title" content="REST / OpenAPI — Sertone Learn | Monetize REST APIs on Sertone">
+  <meta property="og:description" content="Learn about REST APIs and the OpenAPI specification. See how Sertone bridges REST APIs into the Sertone marketplace with automatic per-call billing.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="REST / OpenAPI — Sertone Learn">
+  <meta name="twitter:description" content="Learn how to monetize REST APIs on Sertone with per-call billing.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "REST / OpenAPI — Sertone Learn",
+    "description": "Learn about REST APIs and the OpenAPI specification. See how Sertone bridges REST APIs into the Sertone marketplace.",
+    "url": "https://sertone.net/learn/rest",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="/style.css?v=2">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/handler">Control Center</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/security">Security</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+
+      <nav class="breadcrumb">
+        <a href="/learn/owner">Owner</a>
+        <span class="sep">/</span>
+        <span class="current">REST / OpenAPI</span>
+      </nav>
+
+      <div class="page-header">
+        <span class="protocol-icon">&#x1F310;</span>
+        <h1>REST / OpenAPI</h1>
+        <p class="lead">The standard for web APIs — resource-oriented design with HTTP verbs and JSON payloads.</p>
+      </div>
+
+      <!-- What is REST -->
+      <section class="content-section">
+        <h2>What Is REST?</h2>
+
+        <p>
+          <strong>REST</strong> (Representational State Transfer) is an architectural style
+          for building web services, introduced by Roy Fielding in his 2000 doctoral dissertation.
+          Rather than defining a strict protocol, REST describes a set of constraints that, when
+          followed, produce scalable, loosely-coupled systems. Today, REST is by far the most
+          common approach to building public and internal APIs.
+        </p>
+
+        <p>
+          The core idea is simple: every piece of data your API exposes is a <strong>resource</strong>,
+          identified by a URL. To interact with a resource, clients use standard
+          <strong>HTTP methods</strong> — <code>GET</code> to read, <code>POST</code> to create,
+          <code>PUT</code> or <code>PATCH</code> to update, and <code>DELETE</code> to remove.
+          The server responds with a representation of the resource, almost always as JSON.
+        </p>
+
+        <p>
+          REST APIs are <strong>stateless</strong>: each request from a client contains all the
+          information the server needs to process it. There are no sessions or server-side state
+          between calls. This makes REST APIs inherently scalable — any server in a cluster can
+          handle any request, and load balancers can distribute traffic freely.
+        </p>
+
+        <p>
+          Because REST relies on standard HTTP, it works with every programming language, every
+          platform, and every network tool. You can test a REST API with nothing more than
+          <code>curl</code> or a web browser. This universality is why REST dominates the API
+          landscape, powering everything from social media feeds to financial trading systems.
+        </p>
+      </section>
+
+      <!-- What is OpenAPI -->
+      <section class="content-section">
+        <h2>What Is OpenAPI / Swagger?</h2>
+
+        <p>
+          <strong>OpenAPI</strong> (formerly known as Swagger) is a machine-readable specification
+          format for describing REST APIs. An OpenAPI document — written in YAML or JSON — lists
+          every endpoint, HTTP method, request parameter, request body schema, response format,
+          authentication method, and error code your API supports. Tools can then generate
+          documentation, client SDKs, server stubs, and test suites directly from the spec.
+        </p>
+
+        <p>
+          The OpenAPI Specification is maintained by the
+          <strong>OpenAPI Initiative</strong>, a Linux Foundation project. Version 3.1 (the
+          current standard) aligns fully with JSON Schema, making it easy to validate requests
+          and responses. If you have ever visited a Swagger UI page with interactive "Try it out"
+          buttons, that page was generated from an OpenAPI document.
+        </p>
+      </section>
+
+      <!-- How REST works with Sertone -->
+      <section class="content-section">
+        <h2>How REST Works with Sertone</h2>
+
+        <p>
+          REST is the native language of the Sertone platform. If your API already speaks REST
+          and has an OpenAPI spec, integration is as straightforward as it gets.
+        </p>
+
+        <ol class="steps">
+          <li>
+            <strong>Owner uploads an OpenAPI spec</strong> (YAML or JSON) via the control center web
+            dashboard. The control center validates the spec and registers endpoint metadata with the
+            Sertone catalog.
+          </li>
+          <li>
+            <strong>Control center calls the API using standard HTTP methods.</strong> When a consumer
+            request arrives, the owner control center maps it to the appropriate REST endpoint, forwards
+            the HTTP call to the real API server, and captures the JSON response.
+          </li>
+          <li>
+            <strong>Consumer gets an auto-generated OpenAPI spec</strong> from the catalog —
+            regardless of the owner's underlying protocol. For REST owners, the consumer spec
+            is essentially a clean mirror of the original.
+          </li>
+        </ol>
+
+        <div class="info-box">
+          <p>
+            <strong>Zero changes required.</strong> Your existing REST API stays exactly as it is.
+            The control center sits in front, handles encryption and payment, and proxies
+            standard HTTP calls to your server.
+          </p>
+        </div>
+      </section>
+
+      <!-- Demo info -->
+      <section class="content-section">
+        <h2>Demo API: King James Bible</h2>
+
+        <p>
+          This demo uses the <strong>King James Bible API</strong> — 31,102 verses across
+          66 books, 1,189 chapters. Query by book, chapter, and verse. Search the full text.
+          A rich, real-world dataset that demonstrates REST pagination, filtering, and nested
+          resource lookups.
+        </p>
+
+        <div class="btn-group">
+          <a href="/learn/owner" class="btn btn-outline">
+            &#8592; Owner Guide
+          </a>
+        </div>
+      </section>
+
+      <!-- Code example -->
+      <section class="content-section">
+        <h2>Code Example</h2>
+
+        <p class="code-label">Fetch a specific verse (John 3:16)</p>
+        <div class="code-block"><code><span class="comment"># GET a single verse from the King James Bible REST API</span>
+<span class="keyword">curl</span> <span class="url">http://localhost:4001/api/verses/John/3/16</span> \
+  <span class="string">-H</span> <span class="string">"Accept: application/json"</span></code></div>
+
+        <p class="code-label">Response</p>
+        <div class="code-block"><code>{
+  <span class="string">"book"</span>: <span class="string">"John"</span>,
+  <span class="string">"chapter"</span>: 3,
+  <span class="string">"verse"</span>: 16,
+  <span class="string">"text"</span>: <span class="string">"For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life."</span>
+}</code></div>
+
+        <p class="code-label">Search for verses containing a keyword</p>
+        <div class="code-block"><code><span class="comment"># Search across all 31,102 verses</span>
+<span class="keyword">curl</span> <span class="url">"http://localhost:4001/api/search?q=wisdom&amp;limit=5"</span></code></div>
+      </section>
+
+      <!-- Key concepts table -->
+      <section class="content-section">
+        <h2>REST at a Glance</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Concept</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Transport</td>
+              <td>HTTP/HTTPS</td>
+            </tr>
+            <tr>
+              <td>Data format</td>
+              <td>JSON (typically), XML also possible</td>
+            </tr>
+            <tr>
+              <td>Spec format</td>
+              <td>OpenAPI 3.x (YAML or JSON)</td>
+            </tr>
+            <tr>
+              <td>HTTP methods</td>
+              <td>GET, POST, PUT, PATCH, DELETE</td>
+            </tr>
+            <tr>
+              <td>Stateless</td>
+              <td>Yes — no server-side sessions</td>
+            </tr>
+            <tr>
+              <td>Best for</td>
+              <td>CRUD operations, public APIs, microservices</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms of Service</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy Policy</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+</body>
+</html>

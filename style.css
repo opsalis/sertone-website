@@ -1,0 +1,1017 @@
+/* ============================================================
+   Sertone Product Brochure — Shared Stylesheet
+   Colors: white #ffffff, dark slate #1e293b, teal #00b894
+   ============================================================ */
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  background: #f8fafc;
+  color: #334155;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: #00b894;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: #00a381;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ---------- Typography ---------- */
+h1, h2, h3, h4 {
+  color: #1e293b;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 { font-size: 3.25rem; letter-spacing: -0.03em; }
+h2 { font-size: 2.25rem; letter-spacing: -0.02em; }
+h3 { font-size: 1.375rem; }
+h4 { font-size: 1.125rem; }
+
+p {
+  max-width: 42rem;
+}
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+section {
+  padding: 6rem 0;
+}
+
+section + section {
+  border-top: 1px solid #e2e8f0;
+}
+
+/* ---------- Navigation ---------- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 3.75rem;
+}
+
+.nav-logo {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.02em;
+}
+
+.nav-logo span {
+  color: #00b894;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #1e293b;
+}
+
+/* Mobile nav toggle */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 1.5rem;
+  height: 2px;
+  background: #475569;
+  margin: 5px 0;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  padding: 10rem 0 6rem;
+  text-align: center;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0, 184, 148, 0.06) 0%, transparent 70%),
+    linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.hero h1 {
+  margin-bottom: 1.25rem;
+}
+
+.hero .subheadline {
+  font-size: 1.25rem;
+  color: #64748b;
+  max-width: 36rem;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+/* ---------- CTA Button ---------- */
+.btn {
+  display: inline-block;
+  padding: 0.875rem 2.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: #00b894;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: #00a381;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0, 184, 148, 0.25);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #00b894;
+  border: 1px solid rgba(0, 184, 148, 0.4);
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 184, 148, 0.06);
+  color: #00a381;
+  border-color: #00b894;
+}
+
+.btn-small {
+  padding: 0.625rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+/* ---------- Section Headers ---------- */
+.section-label {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #00b894;
+  margin-bottom: 0.75rem;
+}
+
+.section-title {
+  margin-bottom: 1rem;
+}
+
+.section-desc {
+  color: #64748b;
+  font-size: 1.1rem;
+  margin-bottom: 3.5rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-center p,
+.text-center .section-desc {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- Card Grid (3 Pillars) ---------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 2.25rem 2rem;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.card:hover {
+  border-color: rgba(0, 184, 148, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.card-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  background: rgba(0, 184, 148, 0.08);
+  color: #00b894;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.card h3 {
+  margin-bottom: 0.75rem;
+}
+
+.card p {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* ---------- Steps (How It Works) ---------- */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  counter-reset: step;
+}
+
+.step {
+  position: relative;
+  counter-increment: step;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: rgba(0, 184, 148, 0.08);
+  color: #00b894;
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(0, 184, 148, 0.2);
+}
+
+.step h4 {
+  margin-bottom: 0.5rem;
+}
+
+.step p {
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* Connector line between steps */
+.step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 1.375rem;
+  left: calc(2.75rem + 0.75rem);
+  right: -0.75rem;
+  height: 1px;
+  background: rgba(0, 184, 148, 0.2);
+}
+
+/* ---------- Protocol Badges ---------- */
+.protocol-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.protocol-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #00b894;
+  background: rgba(0, 184, 148, 0.06);
+  border: 1px solid rgba(0, 184, 148, 0.2);
+  border-radius: 100px;
+  letter-spacing: 0.02em;
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.protocol-note {
+  color: #64748b;
+  font-size: 1rem;
+  max-width: 36rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* ---------- Pricing Box ---------- */
+.pricing-box {
+  max-width: 40rem;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.pricing-box .price-headline {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.pricing-box p {
+  color: #64748b;
+  font-size: 1rem;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+.pricing-box p + p {
+  margin-top: 1rem;
+}
+
+/* ---------- Code Blocks ---------- */
+.code-block {
+  position: relative;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  color: #334155;
+  overflow-x: auto;
+  line-height: 1.7;
+  margin: 0.75rem 0;
+}
+
+.code-block code {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.code-block .prompt {
+  color: #00b894;
+  user-select: none;
+}
+
+.code-block .comment {
+  color: #94a3b8;
+}
+
+/* ---------- Blurred (pre-launch) ---------- */
+.blurred-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.blurred-wrapper .code-block {
+  filter: blur(5px);
+  user-select: none;
+  pointer-events: none;
+}
+
+.blurred-wrapper .coming-soon-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1e293b;
+  color: #fff;
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  z-index: 2;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+/* ---------- Coming Soon Details ---------- */
+.coming-soon-details {
+  max-width: 36rem;
+  margin: 2rem auto;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
+}
+
+.coming-soon-details h3 {
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+.expect-list {
+  list-style: none;
+  padding: 0;
+}
+
+.expect-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.6rem;
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+.expect-list li::before {
+  content: "\2713";
+  position: absolute;
+  left: 0;
+  color: #00b894;
+  font-weight: 700;
+}
+
+/* ---------- Try Page — Setup Steps ---------- */
+.setup-steps {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.setup-step {
+  position: relative;
+  padding-left: 4rem;
+  padding-bottom: 3.5rem;
+}
+
+.setup-step:last-child {
+  padding-bottom: 0;
+}
+
+/* Vertical connector */
+.setup-step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 1.375rem;
+  top: 2.75rem;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0, 184, 148, 0.2);
+}
+
+.setup-step-number {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: rgba(0, 184, 148, 0.08);
+  color: #00b894;
+  font-size: 1.125rem;
+  font-weight: 700;
+  border: 1px solid rgba(0, 184, 148, 0.2);
+}
+
+.setup-step h3 {
+  margin-bottom: 0.75rem;
+  padding-top: 0.35rem;
+}
+
+.setup-step p {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin-bottom: 0.75rem;
+}
+
+.setup-step ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+
+.setup-step ul li {
+  color: #64748b;
+  font-size: 0.9rem;
+  padding: 0.25rem 0;
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.setup-step ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00b894;
+}
+
+/* Demo API list */
+.demo-list {
+  margin-top: 1rem;
+}
+
+.demo-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+}
+
+.demo-item .demo-port {
+  flex-shrink: 0;
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  min-width: 4rem;
+}
+
+.demo-item .demo-cmd {
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+/* Inline note */
+.note {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  background: rgba(0, 184, 148, 0.05);
+  border-left: 3px solid #00b894;
+  border-radius: 0 8px 8px 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  margin: 1.5rem 0;
+}
+
+/* Links row */
+.links-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+/* ---------- Terms Page ---------- */
+.terms-page {
+  padding-top: 7rem;
+  padding-bottom: 4rem;
+}
+
+.terms-content {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.terms-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.terms-meta {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.terms-content h2 {
+  font-size: 1.35rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+.terms-content p {
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  margin-bottom: 1rem;
+  max-width: none;
+}
+
+.terms-content ul {
+  margin: 0.75rem 0 1rem 1.25rem;
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.terms-content ul li {
+  margin-bottom: 0.35rem;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  background: #f1f5f9;
+  border-top: 1px solid #e2e8f0;
+  padding: 2.5rem 0;
+}
+
+.footer .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.footer-links a {
+  color: #64748b;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: #1e293b;
+}
+
+.footer-copy {
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .step:not(:last-child)::after {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 1.75rem; }
+
+  section {
+    padding: 4rem 0;
+  }
+
+  .hero {
+    padding: 8rem 0 4rem;
+  }
+
+  .hero .subheadline {
+    font-size: 1.1rem;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .step:not(:last-child)::after {
+    display: none;
+  }
+
+  .pricing-box {
+    padding: 2rem 1.5rem;
+  }
+
+  /* Nav mobile */
+  .nav-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 3.75rem;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+
+  .nav-links.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .footer .container {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+}
+
+/* ---------- Waitlist ---------- */
+.waitlist-box {
+  max-width: 32rem;
+  margin: 2.5rem auto 0;
+}
+
+.waitlist-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.waitlist-form {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.waitlist-form input[type="email"] {
+  flex: 1;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1e293b;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.waitlist-form input[type="email"]:focus {
+  border-color: #00b894;
+  box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
+}
+
+.waitlist-form input[type="email"]::placeholder {
+  color: #94a3b8;
+}
+
+.waitlist-msg {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.waitlist-msg.success {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.06);
+}
+
+.waitlist-msg.error {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.06);
+}
+
+.waitlist-msg.hidden {
+  display: none;
+}
+
+.waitlist-note {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 1.85rem; }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.75rem;
+    font-size: 0.9rem;
+  }
+
+  .setup-step {
+    padding-left: 3.25rem;
+  }
+
+  .links-row {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .waitlist-form {
+    flex-direction: column;
+  }
+
+  .waitlist-form .btn {
+    width: 100%;
+  }
+}
+
+/* ---------- Network Diagram ---------- */
+.network-diagram {
+  margin-top: 2rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  max-width: 740px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.network-diagram .diagram-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+
+.network-diagram .diagram-node {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  min-width: 140px;
+}
+
+.network-diagram .diagram-node h4 {
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #00b894;
+  margin-bottom: 0.35rem;
+}
+
+.network-diagram .diagram-node p {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.network-diagram .diagram-arrow {
+  color: #94a3b8;
+  font-size: 1.5rem;
+  padding: 0 1rem;
+}
+
+.network-diagram .diagram-node-center {
+  background: rgba(0, 184, 148, 0.06);
+  border-color: rgba(0, 184, 148, 0.3);
+}
+
+@media (max-width: 768px) {
+  .network-diagram .diagram-flow {
+    flex-direction: column;
+  }
+  .network-diagram .diagram-arrow {
+    transform: rotate(90deg);
+    padding: 0.5rem 0;
+  }
+}
+
+/* ── Modal overlay ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  position: relative;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 1rem;
+  max-width: 720px;
+  width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 2.5rem 2rem 2rem;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.75rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  transition: color 0.15s, background 0.15s;
+}
+
+.modal-close:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.modal-body {
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+.modal-body h1,
+.modal-body h2,
+.modal-body h3 {
+  color: #f1f5f9;
+}
+
+.modal-body a {
+  color: #22d3ee;
+}
+
+.modal-body a:hover {
+  text-decoration: underline;
+}

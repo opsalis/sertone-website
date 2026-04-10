@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Mode — Sertone Docs | Try Any API for Free</title>
+  <meta name="description" content="Try any API in the Sertone marketplace for free using real sample data. No wallet required. Demo mode lets you test REST, GraphQL, gRPC, and more before spending USDC.">
+  <meta name="keywords" content="API demo mode, try API free, test API no payment, free API trial, API sample data, Sertone demo">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/demo-mode">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/demo-mode">
+  <meta property="og:title" content="Demo Mode — Sertone Docs | Try Any API for Free">
+  <meta property="og:description" content="Try any API in the Sertone marketplace for free using real sample data. No wallet required.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Demo Mode — Sertone Docs">
+  <meta name="twitter:description" content="Try any API in the Sertone marketplace for free using real sample data. No wallet required.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Demo Mode — Sertone",
+    "description": "Try any API in the Sertone marketplace for free using real sample data. No wallet required.",
+    "url": "https://sertone.net/docs/demo-mode",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link active">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Demo Mode</h1>
+      <p class="lead">Try any API for free. Real sample data. No payment needed.</p>
+
+      <h2 id="how-it-works">How it works</h2>
+      <p>When an API owner registers their API, they provide 2&ndash;3 sample responses captured from the live API. In demo mode, your control center returns these cached samples instead of calling the real API. No payment required.</p>
+
+      <h2 id="what-you-get">What you get</h2>
+      <ul>
+        <li><strong>Real data</strong> &mdash; actual responses captured by the owner</li>
+        <li><strong>Zero cost</strong> &mdash; no USDC needed</li>
+        <li><strong>Instant</strong> &mdash; served locally, no network call</li>
+        <li><strong>Same format</strong> &mdash; identical response structure to production</li>
+      </ul>
+
+      <h2 id="toggling-consumer">Toggling demo / production (consumers)</h2>
+      <p>Go to <strong>Catalog &amp; SDKs &gt; My APIs</strong> in the web console. Each API you have bookmarked has a toggle switch:</p>
+      <table>
+        <thead>
+          <tr><th>Mode</th><th>Behavior</th><th>Cost</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Demo</strong> (default)</td><td>Returns cached sample responses</td><td>Free</td></tr>
+          <tr><td><strong>Production</strong></td><td>Calls the real API, returns live data</td><td>USDC per call</td></tr>
+        </tbody>
+      </table>
+      <p>Newly selected APIs always start in demo mode.</p>
+
+      <h2 id="toggling-owner">Setting demo / live mode (API owners)</h2>
+      <p>As an API owner, you can control the mode of each of your registered APIs from the <strong>API Management</strong> tab.</p>
+      <p>In the <strong>My Registered APIs</strong> section, each API has a <strong>Demo Mode</strong> checkbox. When checked, the API serves cached sample responses to all consumers for free. When unchecked (live), the API serves real responses and consumers pay per call.</p>
+      <p>You can also toggle this in the <strong>Edit API</strong> modal: check or uncheck the <strong>Demo Mode</strong> checkbox and save.</p>
+
+      <div class="info-box">
+        <p><strong>Use demo mode to onboard consumers.</strong> Start your API in demo mode so consumers can test their integration for free. Switch to live when you are ready to start earning.</p>
+      </div>
+
+      <h2 id="use-cases">When to use demo mode</h2>
+      <ul>
+        <li>Evaluating an API before committing USDC</li>
+        <li>Building and testing your integration</li>
+        <li>Demoing your app without spending real money</li>
+        <li>CI/CD pipelines and automated tests</li>
+      </ul>
+
+      <h2 id="limitations">Limitations</h2>
+      <ul>
+        <li>Responses are static &mdash; always the same cached samples</li>
+        <li>Only 2&ndash;3 sample endpoints per API</li>
+        <li>No custom parameters &mdash; input is ignored</li>
+      </ul>
+
+      <div class="info-box">
+        <p><strong>SDKs work in demo mode too.</strong> The same code you write for production works in demo. Just flip the toggle when you are ready to go live.</p>
+      </div>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/pricing-apis" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Pricing</span>
+        </a>
+        <a href="/docs/dashboard" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Dashboard</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#how-it-works" class="toc-link">How it works</a>
+      <a href="#what-you-get" class="toc-link">What you get</a>
+      <a href="#toggling-consumer" class="toc-link">Toggling (consumers)</a>
+      <a href="#toggling-owner" class="toc-link">Setting mode (owners)</a>
+      <a href="#use-cases" class="toc-link">When to use demo mode</a>
+      <a href="#limitations" class="toc-link">Limitations</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

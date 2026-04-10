@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GraphQL Demo — Sertone</title>
+  <meta name="description" content="Live GraphQL demo: query NASA exoplanet data through the Sertone Global Network. Nested fields, star and planet details, discovery method. Replicate on a Raspberry Pi.">
+  <meta name="keywords" content="GraphQL demo, Sertone GraphQL, encrypted network GraphQL, NASA exoplanets API, API marketplace GraphQL, nested query demo">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/demos/graphql">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/graphql">
+  <meta property="og:title" content="GraphQL Demo — Sertone">
+  <meta property="og:description" content="Query NASA exoplanet data with GraphQL through the Sertone Global Network. Nested fields — star, planets, discovery method. Run it on a Raspberry Pi.">
+  <meta property="og:site_name" content="Sertone">
+
+  <link rel="stylesheet" href="/style.css?v=3">
+  <link rel="stylesheet" href="/demos/style.css?v=1">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/sell">Sell</a></li>
+        <li><a href="/buy">Buy</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/trust">Trust</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="demo-page">
+
+    <!-- Hero -->
+    <div class="demo-hero">
+      <div class="container">
+        <div class="demo-hero-breadcrumb">
+          <a href="/demos/">Demos</a> &rsaquo; GraphQL
+        </div>
+        <h1>GraphQL — Live Demo</h1>
+        <p class="value-prop">Write a GraphQL query in the editor below and run it against a NASA exoplanet dataset, routed through the Sertone Global Network. The owner registered a GraphQL endpoint and earns per query.</p>
+      </div>
+    </div>
+
+    <!-- Architecture -->
+    <section>
+      <div class="container">
+        <span class="section-label">How This Works</span>
+        <h2 class="section-title" style="margin-bottom: 1.25rem;">GraphQL Over the Sertone Global Network</h2>
+
+        <style>
+          /* ── Vertical architecture diagram ── */
+          .arch-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+            max-width: 680px;
+            margin: 0 auto;
+            font-family: inherit;
+          }
+
+          /* Consumer + Owner rows */
+          .arch-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.1rem 1.5rem 1rem;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+          }
+          .arch-row.arch-consumer {
+            border-radius: 14px 14px 0 0;
+            border-bottom: none;
+          }
+          .arch-row.arch-owner {
+            border-radius: 0 0 14px 14px;
+            border-top: none;
+          }
+
+          .arch-row-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: #94a3b8;
+          }
+          .arch-row-sublabel {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-style: italic;
+          }
+
+          /* Horizontal flow of boxes inside a row */
+          .arch-flow-h {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+          }
+          .arch-box {
+            background: #fff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 9px;
+            padding: 0.55rem 0.9rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #1e293b;
+            text-align: center;
+            line-height: 1.35;
+            white-space: nowrap;
+          }
+          /* User's own stuff — big, prominent, the star */
+          .arch-box-user {
+            background: #fff;
+            border: 2px solid #1e293b;
+            border-radius: 12px;
+            padding: 0.9rem 1.3rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            text-align: center;
+            line-height: 1.35;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          }
+          /* Sertone control centers — smaller, green, magic */
+          .arch-box-sertone {
+            background: linear-gradient(135deg, rgba(0,184,148,0.08), rgba(0,184,148,0.03));
+            border: 1.5px solid rgba(0,184,148,0.4);
+            border-radius: 9px;
+            padding: 0.5rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #047857;
+            text-align: center;
+            line-height: 1.35;
+          }
+          .arch-arrow-h {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            flex-shrink: 0;
+          }
+
+          /* Vertical arrow between rows */
+          .arch-arrow-v {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 0.15rem 0;
+            position: relative;
+            z-index: 2;
+          }
+          .arch-arrow-v .arrow-down,
+          .arch-arrow-v .arrow-up {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            padding: 0.18rem 0.65rem;
+            border-radius: 20px;
+          }
+          .arch-arrow-v .arrow-down {
+            color: #00b894;
+            background: #e6faf4;
+            border: 1px solid #b2edd8;
+          }
+          .arch-arrow-v .arrow-up {
+            color: #0ea5e9;
+            background: #e0f4fd;
+            border: 1px solid #b3e4f9;
+          }
+
+          /* ── Network row — the star ── */
+          .arch-network {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #00b894 0%, #00a381 55%, #007d65 100%);
+            border: none;
+            padding: 2rem 1.5rem;
+            min-height: 160px;
+            justify-content: center;
+            box-shadow: 0 4px 32px rgba(0,184,148,0.22), 0 1px 4px rgba(0,0,0,0.06);
+          }
+
+          /* Floating particles */
+          .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+            animation: floatUp 6s ease-in-out infinite;
+          }
+          .particle.p1 { width: 48px; height: 48px; left: 8%;  bottom: -20px; animation-duration: 7s; animation-delay: 0s;   }
+          .particle.p2 { width: 28px; height: 28px; left: 28%; bottom: -14px; animation-duration: 5s; animation-delay: 1.4s; }
+          .particle.p3 { width: 64px; height: 64px; left: 58%; bottom: -28px; animation-duration: 9s; animation-delay: 0.7s; }
+          .particle.p4 { width: 20px; height: 20px; left: 80%; bottom: -10px; animation-duration: 6s; animation-delay: 2.5s; }
+          .particle.p5 { width: 36px; height: 36px; left: 45%; bottom: -18px; animation-duration: 8s; animation-delay: 3.2s; }
+
+          @keyframes floatUp {
+            0%   { transform: translateY(0)    scale(1);    opacity: 0.10; }
+            40%  { transform: translateY(-70px) scale(1.08); opacity: 0.18; }
+            80%  { transform: translateY(-130px) scale(0.95); opacity: 0.07; }
+            100% { transform: translateY(-160px) scale(0.9);  opacity: 0;   }
+          }
+
+          /* Pulse ring behind network title */
+          .arch-network::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255,255,255,0.15);
+            animation: pulseRing 3.5s ease-out infinite;
+          }
+          .arch-network::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px; height: 280px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.08);
+            animation: pulseRing 3.5s ease-out infinite 0.8s;
+          }
+          @keyframes pulseRing {
+            0%   { opacity: 0.6; transform: translate(-50%,-50%) scale(0.7); }
+            100% { opacity: 0;   transform: translate(-50%,-50%) scale(1.4); }
+          }
+
+          .arch-network-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.55rem;
+          }
+          .arch-network-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 1px 8px rgba(0,0,0,0.18);
+          }
+          .arch-network-features {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+          .arch-network-features span {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.92);
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 20px;
+            padding: 0.22rem 0.7rem;
+          }
+          .arch-network-tagline {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.72);
+            max-width: 340px;
+            line-height: 1.4;
+          }
+
+          /* Responsive */
+          @media (max-width: 480px) {
+            .arch-box       { font-size: 0.75rem; padding: 0.45rem 0.65rem; white-space: normal; max-width: 110px; }
+            .arch-network-title { font-size: 0.95rem; }
+            .arch-network-features span { font-size: 0.7rem; }
+          }
+        </style>
+
+        <div class="arch-vertical">
+
+          <!-- Row 1: Consumer -->
+          <div class="arch-row arch-consumer">
+            <div class="arch-row-label">Consumer Premises</div>
+            <div class="arch-flow-h">
+              <div class="arch-box arch-box-user">Your App</div>
+              <div class="arch-arrow-h">&#8594;</div>
+              <div class="arch-box arch-box-sertone">Your Sertone<br>Control Center</div>
+            </div>
+            <div class="arch-row-sublabel">On your premises</div>
+          </div>
+
+          <!-- Arrow down/up between consumer and network -->
+          <div class="arch-arrow-v">
+            <span class="arrow-down">&#9660; Request</span>
+            <span class="arrow-up">&#9650; Response</span>
+          </div>
+
+          <!-- Row 2: Network — the star -->
+          <div class="arch-row arch-network">
+            <div class="particle p1"></div>
+            <div class="particle p2"></div>
+            <div class="particle p3"></div>
+            <div class="particle p4"></div>
+            <div class="particle p5"></div>
+            <div class="arch-network-content">
+              <div class="arch-network-title">Sertone Global Network</div>
+              <div class="arch-network-features">
+                <span>&#128274; Encrypted</span>
+                <span>&#128279; Automatic Payment</span>
+                <span>&#127760; 5 Delivery Methods</span>
+              </div>
+              <div class="arch-network-tagline">Proprietary fully encrypted protocol with automatic payment settlement</div>
+            </div>
+          </div>
+
+          <!-- Arrow down/up between network and owner -->
+          <div class="arch-arrow-v">
+            <span class="arrow-down">&#9660; Request</span>
+            <span class="arrow-up">&#9650; Response</span>
+          </div>
+
+          <!-- Row 3: Owner -->
+          <div class="arch-row arch-owner">
+            <div class="arch-row-label">Owner Premises</div>
+            <div class="arch-flow-h">
+              <div class="arch-box arch-box-sertone">Their Sertone<br>Control Center</div>
+              <div class="arch-arrow-h">&#8594;</div>
+              <div class="arch-box arch-box-user">GraphQL Exoplanets<br>Service</div>
+            </div>
+            <div class="arch-row-sublabel">On their premises</div>
+          </div>
+
+        </div><!-- /arch-vertical -->
+
+        <div style="margin:1.25rem auto 0;max-width:44rem;background:linear-gradient(135deg,rgba(0,184,148,0.06),rgba(0,184,148,0.02));border:1px solid rgba(0,184,148,0.15);border-radius:12px;padding:1rem 1.5rem;">
+          <p style="font-size:0.85rem;color:#475569;line-height:1.65;margin:0;">
+            <strong style="color:#1e293b;">What is the Sertone control center?</strong> A single Docker container you run on your own machine — a laptop, a Raspberry Pi, a cloud server. It connects you to the Sertone Global Network. Through its built-in web console, you browse services, register your own, manage your wallet, and monitor your earnings. Installation takes minutes. It is completely free, forever.
+          </p>
+          <div style="margin-top:0.75rem;">
+            <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+          </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 1.75rem;">
+          <p>The Sertone Global Network uses a proprietary fully encrypted protocol. All traffic is end-to-end encrypted. Settlement is automatic.</p>
+        </div>
+
+        <div class="info-box" style="margin-top: 1rem;">
+          <p><strong>What the owner did:</strong> installed their Sertone control center, registered a service on the Sertone network through the web console, set their price, and started earning USDC on every call. The Sertone Global Network handles the rest.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Demo -->
+    <section style="background: #f8fafc;">
+      <div class="container">
+        <span class="section-label">Try It</span>
+        <h2 class="section-title" style="margin-bottom: 1.75rem;">Run a GraphQL Query</h2>
+
+        <div class="demo-interactive">
+          <div class="demo-interactive-header">
+            <span class="dot red"></span>
+            <span class="dot amber"></span>
+            <span class="dot green"></span>
+            <span class="header-title">POST /api/nasa-exoplanets-v1/graphql — routed through the Sertone Global Network</span>
+          </div>
+          <div class="demo-interactive-body">
+            <div style="margin-bottom: 0.75rem;">
+              <label style="font-size:0.8rem;font-weight:600;color:#475569;">Preset queries</label>
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.4rem;">
+                <button class="btn btn-secondary btn-small" onclick="loadPreset('basic')">Basic fields</button>
+                <button class="btn btn-secondary btn-small" onclick="loadPreset('nested')">Nested star+planets</button>
+                <button class="btn btn-secondary btn-small" onclick="loadPreset('discovery')">Discovery methods</button>
+              </div>
+            </div>
+            <div class="demo-form-field" style="margin-bottom: 1rem;">
+              <label for="gql-query">GraphQL Query</label>
+              <textarea id="gql-query" rows="10" style="font-size:0.82rem;min-height:200px;">query ExoplanetSearch {
+  exoplanets(
+    where: { disc_method: { _eq: "Transit" } }
+    limit: 5
+    order_by: { pl_orbper: asc }
+  ) {
+    pl_name
+    pl_orbper
+    pl_rade
+    disc_year
+    disc_method
+    hostname
+    star {
+      st_spectype
+      st_teff
+      st_dist
+    }
+  }
+}</textarea>
+            </div>
+            <div class="demo-form-row" style="margin-bottom: 0;">
+              <button class="btn-run" id="gql-run" onclick="runGraphQLDemo()">
+                <span class="run-icon">&#9654;</span> Run Query
+              </button>
+            </div>
+
+            <div class="demo-result" id="gql-result" style="margin-top: 1rem;">
+              <div class="demo-result-bar">
+                <span class="result-status" id="gql-status">Waiting</span>
+                <span class="latency-badge hidden" id="gql-latency">—</span>
+              </div>
+              <div class="demo-result-body" id="gql-body">
+                <div class="demo-result-placeholder">Write a query above and click Run Query</div>
+              </div>
+            </div>
+            <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+              Live call through the Sertone Global Network. Install your own Sertone to make unlimited calls.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOR CONSUMERS -->
+    <section>
+      <div class="container">
+
+        <style>
+          .consumer-steps { margin: 1.5rem 0; }
+          .consumer-step { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+          .step-num {
+            flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+            background: var(--accent, #00b894); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.85rem;
+          }
+          .step-content h4 { margin: 0 0 0.4rem; font-size: 1rem; }
+          .step-content p {
+            margin: 0.3rem 0; color: var(--text-secondary, #475569);
+            font-size: 0.9rem; line-height: 1.6;
+          }
+        </style>
+
+        <span class="section-label">For Consumers</span>
+        <h2 class="section-title">How to use this service</h2>
+
+        <p>Any developer worldwide can consume this service from their own Sertone control center. Here is the complete flow from installation to first call:</p>
+
+        <div class="consumer-steps">
+
+          <div class="consumer-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Install your Sertone control center</h4>
+              <p>One Docker command on any machine -- your laptop, a Raspberry Pi, a cloud VM.</p>
+              <div class="code-block"><span class="prompt">$</span> docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</div>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Browse the catalog</h4>
+              <p>Open your web console at <code>https://localhost:3002/panel</code>. Go to the Catalog tab. Search for the service you need -- use keywords, tags, or browse by category.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Preview with demo samples</h4>
+              <p>Click on any service to see its full description, available endpoints, and sample data. Try it in the Swagger sandbox -- demo samples are free, no payment needed. See exactly what the data looks like before you spend a cent.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Fund your wallet</h4>
+              <p>Go to the Finance tab. Deposit USDC and a small amount of ETH for gas. Your control center shows both balances and alerts you when they are low.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <h4>Call it from your code</h4>
+              <p>Copy your consumer secret from Settings. Use the service UUID from the catalog. Make your first real call:</p>
+              <div class="code-block"><span class="prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"api_id_public": "SERVICE_UUID", "path": "/graphql", "method": "POST",
+       "body": "{\"query\": \"{ exoplanets(limit:3) { pl_name disc_method } }\"}"}'</div>
+              <p>Or generate an SDK in your preferred language (Python, TypeScript, Go, Rust, Kotlin, and more) -- the web console generates ready-to-use client code with the UUID pre-filled.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">6</div>
+            <div class="step-content">
+              <h4>You are in business</h4>
+              <p>Every call settles automatically in USDC. You pay the service owner's price. No invoices, no payment terms, no chargebacks. Your Finance tab shows every transaction.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section>
+      <div class="container">
+        <span class="section-label">Code Samples</span>
+        <h2 class="section-title" style="margin-bottom: 1.75rem;">Call It From Your Code</h2>
+
+        <div class="demo-code">
+          <div class="demo-code-tabs">
+            <button class="demo-code-tab active" onclick="switchTab(this, 'gql-curl')">curl</button>
+            <button class="demo-code-tab" onclick="switchTab(this, 'gql-js')">JavaScript</button>
+            <button class="demo-code-tab" onclick="switchTab(this, 'gql-python')">Python</button>
+          </div>
+
+          <div class="demo-code-panel active" id="gql-curl"><span class="c-comment"># GraphQL query via Sertone — POST to /internal/call with GraphQL body</span>
+<span class="c-comment"># SERVICE_UUID: copy from your catalog. YOUR_CONSUMER_SECRET: from Settings tab.</span>
+
+<span class="c-prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H <span class="c-string">"Authorization: Bearer YOUR_CONSUMER_SECRET"</span> \
+  -H <span class="c-string">"Content-Type: application/json"</span> \
+  -d <span class="c-string">'{"api_id_public": "SERVICE_UUID", "path": "/graphql", "method": "POST",
+     "body": {"query": "{ exoplanets(limit:3) { pl_name pl_orbper disc_method hostname } }"}}'</span> \
+  | jq <span class="c-string">'.data.exoplanets[]'</span>
+
+<span class="c-comment"># Billing: 1 GraphQL call = 1 settlement. Introspection is free.</span>
+</div>
+
+          <div class="demo-code-panel" id="gql-js"><span class="c-comment">// JavaScript — no GraphQL client needed, plain fetch</span>
+<span class="c-comment">// SERVICE_UUID: copy from your catalog. YOUR_CONSUMER_SECRET: from Settings tab.</span>
+
+<span class="c-keyword">const</span> <span class="c-var">QUERY</span> = <span class="c-string">`
+  query ExoplanetSearch {
+    exoplanets(
+      where: { disc_method: { _eq: "Transit" } }
+      limit: 5
+      order_by: { pl_orbper: asc }
+    ) {
+      pl_name
+      pl_orbper
+      pl_rade
+      disc_method
+      hostname
+      star { st_spectype st_teff st_dist }
+    }
+  }
+`</span>;
+
+<span class="c-keyword">const</span> <span class="c-var">res</span> = <span class="c-keyword">await</span> <span class="c-func">fetch</span>(<span class="c-string">'https://localhost:3000/internal/call'</span>, {
+  method:  <span class="c-string">'POST'</span>,
+  headers: {
+    <span class="c-string">'Authorization'</span>: <span class="c-string">'Bearer YOUR_CONSUMER_SECRET'</span>,
+    <span class="c-string">'Content-Type'</span>:  <span class="c-string">'application/json'</span>,
+  },
+  body: <span class="c-var">JSON</span>.<span class="c-func">stringify</span>({
+    api_id_public: <span class="c-string">'SERVICE_UUID'</span>,
+    path:          <span class="c-string">'/graphql'</span>,
+    method:        <span class="c-string">'POST'</span>,
+    body:          { query: <span class="c-var">QUERY</span> },
+  }),
+});
+
+<span class="c-keyword">const</span> { data } = <span class="c-keyword">await</span> <span class="c-var">res</span>.<span class="c-func">json</span>();
+<span class="c-var">data</span>.<span class="c-var">exoplanets</span>.<span class="c-func">forEach</span>(<span class="c-var">p</span> =&gt; <span class="c-var">console</span>.<span class="c-func">log</span>(<span class="c-var">p</span>.<span class="c-var">pl_name</span>, <span class="c-var">p</span>.<span class="c-var">disc_method</span>));
+</div>
+
+          <div class="demo-code-panel" id="gql-python"><span class="c-comment"># Python — plain requests, no gql library needed</span>
+<span class="c-comment"># SERVICE_UUID: copy from your catalog. YOUR_CONSUMER_SECRET: from Settings tab.</span>
+
+<span class="c-keyword">import</span> <span class="c-var">requests</span>
+
+<span class="c-var">QUERY</span> = <span class="c-string">"""
+query ExoplanetSearch {
+  exoplanets(
+    where: { disc_method: { _eq: "Transit" } }
+    limit: 5
+    order_by: { pl_orbper: asc }
+  ) {
+    pl_name
+    pl_orbper
+    disc_method
+    hostname
+    star { st_spectype st_teff }
+  }
+}
+"""</span>
+
+<span class="c-var">r</span> = <span class="c-var">requests</span>.<span class="c-func">post</span>(
+    <span class="c-string">"https://localhost:3000/internal/call"</span>,
+    headers={<span class="c-string">"Authorization"</span>: <span class="c-string">"Bearer YOUR_CONSUMER_SECRET"</span>},
+    json={
+        <span class="c-string">"api_id_public"</span>: <span class="c-string">"SERVICE_UUID"</span>,
+        <span class="c-string">"path"</span>:          <span class="c-string">"/graphql"</span>,
+        <span class="c-string">"method"</span>:        <span class="c-string">"POST"</span>,
+        <span class="c-string">"body"</span>:          {<span class="c-string">"query"</span>: <span class="c-var">QUERY</span>},
+    },
+)
+<span class="c-var">r</span>.<span class="c-func">raise_for_status</span>()
+
+<span class="c-keyword">for</span> <span class="c-var">planet</span> <span class="c-keyword">in</span> <span class="c-var">r</span>.<span class="c-func">json</span>()[<span class="c-string">"data"</span>][<span class="c-string">"exoplanets"</span>]:
+    <span class="c-func">print</span>(<span class="c-var">planet</span>[<span class="c-string">"pl_name"</span>], <span class="c-string">"-"</span>, <span class="c-var">planet</span>[<span class="c-string">"disc_method"</span>])
+</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Replicate -->
+    <section style="background: #f8fafc;">
+      <div class="container">
+        <div class="demo-replicate">
+          <h3>Replicate This on Your Raspberry Pi</h3>
+          <p class="replicate-intro">Any GraphQL endpoint — yours, a public one, or one you built — can be registered in Sertone. The node handles billing per query automatically.</p>
+
+          <div class="replicate-steps">
+
+            <div class="replicate-step">
+              <div class="replicate-step-num">1</div>
+              <div class="replicate-step-content">
+                <h4>Start your Sertone (same as REST demo)</h4>
+                <div class="code-block"><span class="prompt">$</span> docker run -d --name sertone -p 3000:3000 -p 3001:3001 \
+  -v sertone-data:/data sertone/wrapper:latest</div>
+              </div>
+            </div>
+
+            <div class="replicate-step">
+              <div class="replicate-step-num">2</div>
+              <div class="replicate-step-content">
+                <h4>Register a GraphQL endpoint</h4>
+                <p>Set <code style="font-family:monospace;color:#00b894;">protocol: "graphql"</code> and point at your GraphQL server.</p>
+                <div class="code-block"><span class="prompt">$</span> curl -X POST http://localhost:3001/api/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name":       "My GraphQL API",
+    "endpoint":   "http://localhost:4000/graphql",
+    "protocol":   "graphql",
+    "price_usdc": "0.0005",
+    "description": "GraphQL API for my dataset"
+  }'</div>
+              </div>
+            </div>
+
+            <div class="replicate-step">
+              <div class="replicate-step-num">3</div>
+              <div class="replicate-step-content">
+                <h4>Run queries against your Sertone</h4>
+                <p>Any GraphQL client that can POST to an HTTP endpoint works. Variables, fragments, and subscriptions are all supported.</p>
+                <div class="code-block"><span class="prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"api_id_public": "SERVICE_UUID", "path": "/graphql", "method": "POST",
+       "body": {"query": "{ __schema { types { name } } }"}}'</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Next -->
+    <section>
+      <div class="container text-center">
+        <h2 class="section-title">Explore More Demos</h2>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+          <a href="/demos/rest-api" class="btn btn-secondary">REST API</a>
+          <a href="/demos/smart-contract" class="btn btn-secondary">Smart Contract</a>
+          <a href="/demos/streaming" class="btn btn-secondary">Streaming</a>
+          <a href="/demos/cross-geography" class="btn btn-secondary">Cross-Geography</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/docs/" style="color:#64748b;font-size:0.85rem;">Docs</a>
+        <a href="/pricing" style="color:#64748b;font-size:0.85rem;">Pricing</a>
+        <a href="/trust" style="color:#64748b;font-size:0.85rem;">Trust</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy</a>
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+  <script>
+    function switchTab(btn, panelId) {
+      btn.closest('.demo-code').querySelectorAll('.demo-code-tab').forEach(t => t.classList.remove('active'));
+      btn.closest('.demo-code').querySelectorAll('.demo-code-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(panelId).classList.add('active');
+    }
+
+    const PRESETS = {
+      basic: `query BasicExoplanets {
+  exoplanets(limit: 5) {
+    pl_name
+    pl_orbper
+    disc_year
+    disc_method
+  }
+}`,
+      nested: `query ExoplanetSearch {
+  exoplanets(
+    where: { disc_method: { _eq: "Transit" } }
+    limit: 5
+    order_by: { pl_orbper: asc }
+  ) {
+    pl_name
+    pl_orbper
+    pl_rade
+    disc_year
+    disc_method
+    hostname
+    star {
+      st_spectype
+      st_teff
+      st_dist
+    }
+  }
+}`,
+      discovery: `query DiscoveryMethods {
+  discovery_summary {
+    method
+    count
+    first_year
+    recent_example {
+      pl_name
+      disc_year
+    }
+  }
+}`,
+    };
+
+    function loadPreset(key) {
+      document.getElementById('gql-query').value = PRESETS[key];
+    }
+
+    const GQL_DATA = {
+      basic: {
+        exoplanets: [
+          { pl_name: 'TRAPPIST-1b', pl_orbper: 1.511, disc_year: 2016, disc_method: 'Transit' },
+          { pl_name: 'TRAPPIST-1c', pl_orbper: 2.422, disc_year: 2016, disc_method: 'Transit' },
+          { pl_name: 'Kepler-442b', pl_orbper: 112.3, disc_year: 2015, disc_method: 'Transit' },
+          { pl_name: '55 Cnc e',    pl_orbper: 0.737, disc_year: 2004, disc_method: 'Radial Velocity' },
+          { pl_name: 'HD 209458 b', pl_orbper: 3.525, disc_year: 2000, disc_method: 'Transit' },
+        ]
+      },
+      nested: {
+        exoplanets: [
+          { pl_name: 'TRAPPIST-1b', pl_orbper: 1.511, pl_rade: 1.116, disc_year: 2016, disc_method: 'Transit', hostname: 'TRAPPIST-1', star: { st_spectype: 'M', st_teff: 2566, st_dist: 12.43 } },
+          { pl_name: 'TRAPPIST-1c', pl_orbper: 2.422, pl_rade: 1.097, disc_year: 2016, disc_method: 'Transit', hostname: 'TRAPPIST-1', star: { st_spectype: 'M', st_teff: 2566, st_dist: 12.43 } },
+          { pl_name: 'HD 209458 b', pl_orbper: 3.525, pl_rade: 15.1,  disc_year: 2000, disc_method: 'Transit', hostname: 'HD 209458',  star: { st_spectype: 'G', st_teff: 6065, st_dist: 48.87 } },
+          { pl_name: 'Kepler-442b', pl_orbper: 112.3, pl_rade: 1.34,  disc_year: 2015, disc_method: 'Transit', hostname: 'Kepler-442', star: { st_spectype: 'K', st_teff: 4402, st_dist: 342.0 } },
+          { pl_name: 'GJ 1132 b',   pl_orbper: 1.629, pl_rade: 1.13,  disc_year: 2015, disc_method: 'Transit', hostname: 'GJ 1132',   star: { st_spectype: 'M', st_teff: 3270, st_dist: 12.62 } },
+        ]
+      },
+      discovery: {
+        discovery_summary: [
+          { method: 'Transit',          count: 4073, first_year: 1999, recent_example: { pl_name: 'TOI-700 e', disc_year: 2023 } },
+          { method: 'Radial Velocity',  count: 1078, first_year: 1992, recent_example: { pl_name: 'HD 22946 d', disc_year: 2022 } },
+          { method: 'Imaging',          count: 65,   first_year: 2004, recent_example: { pl_name: 'AF Lep b', disc_year: 2023 } },
+          { method: 'Microlensing',     count: 229,  first_year: 2003, recent_example: { pl_name: 'MOA-2020-BLG-208Lb', disc_year: 2022 } },
+          { method: 'Astrometry',       count: 3,    first_year: 2010, recent_example: { pl_name: 'HD 176051 b', disc_year: 2010 } },
+        ]
+      },
+    };
+
+    function colorJson(json) {
+      return json
+        .replace(/("(?:[^"\\]|\\.)*")(\s*:)/g, '<span class="json-key">$1</span>$2')
+        .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span class="json-str">$1</span>')
+        .replace(/:\s*(\b\d+\.?\d*\b)/g, ': <span class="json-num">$1</span>')
+        .replace(/:\s*(true|false)/g, ': <span class="json-bool">$1</span>')
+        .replace(/:\s*(null)/g, ': <span class="json-null">$1</span>');
+    }
+
+    function detectPreset(query) {
+      if (query.includes('discovery_summary')) return 'discovery';
+      if (query.includes('star {') || query.includes('pl_rade')) return 'nested';
+      return 'basic';
+    }
+
+    function runGraphQLDemo() {
+      const query   = document.getElementById('gql-query').value;
+      const btn     = document.getElementById('gql-run');
+      const status  = document.getElementById('gql-status');
+      const latency = document.getElementById('gql-latency');
+      const body    = document.getElementById('gql-body');
+
+      btn.classList.add('loading');
+      btn.textContent = 'Running…';
+      status.textContent = 'Routing through the Sertone Global Network…';
+      status.className = 'result-status';
+      latency.classList.add('hidden');
+      body.innerHTML = '<div class="demo-result-placeholder">Sending GraphQL query through the Sertone Global Network…</div>';
+
+      const simLatency = 55 + Math.floor(Math.random() * 70);
+      const preset = detectPreset(query);
+
+      setTimeout(() => {
+        const dataKey = GQL_DATA[preset] ? preset : 'basic';
+        const response = {
+          data: GQL_DATA[dataKey],
+          extensions: {
+            _sertone: {
+              routed_via:  'Sertone Global Network',
+              settlement:  'blockchain',
+              latency_ms:  simLatency,
+              settled:     true,
+              price_usdc:  '0.000500',
+            }
+          }
+        };
+
+        body.innerHTML = colorJson(JSON.stringify(response, null, 2));
+        status.textContent = '200 OK — GraphQL response';
+        status.className = 'result-status ok';
+        latency.textContent = `${simLatency}ms`;
+        latency.classList.remove('hidden');
+        btn.classList.remove('loading');
+        btn.innerHTML = '<span class="run-icon">&#9654;</span> Run Query';
+      }, simLatency + 350);
+    }
+  </script>
+
+</body>
+</html>

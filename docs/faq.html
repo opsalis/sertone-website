@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — Sertone Docs | Frequently Asked Questions</title>
+  <meta name="description" content="Frequently asked questions about Sertone — the API marketplace. Covers pricing, security, protocols, payments, wallet, and how the platform works.">
+  <meta name="keywords" content="Sertone FAQ, API marketplace questions, USDC payment FAQ, how does Sertone work, API monetization questions">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/faq">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/faq">
+  <meta property="og:title" content="FAQ — Sertone Docs | Frequently Asked Questions">
+  <meta property="og:description" content="Frequently asked questions about Sertone — the API marketplace. Covers pricing, security, protocols, and payments.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="FAQ — Sertone Docs">
+  <meta name="twitter:description" content="Frequently asked questions about Sertone — the API marketplace. Pricing, security, protocols, and more.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Sertone?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sertone is an API marketplace with no central server. API owners and consumers connect directly through the Sertone control center. All communication is encrypted and direct, powered by a proprietary protocol with automatic payment settlement."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What currency do I pay in?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "USDC (USD Coin), a stablecoin pegged to $1 USD. Prices are predictable — $0.005 today is $0.005 tomorrow. You also need a small amount of ETH for transaction fees."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is it free to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Demo mode is completely free. Production API calls cost the owner's stated price. From that payment, 5% is deducted from the owner and goes to the platform. The owner receives 95%. No sign-up fees or monthly charges."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What API protocols are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Six protocols: REST (OpenAPI), GraphQL, SOAP (WSDL), gRPC (Protobuf), JSON-RPC, and XML-RPC."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does payment work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You fund your wallet with USDC. When you call an API, the cost is deducted automatically. API owners receive payment automatically. No invoices, no manual transfers."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the control center?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Docker container that you install for free on your own hardware, under your sole supervision. It provides a web console where you manage everything: browse APIs, register your own, handle payments, and generate SDKs. Nobody else has access to your control center — not even Sertone."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can anyone see my API calls?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All communication between control centers is fully encrypted. The platform never sees your API parameters or responses."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can the platform take my USDC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Your funds stay in your wallet. Sertone never holds or controls your money."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are there hidden fees?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The consumer pays the owner's stated price. The 5% platform fee is deducted from the owner's side. Plus a small network transaction fee."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For consuming APIs: no, a laptop is fine. For publishing APIs: your control center needs to be reachable by consumers, so a machine with a public IP or a tunnel is recommended."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link active">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>FAQ</h1>
+      <p class="lead">Common questions about Sertone.</p>
+
+      <h2 id="general">General</h2>
+
+      <h3 id="what-is-sertone">What is Sertone?</h3>
+      <p>Sertone is an <strong>API marketplace</strong> with no central server. API owners and consumers connect directly through the Sertone control center. All communication is encrypted and direct, powered by a proprietary protocol with automatic payment settlement. Sertone has no servers of any kind &mdash; you install the free control center on your machine and you're connected to the entire network.</p>
+
+      <h3 id="what-currency">What currency do I pay in?</h3>
+      <p><strong>USDC</strong> (USD Coin), a stablecoin pegged to $1 USD. Prices are predictable &mdash; $0.005 today is $0.005 tomorrow. You also need a small amount of ETH for transaction fees.</p>
+
+      <h3 id="is-it-free">Is it free to use?</h3>
+      <p>Demo mode is completely free. Production API calls cost the owner's stated price. From that payment, 5% is deducted from the owner and goes to the platform. The owner receives 95%. Owners can also offer monthly subscriptions for unlimited access (same 95/5 split).</p>
+
+      <h3 id="both-roles">Can I be both a consumer and an owner?</h3>
+      <p>Yes. You can browse and call APIs while also publishing your own. The same control center handles both roles.</p>
+
+      <h2 id="protocols">Protocols &amp; Languages</h2>
+
+      <h3 id="protocols-supported">What API protocols are supported?</h3>
+      <p>Six protocols: <strong>REST</strong> (OpenAPI), <strong>GraphQL</strong>, <strong>SOAP</strong> (WSDL), <strong>gRPC</strong> (Protobuf), <strong>JSON-RPC</strong>, and <strong>XML-RPC</strong>.</p>
+
+      <h3 id="sdk-languages">What languages can I generate SDKs in?</h3>
+      <p>13 languages + 5 AI integrations (18 total):</p>
+      <ul>
+        <li><strong>Web &amp; Node:</strong> TypeScript (Axios), JavaScript (fetch)</li>
+        <li><strong>Backend:</strong> Python, Go, Java, C# / .NET, PHP, Ruby, Rust, Kotlin</li>
+        <li><strong>Mobile:</strong> Swift (iOS/macOS), Dart (Flutter)</li>
+        <li><strong>CLI:</strong> cURL (Shell)</li>
+        <li><strong>AI:</strong> MCP, LangChain, CrewAI, AutoGen, A2A</li>
+      </ul>
+
+      <h2 id="how-it-works">How it works</h2>
+
+      <h3 id="how-payment">How does payment work?</h3>
+      <p>You fund your wallet with USDC. When you call an API, the cost is deducted automatically. API owners receive payment automatically. No invoices, no manual transfers.</p>
+
+      <h3 id="what-is-control-center">What is the "control center"?</h3>
+      <p>A Docker container that you install <strong>for free</strong> on your own hardware, under your sole supervision. It provides a web console where you manage everything: browse APIs, register your own, handle payments, and generate SDKs. Nobody else has access to your control center &mdash; not even Sertone.</p>
+
+      <h3 id="need-server">Do I need a server?</h3>
+      <p>For consuming APIs: no, a laptop is fine. For publishing APIs: your control center needs to be reachable by consumers, so a machine with a public IP or a tunnel is recommended.</p>
+
+      <h3 id="how-fast">How fast are API calls?</h3>
+      <p>Sub-second. Your request goes directly to the owner's control center and the response comes back typically in under a second.</p>
+
+      <h2 id="console">Console &amp; Settings</h2>
+
+      <h3 id="dark-mode">How do I switch between light and dark mode?</h3>
+      <p>Go to <strong>Settings &gt; Appearance</strong> and toggle the Day/Night mode switch. Your preference is saved in your browser.</p>
+
+      <h3 id="multiple-users">Can I have multiple users?</h3>
+      <p>Yes. Go to <strong>Settings &gt; Users</strong> to create additional user accounts. Each user gets an email, password, and assigned roles (Admin, API Owner, Consumer, Finance). Users only see the tabs their roles allow.</p>
+
+      <h3 id="backup-faq">How do I back up my data?</h3>
+      <p>Go to <strong>Settings &gt; Backup</strong>. Click "Download Backup" for a manual encrypted backup, or enable auto-backup to run on a schedule (every 1, 3, 6, 12, or 24 hours). Backups are encrypted with the password you set during first-run setup.</p>
+
+      <h2 id="reliability">Reliability</h2>
+
+      <h3 id="api-goes-down">What happens if my API goes down?</h3>
+      <p>Consumers who try to call your API will receive an error. Your API's status in the catalog updates automatically to show it is unreachable. When your API comes back online, the status updates to live again.</p>
+
+      <h3 id="owner-offline">What if the owner is offline when I call?</h3>
+      <p>You get a <code>504</code> error. You can retry later when the API is back online.</p>
+
+      <h2 id="security-faq">Security</h2>
+
+      <h3 id="data-privacy">Can anyone see my API calls?</h3>
+      <p>No. All communication between control centers is fully encrypted. The platform never sees your API parameters or responses.</p>
+
+      <h3 id="can-platform-steal">Can the platform take my USDC?</h3>
+      <p>No. Your funds stay in your wallet. Sertone never holds or controls your money.</p>
+
+      <h3 id="what-if-hacked">What if my control center is compromised?</h3>
+      <p>Your funds are in your wallet, not in the control center. Export your wallet backup from Settings and recover it elsewhere. Then destroy and recreate the container.</p>
+
+      <h2 id="costs">Costs</h2>
+
+      <h3 id="minimum-funding">What is the minimum funding?</h3>
+      <p>Any amount works. We recommend at least $5 USDC and a small amount of ETH to get started.</p>
+
+      <h3 id="refunds">Are there refunds?</h3>
+      <p>Payments are final. Use demo mode to test any API before spending real USDC.</p>
+
+      <h3 id="hidden-fees">Are there hidden fees?</h3>
+      <p>No. The consumer pays the owner's stated price. The 5% platform fee is deducted from the owner's side. Plus a small network transaction fee.</p>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/tutorial-consume-api" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Use APIs</span>
+        </a>
+        <div></div>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#general" class="toc-link">General</a>
+      <a href="#what-is-sertone" class="toc-link sub">What is Sertone?</a>
+      <a href="#what-currency" class="toc-link sub">What currency?</a>
+      <a href="#is-it-free" class="toc-link sub">Is it free?</a>
+      <a href="#both-roles" class="toc-link sub">Both roles?</a>
+      <a href="#protocols" class="toc-link">Protocols &amp; Languages</a>
+      <a href="#protocols-supported" class="toc-link sub">Protocols supported?</a>
+      <a href="#sdk-languages" class="toc-link sub">SDK languages?</a>
+      <a href="#how-it-works" class="toc-link">How it works</a>
+      <a href="#how-payment" class="toc-link sub">Payment?</a>
+      <a href="#what-is-control-center" class="toc-link sub">Control center?</a>
+      <a href="#need-server" class="toc-link sub">Need a server?</a>
+      <a href="#how-fast" class="toc-link sub">How fast?</a>
+      <a href="#console" class="toc-link">Console &amp; Settings</a>
+      <a href="#dark-mode" class="toc-link sub">Light/dark mode?</a>
+      <a href="#multiple-users" class="toc-link sub">Multiple users?</a>
+      <a href="#backup-faq" class="toc-link sub">Backup?</a>
+      <a href="#reliability" class="toc-link">Reliability</a>
+      <a href="#api-goes-down" class="toc-link sub">API goes down?</a>
+      <a href="#security-faq" class="toc-link">Security</a>
+      <a href="#costs" class="toc-link">Costs</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

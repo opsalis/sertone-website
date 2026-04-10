@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gRPC — Sertone Learn</title>
+  <meta name="description" content="Learn about gRPC, Protocol Buffers, and HTTP/2 streaming. See how Sertone bridges gRPC APIs into its marketplace.">
+  <meta name="keywords" content="gRPC, Protocol Buffers, protobuf, HTTP/2, RPC framework, binary RPC, API monetization, streaming API, sell gRPC API, API marketplace, Sertone">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/learn/grpc">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/learn/grpc">
+  <meta property="og:title" content="gRPC — Sertone Learn | Monetize gRPC APIs on Sertone">
+  <meta property="og:description" content="Learn about gRPC, Protocol Buffers, and HTTP/2 streaming. See how Sertone bridges gRPC APIs into its marketplace on Sertone billing.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="gRPC — Sertone Learn">
+  <meta name="twitter:description" content="Monetize your gRPC API on the Sertone marketplace. Protocol Buffers, HTTP/2, per-call billing.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "gRPC — Sertone Learn",
+    "description": "Learn about gRPC, Protocol Buffers, and HTTP/2 streaming. See how Sertone bridges gRPC APIs into its marketplace.",
+    "url": "https://sertone.net/learn/grpc",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="/style.css?v=2">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/handler">Control Center</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/security">Security</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+
+      <nav class="breadcrumb">
+        <a href="/learn/owner">Owner</a>
+        <span class="sep">/</span>
+        <span class="current">gRPC</span>
+      </nav>
+
+      <div class="page-header">
+        <span class="protocol-icon">&#x26A1;</span>
+        <h1>gRPC</h1>
+        <p class="lead">High-performance binary RPC — Protocol Buffers, HTTP/2, and bidirectional streaming.</p>
+      </div>
+
+      <!-- What is gRPC -->
+      <section class="content-section">
+        <h2>What Is gRPC?</h2>
+
+        <p>
+          <strong>gRPC</strong> (gRPC Remote Procedure Calls) is a high-performance, open-source
+          RPC framework originally developed by Google. Released in 2015, it is now a
+          Cloud Native Computing Foundation (CNCF) project used by organizations ranging from
+          Netflix and Square to the US Department of Defense. gRPC is designed for
+          low-latency, high-throughput communication between services — especially in
+          microservice architectures where services call each other millions of times per second.
+        </p>
+
+        <p>
+          gRPC uses <strong>Protocol Buffers</strong> (protobuf) as its interface definition
+          language and serialization format. You define your service methods and message types
+          in a <code>.proto</code> file, then use the <code>protoc</code> compiler to generate
+          client and server code in your language of choice — Go, Java, Python, C++, Rust,
+          Node.js, and many more. Protobuf messages are serialized into a compact binary format
+          that is significantly smaller and faster to parse than JSON or XML.
+        </p>
+
+        <p>
+          Under the hood, gRPC runs on <strong>HTTP/2</strong>, which provides multiplexing
+          (multiple concurrent requests over a single TCP connection), header compression, and
+          bidirectional streaming. This means a gRPC client can send a stream of messages to the
+          server while simultaneously receiving a stream of responses — all over one connection.
+          Four communication patterns are supported: <strong>unary</strong> (one request, one
+          response), <strong>server streaming</strong> (one request, stream of responses),
+          <strong>client streaming</strong> (stream of requests, one response), and
+          <strong>bidirectional streaming</strong> (both sides stream simultaneously).
+        </p>
+
+        <p>
+          gRPC also provides built-in support for <strong>deadlines/timeouts</strong> (clients
+          specify how long they are willing to wait), <strong>cancellation</strong> (either side
+          can abort an RPC), <strong>interceptors</strong> (middleware for logging, auth, metrics),
+          and <strong>load balancing</strong>. These features, combined with binary serialization
+          and HTTP/2, make gRPC the fastest mainstream RPC framework available — typically
+          5-10x faster than equivalent REST/JSON calls.
+        </p>
+      </section>
+
+      <!-- How gRPC works with Sertone -->
+      <section class="content-section">
+        <h2>How gRPC Works with Sertone</h2>
+
+        <p>
+          gRPC APIs are binary and require generated client code — but Sertone consumers never
+          need to deal with any of that. The control center bridges gRPC to a clean REST interface
+          automatically.
+        </p>
+
+        <ol class="steps">
+          <li>
+            <strong>Owner provides a .proto file.</strong> Upload your Protocol Buffer service
+            definition via the control center dashboard. The control center parses all service definitions,
+            RPC methods, and message types.
+          </li>
+          <li>
+            <strong>Control center loads the proto, creates a gRPC client, and invokes methods.</strong>
+            When a consumer request arrives as JSON, the control center maps it to the appropriate
+            gRPC method, serializes the request to protobuf, sends it over HTTP/2 to your
+            gRPC server, and deserializes the protobuf response back to JSON.
+          </li>
+          <li>
+            <strong>Supports unary and server-streaming RPCs.</strong> For unary calls, the
+            control center returns a single JSON response. For server-streaming calls, the control center
+            collects the stream and returns the results as a JSON array.
+          </li>
+        </ol>
+
+        <div class="info-box">
+          <p>
+            <strong>Your gRPC server stays untouched.</strong> No REST gateway needed, no
+            transcoding proxy. The control center speaks native gRPC to your server and translates
+            to JSON/OpenAPI for consumers.
+          </p>
+        </div>
+      </section>
+
+      <!-- Demo info -->
+      <section class="content-section">
+        <h2>Demo API: USGS Earthquake Data</h2>
+
+        <p>
+          This demo uses <strong>USGS Earthquake data</strong> — over 24,000 significant
+          earthquakes (magnitude 5.5 and above) recorded by the United States Geological
+          Survey. Query by magnitude range, date range, geographic region, and depth.
+          Stream results for large queries. A perfect dataset for demonstrating gRPC's
+          strengths in high-throughput data retrieval and server-side streaming.
+        </p>
+
+        <div class="btn-group">
+          <a href="/learn/owner" class="btn btn-outline">
+            &#8592; Owner Guide
+          </a>
+        </div>
+      </section>
+
+      <!-- Code example -->
+      <section class="content-section">
+        <h2>Code Example</h2>
+
+        <p class="code-label">Query earthquakes using grpcurl (unary)</p>
+        <div class="code-block"><code><span class="comment"># Unary call: get earthquakes above magnitude 7.0</span>
+<span class="keyword">grpcurl</span> \
+  <span class="string">-plaintext</span> \
+  <span class="string">-d</span> <span class="string">'{ "minMagnitude": 7.0, "limit": 5 }'</span> \
+  <span class="url">localhost:4004</span> \
+  <span class="string">earthquake.EarthquakeService/SearchQuakes</span></code></div>
+
+        <p class="code-label">Response (JSON representation)</p>
+        <div class="code-block"><code>{
+  <span class="string">"quakes"</span>: [
+    {
+      <span class="string">"id"</span>: <span class="string">"us7000abc1"</span>,
+      <span class="string">"magnitude"</span>: 7.8,
+      <span class="string">"location"</span>: <span class="string">"Southern Turkey"</span>,
+      <span class="string">"latitude"</span>: 37.174,
+      <span class="string">"longitude"</span>: 37.032,
+      <span class="string">"depth"</span>: 10.0,
+      <span class="string">"timestamp"</span>: <span class="string">"2023-02-06T01:17:34Z"</span>
+    },
+    ...
+  ]
+}</code></div>
+
+        <p class="code-label">Server-streaming: stream all M6+ quakes in a region</p>
+        <div class="code-block"><code><span class="comment"># Server streaming: results arrive one at a time</span>
+<span class="keyword">grpcurl</span> \
+  <span class="string">-plaintext</span> \
+  <span class="string">-d</span> <span class="string">'{
+    "minMagnitude": 6.0,
+    "minLatitude": 30.0,
+    "maxLatitude": 45.0,
+    "minLongitude": 25.0,
+    "maxLongitude": 45.0
+  }'</span> \
+  <span class="url">localhost:4004</span> \
+  <span class="string">earthquake.EarthquakeService/StreamQuakes</span></code></div>
+      </section>
+
+      <!-- Key concepts table -->
+      <section class="content-section">
+        <h2>gRPC at a Glance</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Concept</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Transport</td>
+              <td>HTTP/2 (mandatory)</td>
+            </tr>
+            <tr>
+              <td>Data format</td>
+              <td>Protocol Buffers (binary), JSON also possible</td>
+            </tr>
+            <tr>
+              <td>Spec format</td>
+              <td>.proto files (Protocol Buffer IDL)</td>
+            </tr>
+            <tr>
+              <td>Communication patterns</td>
+              <td>Unary, server streaming, client streaming, bidirectional</td>
+            </tr>
+            <tr>
+              <td>Code generation</td>
+              <td>Yes — protoc generates client/server stubs</td>
+            </tr>
+            <tr>
+              <td>Best for</td>
+              <td>Microservices, real-time systems, high-throughput data pipelines</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms of Service</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy Policy</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+</body>
+</html>

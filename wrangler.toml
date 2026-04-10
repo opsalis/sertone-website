@@ -1,0 +1,18 @@
+# Cloudflare Pages project configuration
+# Deploy: npx wrangler pages deploy site/ --project-name sertone
+
+name = "sertone"
+compatibility_date = "2026-03-01"
+
+# KV namespace for waitlist emails
+# Create with: npx wrangler kv:namespace create WAITLIST
+# Then paste the binding ID below
+[[kv_namespaces]]
+binding = "WAITLIST"
+id = "5249819c0449457caf25d051cf1e3f52"
+
+# To list all waitlist emails:
+#   npx wrangler kv:key list --namespace-id=5249819c0449457caf25d051cf1e3f52
+#
+# To export all waitlist data:
+#   npx wrangler kv:bulk get --namespace-id=5249819c0449457caf25d051cf1e3f52

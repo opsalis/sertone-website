@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation — Sertone</title>
+  <meta name="description" content="Complete documentation for Sertone — the global service network. Offer and consume REST, GraphQL, gRPC, streams, webhooks, and smart contracts with automatic USDC settlement.">
+  <meta name="keywords" content="Sertone documentation, service network docs, API monetization, Docker service setup, USDC payments, service catalog">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/docs/">
+  <meta property="og:title" content="Documentation — Sertone">
+  <meta property="og:description" content="Complete documentation for Sertone — the global service network. Offer and consume services with automatic USDC settlement.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Documentation — Sertone">
+  <meta name="twitter:description" content="Complete documentation for Sertone — the global service network. Offer and consume services with automatic USDC settlement.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Sertone Documentation",
+    "description": "Complete documentation for Sertone — the global service network. Offer and consume REST, GraphQL, gRPC, streams, webhooks, and smart contracts with automatic USDC settlement.",
+    "url": "https://sertone.net/docs/",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <!-- Left Nav -->
+    <aside class="docs-nav">
+
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link active">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Services You Can Offer</div>
+        <a href="/docs/rest-apis" class="nav-link">REST APIs</a>
+        <a href="/docs/graphql" class="nav-link">GraphQL</a>
+        <a href="/docs/soap-xmlrpc" class="nav-link">SOAP &amp; XML-RPC</a>
+        <a href="/docs/grpc" class="nav-link">gRPC</a>
+        <a href="/docs/json-rpc" class="nav-link">JSON-RPC</a>
+        <a href="/docs/live-streams" class="nav-link">Live Streams</a>
+        <a href="/docs/smart-contracts" class="nav-link">Smart Contracts</a>
+        <a href="/docs/webhooks" class="nav-link">Webhooks</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Consuming Services</div>
+        <a href="/docs/browsing-catalog" class="nav-link">Browsing the Catalog</a>
+        <a href="/docs/calling-a-service" class="nav-link">Calling a Service</a>
+        <a href="/docs/delivery-methods" class="nav-link">Delivery Methods</a>
+        <a href="/docs/sdks" class="nav-link">SDKs &amp; Code Generators</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Corporate &amp; Enterprise</div>
+        <a href="/docs/oauth-sso" class="nav-link">OAuth / SSO</a>
+        <a href="/docs/subscription-plans" class="nav-link">Subscription Plans</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Pricing &amp; Settlement</div>
+        <a href="/docs/how-pricing-works" class="nav-link">How Pricing Works</a>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Your Control Center</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-offer-service" class="nav-link">Offer Your First Service</a>
+        <a href="/docs/tutorial-consume-service" class="nav-link">Consume Your First Service</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Live Demos</div>
+        <a href="/demos/" class="nav-link">&#8594; /demos/</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+
+    </aside>
+
+    <!-- Center Content -->
+    <main class="docs-content">
+      <h1>Sertone Documentation</h1>
+      <p class="lead">Everything you need to offer and consume services on the Sertone network.</p>
+
+      <h2 id="what-is-sertone">What is Sertone?</h2>
+      <p>Sertone is a global service network. There are no Sertone servers. There is no Sertone database. There is no Sertone employee approving your listing or processing your payment.</p>
+      <p>Every participant runs their own Sertone control center &mdash; a single Docker container on their own hardware. Sellers register services. Buyers discover them. Calls flow directly between participants through the Sertone Global Network, a proprietary fully encrypted protocol. Payment settles automatically in USDC.</p>
+      <p>Nobody controls who can join. Nobody controls what you sell. Nobody can see what you buy. Nobody can freeze your funds.</p>
+      <p><strong>Sertone built the protocol &mdash; the roads, not the shops.</strong></p>
+
+      <h2 id="the-un-marketplace">The un-marketplace</h2>
+      <p>Traditional API marketplaces charge 20&ndash;40%, control your listings, see your traffic, and can ban you at will. Sertone is the un-marketplace.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Traditional Marketplace</th>
+            <th>Sertone Network</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Infrastructure</strong></td>
+            <td>They run servers</td>
+            <td>No servers anywhere</td>
+          </tr>
+          <tr>
+            <td><strong>Listings</strong></td>
+            <td>They approve what you sell</td>
+            <td>Anyone can register a service</td>
+          </tr>
+          <tr>
+            <td><strong>Payments</strong></td>
+            <td>They process your money</td>
+            <td>Smart contracts settle automatically</td>
+          </tr>
+          <tr>
+            <td><strong>Privacy</strong></td>
+            <td>They see all your traffic</td>
+            <td>Zero-knowledge &mdash; encrypted end-to-end</td>
+          </tr>
+          <tr>
+            <td><strong>Control</strong></td>
+            <td>They can ban you, freeze funds</td>
+            <td>Nobody can &mdash; the protocol is permanent</td>
+          </tr>
+          <tr>
+            <td><strong>Cost</strong></td>
+            <td>20&ndash;40% commission</td>
+            <td>5% IP royalty</td>
+          </tr>
+          <tr>
+            <td><strong>Your data</strong></td>
+            <td>They own it</td>
+            <td>You own everything</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="services-you-can-offer">What services can you offer?</h2>
+      <ul>
+        <li><strong>REST APIs</strong> &mdash; standard HTTP endpoints</li>
+        <li><strong>GraphQL</strong> &mdash; query-based, nested data</li>
+        <li><strong>SOAP &amp; XML-RPC</strong> &mdash; legacy enterprise protocols</li>
+        <li><strong>gRPC</strong> &mdash; high-performance binary protocol</li>
+        <li><strong>JSON-RPC</strong> &mdash; lightweight remote procedure calls</li>
+        <li><strong>Live Streams</strong> &mdash; SSE, WebSocket, video feeds</li>
+        <li><strong>Smart Contracts</strong> &mdash; any function on any EVM blockchain, served as REST</li>
+        <li><strong>Webhooks</strong> &mdash; asynchronous event delivery</li>
+      </ul>
+      <p><strong>Every protocol. Every format. One network. One settlement.</strong></p>
+
+      <h2 id="how-it-works">How it works</h2>
+      <ol>
+        <li><strong>Install</strong> &mdash; <code>docker run sertone/wrapper:latest</code> on any machine</li>
+        <li><strong>Register</strong> &mdash; add your service via the web console, set your price</li>
+        <li><strong>Publish</strong> &mdash; your service appears in the global catalog automatically</li>
+        <li><strong>Earn</strong> &mdash; consumers call your service, USDC settles automatically. You earn 95%.</li>
+      </ol>
+
+      <div class="info-box">
+        <p><strong>You keep 95%.</strong> Sertone deducts a 5% protocol royalty from every settlement &mdash; automatically, with no invoices, no approval process, and no payment terms. There is no other fee.</p>
+      </div>
+
+      <h2 id="next-steps">Next steps</h2>
+      <p>Ready to start?</p>
+      <ul>
+        <li><a href="/docs/quick-start">Quick Start</a> &mdash; get up and running in minutes</li>
+        <li><a href="/docs/tutorial-offer-service">Offer Your First Service</a> &mdash; start earning USDC</li>
+        <li><a href="/docs/tutorial-consume-service">Consume Your First Service</a> &mdash; find and call a service</li>
+        <li><a href="/demos/">Live Demos</a> &mdash; see the network in action</li>
+      </ul>
+
+      <!-- Prev / Next -->
+      <nav class="docs-page-nav">
+        <div></div>
+        <a href="/docs/quick-start" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Quick Start</span>
+        </a>
+      </nav>
+    </main>
+
+    <!-- Right TOC -->
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#what-is-sertone" class="toc-link">What is Sertone?</a>
+      <a href="#the-un-marketplace" class="toc-link">The un-marketplace</a>
+      <a href="#services-you-can-offer" class="toc-link">What services can you offer?</a>
+      <a href="#how-it-works" class="toc-link">How it works</a>
+      <a href="#next-steps" class="toc-link">Next steps</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

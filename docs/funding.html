@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Funding & Withdrawing — Sertone Docs | Manage Your USDC Wallet</title>
+  <meta name="description" content="Fund your Sertone wallet with USDC to pay for API calls, and withdraw your earnings at any time. You hold your own keys. No minimum balance required.">
+  <meta name="keywords" content="fund USDC wallet, API wallet funding, withdraw USDC earnings, Base L2 USDC, Sertone wallet">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/funding">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/funding">
+  <meta property="og:title" content="Funding & Withdrawing — Sertone Docs | Manage Your USDC Wallet">
+  <meta property="og:description" content="Fund your Sertone wallet with USDC to pay for API calls, and withdraw your earnings at any time.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Funding & Withdrawing — Sertone Docs">
+  <meta name="twitter:description" content="Fund your Sertone wallet with USDC to pay for API calls, and withdraw your earnings at any time.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Funding & Withdrawing — Sertone",
+    "description": "Fund your Sertone wallet with USDC to pay for API calls, and withdraw your earnings at any time.",
+    "url": "https://sertone.net/docs/funding",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link active">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Funding &amp; Withdrawing</h1>
+      <p class="lead">Fund your wallet to pay for API calls. Withdraw your earnings at any time. Everything is managed from the Finance tab.</p>
+
+      <h2 id="finance-tab">The Finance tab</h2>
+      <p>Click <strong>Finance</strong> in the sidebar to open the financial management page. This tab contains all deposit, withdrawal, swap, and threshold controls.</p>
+
+      <h2 id="balance-card">Balance card</h2>
+      <p>At the top of the Finance tab, a balance card shows your current holdings:</p>
+      <ul>
+        <li><strong>USDC balance</strong> &mdash; your available USDC for API payments or earnings</li>
+        <li><strong>ETH balance</strong> &mdash; your gas balance for transaction fees</li>
+        <li><strong>Contract deposit</strong> &mdash; how much USDC is deposited in the payment system</li>
+      </ul>
+
+      <h2 id="deposit">Depositing funds</h2>
+      <p>The "Fund Your Control Center" section shows:</p>
+      <ul>
+        <li><strong>Your deposit address</strong> &mdash; a Base network address displayed as text and as a QR code</li>
+        <li>A <strong>Copy</strong> button to copy the address to your clipboard</li>
+      </ul>
+      <p>Send USDC or ETH to this address from any wallet or exchange you trust (Tangem, Ledger, MetaMask, Kraken, Coinbase, Binance, etc.). No wallet connection is needed &mdash; just send to the address on the <strong>Base</strong> network. The control center detects incoming transfers automatically.</p>
+
+      <div class="info-box">
+        <p><strong>Recommended starting balance:</strong> $5&ndash;10 USDC is enough for hundreds of API calls. A small amount of ETH (a few dollars) covers transaction fees for months.</p>
+      </div>
+
+      <h2 id="withdraw">Withdrawing funds</h2>
+      <p>The "Withdraw Earnings" section lets you send tokens from your control center to any wallet address:</p>
+      <ol>
+        <li>Select the <strong>Token</strong> dropdown: USDC or ETH</li>
+        <li>Enter the <strong>destination address</strong> (0x...)</li>
+        <li>Enter the <strong>amount</strong> (for USDC; ETH sends the full balance minus gas reserve)</li>
+        <li>Confirm with your <strong>admin password</strong></li>
+        <li>Click <strong>Send</strong></li>
+      </ol>
+
+      <h2 id="auto-swap">USDC to ETH swap</h2>
+      <p>If you need ETH for gas fees but only have USDC, the control center can swap for you. Two modes are available:</p>
+      <ul>
+        <li><strong>Auto mode</strong> &mdash; set a threshold (e.g., "swap when ETH below 0.002") and an amount. The control center handles swaps automatically.</li>
+        <li><strong>Manual mode</strong> &mdash; toggle to manual, enter an amount, click "Get Quote" to see the exchange rate, then click "Swap Now" to execute.</li>
+      </ul>
+
+      <h2 id="thresholds">Thresholds and auto-pause</h2>
+      <p>Configure balance thresholds to trigger alerts and auto-pause:</p>
+      <ul>
+        <li><strong>Low USDC Threshold</strong> &mdash; alerts and auto-pause trigger below this USDC balance</li>
+        <li><strong>Low Gas Threshold (ETH)</strong> &mdash; alerts trigger below this ETH balance</li>
+      </ul>
+      <p>Enable <strong>auto-pause</strong> to automatically stop serving paid API calls when your balance drops below thresholds. Demo mode continues to work while paused. You can also manually <strong>Pause Now</strong> or <strong>Resume</strong>.</p>
+
+      <h2 id="transaction-history">Transaction history</h2>
+      <p>The <strong>History</strong> section at the bottom of the Finance tab shows a table of all financial activity:</p>
+      <table>
+        <thead>
+          <tr><th>Column</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Time</strong></td><td>When the transaction occurred</td></tr>
+          <tr><td><strong>Action</strong></td><td>Type of transaction (deposit, withdrawal, swap, payment, earning)</td></tr>
+          <tr><td><strong>Token</strong></td><td>USDC or ETH</td></tr>
+          <tr><td><strong>Amount</strong></td><td>How much was transferred</td></tr>
+          <tr><td><strong>Detail</strong></td><td>Additional context (e.g., destination address, API name)</td></tr>
+          <tr><td><strong>TX</strong></td><td>Transaction reference link</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="wallet-management">Wallet management</h2>
+      <p>An expandable "Wallet Management" section provides advanced options:</p>
+      <ul>
+        <li><strong>View your wallet address</strong> and public key</li>
+        <li><strong>Export your wallet</strong> &mdash; download the raw key or a password-protected keystore file</li>
+        <li><strong>Import your own wallet</strong> &mdash; replace the auto-generated wallet with one you already own</li>
+      </ul>
+
+      <div class="warn-box">
+        <p><strong>Back up your wallet.</strong> Export a backup from <a href="/docs/settings">Settings &gt; Backup</a>. If you lose access to your control center without a backup, your funds cannot be recovered.</p>
+      </div>
+
+      <h2 id="owner-earnings">Owner earnings</h2>
+      <p>When a consumer calls your API, USDC is transferred to your wallet automatically. You can see your earnings on the <a href="/docs/dashboard">Dashboard</a> and withdraw at any time from this Finance tab.</p>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/sdks" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">SDKs</span>
+        </a>
+        <a href="/docs/settings" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Settings</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#finance-tab" class="toc-link">The Finance tab</a>
+      <a href="#balance-card" class="toc-link">Balance card</a>
+      <a href="#deposit" class="toc-link">Depositing funds</a>
+      <a href="#withdraw" class="toc-link">Withdrawing funds</a>
+      <a href="#auto-swap" class="toc-link">USDC to ETH swap</a>
+      <a href="#thresholds" class="toc-link">Thresholds and auto-pause</a>
+      <a href="#transaction-history" class="toc-link">Transaction history</a>
+      <a href="#wallet-management" class="toc-link">Wallet management</a>
+      <a href="#owner-earnings" class="toc-link">Owner earnings</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

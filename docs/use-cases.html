@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Use Cases — Sertone Docs | Monetize AI, IoT, Data, Video & More</title>
+  <meta name="description" content="Monetize any service with Sertone: AI inference, IoT sensor data, databases, video processing, smart contracts, and more. Real examples with step-by-step setup guides.">
+  <meta name="keywords" content="API monetization use cases, sell AI API, IoT data marketplace, monetize database, video API marketplace, smart contract API, Sertone use cases">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/use-cases">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/use-cases">
+  <meta property="og:title" content="Use Cases — Sertone Docs | Monetize AI, IoT, Data, Video & More">
+  <meta property="og:description" content="Monetize any service with Sertone: AI inference, IoT sensor data, databases, video processing, smart contracts, and more.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Use Cases — Sertone Docs">
+  <meta name="twitter:description" content="Monetize any service with Sertone: AI inference, IoT data, databases, video processing, smart contracts, and more.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Monetize APIs with Sertone",
+    "description": "Step-by-step guides for monetizing AI, video, IoT, databases, and more with the Sertone API marketplace.",
+    "url": "https://sertone.net/docs/use-cases",
+    "step": [
+      {"@type": "HowToStep", "name": "Install Docker container", "text": "Run one command to install the Sertone control center on your server"},
+      {"@type": "HowToStep", "name": "Register your service", "text": "Add your API, AI model, IoT endpoint, or any service to the marketplace"},
+      {"@type": "HowToStep", "name": "Set your price", "text": "Choose a per-call price in USDC. API owners receive 95% of every call."},
+      {"@type": "HowToStep", "name": "Earn USDC", "text": "Consumers find and pay you automatically"}
+    ],
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Smart Contracts</div>
+        <a href="/docs/smart-contracts" class="nav-link">SC Integration</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Use Cases</div>
+        <a href="/docs/use-cases" class="nav-link active">All Use Cases</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Use Cases</h1>
+      <p class="lead">Sertone bills for any service &mdash; not just REST APIs. If it runs in a Docker container and accepts connections, you can monetize it. Here are concrete examples with step-by-step setup guides.</p>
+
+      <!-- ============================================================ -->
+      <h2 id="ai-gateway">AI Gateway &mdash; Sell Access to LLMs</h2>
+
+      <p>Run a local LLM (or proxy a remote one) and charge per call or per month.</p>
+
+      <h3>What you need</h3>
+      <ul>
+        <li>A machine with a GPU (or CPU for smaller models)</li>
+        <li>Ollama, LM Studio, vLLM, or any OpenAI-compatible server</li>
+        <li>Sertone control center (free, Docker)</li>
+      </ul>
+
+      <h3>Setup (5 minutes)</h3>
+      <pre><code># 1. Start Ollama with a model
+docker run -d --gpus all -p 11434:11434 ollama/ollama
+docker exec -it ollama ollama pull llama3.1
+
+# 2. Start Sertone control center
+docker run -d -p 3000:3000 -p 3002:3002 sertone/dag
+
+# 3. Open the web console at https://localhost:3002
+#    Go to My APIs → Register
+#    Name: "Llama 3.1 Chat"
+#    Upstream URL: http://host.docker.internal:11434
+#    Price: $0.001 per call
+#    Click Register</code></pre>
+
+      <p>Done. Your LLM is now in the Sertone catalog. Anyone can find it, call it, and pay you in USDC &mdash; automatically.</p>
+
+      <h3>Subscription model</h3>
+      <p>For unlimited monthly access (ideal for corporate customers):</p>
+      <ul>
+        <li>Open the web console &rarr; Subscriptions</li>
+        <li>Add a corporate customer with their SSO/OAuth details</li>
+        <li>Set a monthly fee (e.g. $50/user/month)</li>
+        <li>Employees connect to port 3005 (MCP) or 3006 (REST)</li>
+        <li>First call of the month triggers payment, rest is unlimited</li>
+      </ul>
+
+      <h3>Streaming</h3>
+      <p>AI responses stream token-by-token via SSE or WebSocket:</p>
+      <pre><code># SSE streaming
+curl -N http://your-node:3006/stream/llama-chat \
+  -H "X-Consumer-Key: your-key" \
+  -H "Accept: text/event-stream" \
+  -d '{"prompt": "Explain quantum computing", "stream": true}'
+
+# WebSocket (persistent connection)
+wscat -c "ws://your-node:3006/ws/llama-chat?token=your-key"
+> {"prompt": "Explain quantum computing"}</code></pre>
+
+      <!-- ============================================================ -->
+      <h2 id="video-streaming">Video Streaming &mdash; Monetize Live or Recorded Video</h2>
+
+      <p>Run an open-source video server alongside your control center. Sertone handles billing, the video server handles streaming.</p>
+
+      <h3>Option A: Video Conferencing (Jitsi Meet)</h3>
+      <pre><code># docker-compose.yml
+services:
+  wrapper:
+    image: sertone/dag
+    ports: [3000:3000, 3002:3002, 3005:3005, 3006:3006]
+
+  jitsi:
+    image: jitsi/web
+    ports: [8443:443]
+    environment:
+      - ENABLE_AUTH=1</code></pre>
+      <p>Register Jitsi as an API in your control center (upstream: <code>http://jitsi:443</code>). Consumers pay per session to join video calls.</p>
+
+      <h3>Option B: Live Video Streaming (MediaMTX)</h3>
+      <pre><code># docker-compose.yml
+services:
+  wrapper:
+    image: sertone/dag
+    ports: [3000:3000, 3002:3002]
+
+  mediamtx:
+    image: bluenviron/mediamtx
+    ports: [8554:8554, 8888:8888]</code></pre>
+      <p>MediaMTX accepts RTSP/RTMP/HLS streams. Register it as an API. Consumers pay per call to access live streams.</p>
+
+      <h3>Option C: Video Transcoding (FFmpeg as a Service)</h3>
+      <p>Build a simple API server that accepts video uploads, transcodes with FFmpeg, and returns the result. Register it in your control center. Consumers pay per transcode job.</p>
+
+      <!-- ============================================================ -->
+      <h2 id="iot-data">IoT Data Feeds &mdash; Sell Sensor Data</h2>
+
+      <p>Connect IoT sensors to a simple API server. Sell real-time data feeds.</p>
+
+      <h3>Examples</h3>
+      <ul>
+        <li><strong>Weather station</strong> &mdash; temperature, humidity, pressure, wind. Useful for agriculture, aviation, insurance.</li>
+        <li><strong>Air quality monitor</strong> &mdash; PM2.5, CO2, ozone. Cities and health orgs pay for real-time data.</li>
+        <li><strong>Traffic counter</strong> &mdash; vehicle count, speed. Urban planners and logistics companies need this.</li>
+        <li><strong>Energy meter</strong> &mdash; solar panel output, grid consumption. Energy traders pay for real-time feeds.</li>
+      </ul>
+
+      <h3>Setup</h3>
+      <pre><code># Simple Python API that reads from a sensor
+from flask import Flask, jsonify
+import sensor_lib  # your sensor library
+
+app = Flask(__name__)
+
+@app.route('/v1/reading')
+def reading():
+    return jsonify({
+        'temperature': sensor_lib.read_temp(),
+        'humidity': sensor_lib.read_humidity(),
+        'timestamp': time.time()
+    })
+
+# Run on port 5001
+app.run(host='0.0.0.0', port=5001)</code></pre>
+      <p>Register in your control center: upstream <code>http://localhost:5001</code>, price $0.0001 per reading. A Raspberry Pi with a $5 sensor becomes a revenue-generating data feed.</p>
+
+      <!-- ============================================================ -->
+      <h2 id="database-access">Database Access &mdash; Monetize Your Data</h2>
+
+      <p>Wrap any database (PostgreSQL, MongoDB, Elasticsearch) behind a read-only API. Sell query access.</p>
+
+      <h3>Setup</h3>
+      <pre><code># PostgREST turns any PostgreSQL database into a REST API
+docker run -d -p 5001:3000 \
+  -e PGRST_DB_URI="postgres://user:pass@db:5432/mydata" \
+  -e PGRST_DB_ANON_ROLE="web_anon" \
+  postgrest/postgrest</code></pre>
+      <p>Register PostgREST as an API in your control center. Consumers query your database and pay per request. You control which tables are exposed via PostgreSQL roles.</p>
+
+      <h3>Other databases</h3>
+      <ul>
+        <li><strong>MongoDB</strong> &mdash; use <a href="https://github.com/mongo-express/mongo-express" rel="noopener">mongo-express</a> or build a thin Express API</li>
+        <li><strong>Elasticsearch</strong> &mdash; expose search endpoints directly (read-only)</li>
+        <li><strong>Redis</strong> &mdash; build a key-value lookup API</li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2 id="file-storage">File Storage &mdash; Sell Cloud Storage</h2>
+
+      <p>Run MinIO (S3-compatible storage) and sell file upload/download access.</p>
+
+      <pre><code># docker-compose.yml
+services:
+  wrapper:
+    image: sertone/dag
+    ports: [3000:3000, 3002:3002]
+
+  minio:
+    image: minio/minio
+    command: server /data
+    ports: [9000:9000]
+    volumes: [minio-data:/data]
+
+volumes:
+  minio-data:</code></pre>
+      <p>Register MinIO S3 API as an API in your control center. Consumers pay per upload/download. You earn from unused disk space on your machine.</p>
+
+      <!-- ============================================================ -->
+      <h2 id="compute">Compute &mdash; Sell Processing Power</h2>
+
+      <p>Turn spare compute into revenue.</p>
+
+      <h3>Examples</h3>
+      <ul>
+        <li><strong>Image processing</strong> &mdash; resize, watermark, OCR. Use ImageMagick or Tesseract behind an API.</li>
+        <li><strong>PDF generation</strong> &mdash; HTML to PDF conversion. Use Puppeteer or wkhtmltopdf.</li>
+        <li><strong>Code execution</strong> &mdash; sandboxed code runner (like Replit). Use <a href="https://github.com/judge0/judge0" rel="noopener">Judge0</a>.</li>
+        <li><strong>ML inference</strong> &mdash; run any ONNX/TensorFlow model behind a Flask API.</li>
+        <li><strong>Rendering</strong> &mdash; 3D rendering farm (Blender as a service).</li>
+      </ul>
+
+      <h3>Setup pattern (same for all)</h3>
+      <pre><code># 1. Run the processing tool in Docker
+docker run -d -p 5001:8080 your-processing-service
+
+# 2. Register in your control center
+#    Upstream: http://localhost:5001
+#    Price: set your price per call (e.g. $0.01)
+
+# 3. Consumers call it, you get paid automatically</code></pre>
+
+      <!-- ============================================================ -->
+      <h2 id="web-scraping">Web Scraping &mdash; Sell Structured Data</h2>
+
+      <p>Scrape public websites, structure the data, and sell it as a clean API.</p>
+
+      <h3>Examples</h3>
+      <ul>
+        <li><strong>Real estate listings</strong> &mdash; scrape property sites, return structured JSON</li>
+        <li><strong>Job postings</strong> &mdash; aggregate from multiple job boards</li>
+        <li><strong>Price comparison</strong> &mdash; track product prices across retailers</li>
+        <li><strong>News aggregation</strong> &mdash; headlines from multiple sources, tagged by topic</li>
+      </ul>
+
+      <p>Build a scraper with Playwright or Cheerio, wrap it in an Express API, register in your control center. Consumers pay per query instead of building their own scrapers.</p>
+
+      <!-- ============================================================ -->
+      <h2 id="notifications">Notification Service &mdash; Sell Alerts</h2>
+
+      <p>Build a notification gateway that sends SMS, email, push, or WhatsApp messages.</p>
+
+      <pre><code># Simple notification API
+app.post('/v1/send', (req, res) => {
+  const { channel, to, message } = req.body;
+  if (channel === 'sms') sendSMS(to, message);
+  if (channel === 'email') sendEmail(to, message);
+  if (channel === 'whatsapp') sendWhatsApp(to, message);
+  res.json({ ok: true, delivered: true });
+});</code></pre>
+      <p>Register in your control center. Consumers pay per notification. You aggregate multiple providers (Twilio, SendGrid, etc.) and offer one unified API.</p>
+
+      <!-- ============================================================ -->
+      <h2 id="identity">Identity Verification &mdash; Sell KYC/Auth</h2>
+
+      <p>Run identity verification services and charge per check.</p>
+
+      <h3>Examples</h3>
+      <ul>
+        <li><strong>Email verification</strong> &mdash; check if an email is valid, disposable, or has MX records</li>
+        <li><strong>Phone validation</strong> &mdash; format, carrier lookup, fraud score</li>
+        <li><strong>Address validation</strong> &mdash; standardize and geocode postal addresses</li>
+        <li><strong>Document OCR</strong> &mdash; extract data from ID cards, passports, invoices</li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2 id="blockchain">Blockchain Data &mdash; Sell On-Chain Analytics</h2>
+
+      <p>Index blockchain data and sell queries. Many developers need historical on-chain data but don&rsquo;t want to run their own archive node.</p>
+
+      <h3>Examples</h3>
+      <ul>
+        <li><strong>Token price history</strong> &mdash; indexed from DEX trades</li>
+        <li><strong>Wallet profiling</strong> &mdash; transaction history, token holdings, DeFi positions</li>
+        <li><strong>Smart contract events</strong> &mdash; indexed event logs for any contract</li>
+        <li><strong>Gas price oracle</strong> &mdash; historical and predicted gas prices</li>
+      </ul>
+
+      <p>Run your indexer, expose it as an API, register in your control center. Consumers pay per query.</p>
+
+      <!-- ============================================================ -->
+      <h2 id="gaming">Gaming Services &mdash; Sell Game Infrastructure</h2>
+
+      <ul>
+        <li><strong>Matchmaking API</strong> &mdash; find opponents by skill level, region, game mode</li>
+        <li><strong>Leaderboard API</strong> &mdash; global rankings with anti-cheat</li>
+        <li><strong>Game state storage</strong> &mdash; save/load game progress via API</li>
+        <li><strong>Random number oracle</strong> &mdash; verifiable randomness for on-chain games</li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2 id="tribe-gateway">Tribe Gateway &mdash; Shared AI for Teams</h2>
+
+      <p>Your team, company, or community buys one AI API key. Deploy one Sertone control center with subscription ports. Members connect via SSO and get unlimited AI access for a flat monthly fee. Finance sees per-member cost breakdown automatically.</p>
+
+      <h3>How it works</h3>
+      <ol>
+        <li>Install wrapper + connect to your AI provider (OpenAI, Claude, Mistral, local Ollama)</li>
+        <li>Open web console &rarr; Subscriptions &rarr; Add a Tribe</li>
+        <li>Enter your team&rsquo;s SSO details (OAuth URL, client ID, secret)</li>
+        <li>Set the monthly fee per member</li>
+        <li>Members connect to port 3005 (MCP) or 3006 (REST) with their email</li>
+        <li>First call each month: USDC settlement (~2 seconds). Rest of the month: unlimited, instant.</li>
+      </ol>
+
+      <h3>Pricing examples</h3>
+      <table>
+        <thead><tr><th>Tribe size</th><th>Monthly fee/member</th><th>Your revenue</th><th>Sertone royalty (5%)</th></tr></thead>
+        <tbody>
+          <tr><td>Startup (10 members)</td><td>$20</td><td>$190/mo</td><td>$10/mo</td></tr>
+          <tr><td>Mid-size (100 members)</td><td>$30</td><td>$2,850/mo</td><td>$150/mo</td></tr>
+          <tr><td>Enterprise (1,000 members)</td><td>$50</td><td>$47,500/mo</td><td>$2,500/mo</td></tr>
+        </tbody>
+      </table>
+      <p>Set any price you want. You keep 95%, Sertone takes 5% &mdash; automatically, no invoices.</p>
+
+      <h3>Use cases for Tribe Gateway</h3>
+      <ul>
+        <li><strong>Corporate AI access</strong> &mdash; one API key, per-department billing, full audit trail</li>
+        <li><strong>University research lab</strong> &mdash; shared GPU cluster or AI API, students pay per semester</li>
+        <li><strong>Developer community</strong> &mdash; premium API access for paying members</li>
+        <li><strong>Freelancer collective</strong> &mdash; shared tools and services, split costs automatically</li>
+        <li><strong>Agency + clients</strong> &mdash; agency provides AI tools, each client pays their own usage</li>
+      </ul>
+
+      <!-- ============================================================ -->
+      <h2 id="pattern">The Universal Pattern</h2>
+
+      <p>Every use case follows the same three steps:</p>
+
+      <ol>
+        <li><strong>Run your service</strong> in Docker (any port, any protocol)</li>
+        <li><strong>Register it</strong> in your Sertone control center (upstream URL + price)</li>
+        <li><strong>Consumers find and pay</strong> automatically via the catalog</li>
+      </ol>
+
+      <p>If it accepts HTTP requests, you can monetize it with Sertone. No payment integration, no billing code, no invoices. Payments are handled automatically.</p>
+
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On This Page</div>
+      <a class="toc-link" href="#ai-gateway">AI Gateway</a>
+      <a class="toc-link" href="#video-streaming">Video Streaming</a>
+      <a class="toc-link" href="#iot-data">IoT Data Feeds</a>
+      <a class="toc-link" href="#database-access">Database Access</a>
+      <a class="toc-link" href="#file-storage">File Storage</a>
+      <a class="toc-link" href="#compute">Compute</a>
+      <a class="toc-link" href="#web-scraping">Web Scraping</a>
+      <a class="toc-link" href="#notifications">Notification Service</a>
+      <a class="toc-link" href="#identity">Identity Verification</a>
+      <a class="toc-link" href="#blockchain">Blockchain Data</a>
+      <a class="toc-link" href="#gaming">Gaming Services</a>
+      <a class="toc-link" href="#tribe-gateway">Tribe Gateway</a>
+      <a class="toc-link" href="#pattern">The Universal Pattern</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+
+</body>
+</html>

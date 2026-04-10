@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2A Protocol Support — Sertone</title>
+  <meta name="description" content="Every service on the Sertone network is automatically discoverable by any AI agent using Google's Agent-to-Agent (A2A) protocol. Discovery and payment, solved.">
+  <meta name="keywords" content="A2A protocol, agent-to-agent, AI agent marketplace, agent discovery, USDC payment agents, Sertone A2A, Google A2A, LangChain, CrewAI, Google ADK">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/demos/a2a">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/a2a">
+  <meta property="og:title" content="A2A Protocol Support — Sertone">
+  <meta property="og:description" content="Every service on the Sertone network is automatically discoverable by any AI agent using Google's Agent-to-Agent protocol. Discovery and payment, solved.">
+  <meta property="og:site_name" content="Sertone">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A2A Protocol Support — Sertone">
+  <meta name="twitter:description" content="Sertone fills the two gaps in A2A: discovery registry and automatic USDC payment. 900+ services available day one.">
+
+  <link rel="stylesheet" href="/style.css?v=3">
+  <link rel="stylesheet" href="/demos/style.css?v=1">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/sell">Sell</a></li>
+        <li><a href="/buy">Buy</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/trust">Trust</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="demo-page">
+
+    <!-- Hero -->
+    <div class="demo-hero">
+      <div class="container">
+        <div class="demo-hero-breadcrumb">
+          <a href="/demos/">Demos</a> &rsaquo; A2A Protocol
+        </div>
+        <h1>A2A Protocol Support</h1>
+        <p class="value-prop">Every service on the Sertone network is automatically discoverable by any AI agent using Google's Agent-to-Agent protocol. No extra configuration, no separate registry — it just works.</p>
+      </div>
+    </div>
+
+    <!-- What is A2A -->
+    <section>
+      <div class="container">
+        <span class="section-label">Background</span>
+        <h2 class="section-title" style="margin-bottom:1rem;">What is A2A?</h2>
+        <p style="color:#475569;font-size:1rem;line-height:1.75;max-width:720px;">
+          Google's Agent-to-Agent (A2A) protocol is an open standard that lets AI agents call each other over plain HTTPS using a JSON-RPC 2.0 wire format. An agent publishes an <strong>agent card</strong> — a JSON file at a well-known URL — describing its capabilities, endpoints, and authentication requirements. Other agents read the card, discover what the agent can do, and call it.
+        </p>
+        <p style="color:#475569;font-size:1rem;line-height:1.75;max-width:720px;margin-top:1rem;">
+          A2A solves the <em>call format</em> problem elegantly. But it leaves two critical gaps open:
+        </p>
+        <div style="display:flex;flex-direction:column;gap:1rem;margin-top:1.25rem;max-width:680px;">
+          <div style="display:flex;gap:1rem;align-items:flex-start;padding:1rem 1.25rem;background:#fff8f0;border:1.5px solid #fbbf24;border-radius:10px;">
+            <div style="font-size:1.4rem;line-height:1;">&#128269;</div>
+            <div>
+              <strong style="color:#92400e;">Gap 1: Discovery</strong>
+              <p style="color:#78350f;font-size:0.9rem;margin:0.3rem 0 0;line-height:1.6;">A2A has no registry. An agent card is only useful if you already know where it lives. There is no "search for agents that can do X".</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:1rem;align-items:flex-start;padding:1rem 1.25rem;background:#fff0f6;border:1.5px solid #f472b6;border-radius:10px;">
+            <div style="font-size:1.4rem;line-height:1;">&#128181;</div>
+            <div>
+              <strong style="color:#9d174d;">Gap 2: Payment</strong>
+              <p style="color:#831843;font-size:0.9rem;margin:0.3rem 0 0;line-height:1.6;">A2A has no payment layer. If your agent calls a commercial service, you need a separate billing arrangement — API keys, invoices, credit limits, chargebacks.</p>
+            </div>
+          </div>
+        </div>
+        <p style="color:#475569;font-size:1rem;line-height:1.75;max-width:720px;margin-top:1.5rem;">
+          <strong style="color:#047857;">Sertone fills both gaps.</strong> Every service registered on the Sertone network automatically gets a standards-compliant agent card. Your Sertone control center is the discovery registry — search by capability, category, or keyword. Payment settles automatically in USDC on every call, with no setup beyond funding your wallet.
+        </p>
+      </div>
+    </section>
+
+    <!-- Architecture -->
+    <section style="background:#f8fafc;">
+      <div class="container">
+        <span class="section-label">How This Works</span>
+        <h2 class="section-title" style="margin-bottom: 1.75rem;">The Call Path</h2>
+
+        <style>
+          /* ── Vertical architecture diagram ── */
+          .arch-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+            max-width: 680px;
+            margin: 0 auto;
+            font-family: inherit;
+          }
+
+          /* Consumer + Owner rows */
+          .arch-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.1rem 1.5rem 1rem;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+          }
+          .arch-row.arch-consumer {
+            border-radius: 14px 14px 0 0;
+            border-bottom: none;
+          }
+          .arch-row.arch-owner {
+            border-radius: 0 0 14px 14px;
+            border-top: none;
+          }
+
+          .arch-row-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: #94a3b8;
+          }
+          .arch-row-sublabel {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-style: italic;
+          }
+
+          /* Horizontal flow of boxes inside a row */
+          .arch-flow-h {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+          }
+          .arch-box {
+            background: #fff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 9px;
+            padding: 0.55rem 0.9rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #1e293b;
+            text-align: center;
+            line-height: 1.35;
+            white-space: nowrap;
+          }
+          /* User's own stuff — big, prominent */
+          .arch-box-user {
+            background: #fff;
+            border: 2px solid #1e293b;
+            border-radius: 12px;
+            padding: 0.9rem 1.3rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            text-align: center;
+            line-height: 1.35;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          }
+          /* Sertone control centers — smaller, green */
+          .arch-box-sertone {
+            background: linear-gradient(135deg, rgba(0,184,148,0.08), rgba(0,184,148,0.03));
+            border: 1.5px solid rgba(0,184,148,0.4);
+            border-radius: 9px;
+            padding: 0.5rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #047857;
+            text-align: center;
+            line-height: 1.35;
+          }
+          .arch-arrow-h {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            flex-shrink: 0;
+          }
+
+          /* Vertical arrow between rows */
+          .arch-arrow-v {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 0.15rem 0;
+            position: relative;
+            z-index: 2;
+          }
+          .arch-arrow-v .arrow-down,
+          .arch-arrow-v .arrow-up {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            padding: 0.18rem 0.65rem;
+            border-radius: 20px;
+          }
+          .arch-arrow-v .arrow-down {
+            color: #00b894;
+            background: #e6faf4;
+            border: 1px solid #b2edd8;
+          }
+          .arch-arrow-v .arrow-up {
+            color: #0ea5e9;
+            background: #e0f4fd;
+            border: 1px solid #b3e4f9;
+          }
+
+          /* ── Network row ── */
+          .arch-network {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #00b894 0%, #00a381 55%, #007d65 100%);
+            border: none;
+            padding: 2rem 1.5rem;
+            min-height: 160px;
+            justify-content: center;
+            box-shadow: 0 4px 32px rgba(0,184,148,0.22), 0 1px 4px rgba(0,0,0,0.06);
+          }
+
+          /* Floating particles */
+          .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+            animation: floatUp 6s ease-in-out infinite;
+          }
+          .particle.p1 { width: 48px; height: 48px; left: 8%;  bottom: -20px; animation-duration: 7s; animation-delay: 0s;   }
+          .particle.p2 { width: 28px; height: 28px; left: 28%; bottom: -14px; animation-duration: 5s; animation-delay: 1.4s; }
+          .particle.p3 { width: 64px; height: 64px; left: 58%; bottom: -28px; animation-duration: 9s; animation-delay: 0.7s; }
+          .particle.p4 { width: 20px; height: 20px; left: 80%; bottom: -10px; animation-duration: 6s; animation-delay: 2.5s; }
+          .particle.p5 { width: 36px; height: 36px; left: 45%; bottom: -18px; animation-duration: 8s; animation-delay: 3.2s; }
+
+          @keyframes floatUp {
+            0%   { transform: translateY(0)    scale(1);    opacity: 0.10; }
+            40%  { transform: translateY(-70px) scale(1.08); opacity: 0.18; }
+            80%  { transform: translateY(-130px) scale(0.95); opacity: 0.07; }
+            100% { transform: translateY(-160px) scale(0.9);  opacity: 0;   }
+          }
+
+          /* Pulse ring behind network title */
+          .arch-network::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255,255,255,0.15);
+            animation: pulseRing 3.5s ease-out infinite;
+          }
+          .arch-network::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px; height: 280px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.08);
+            animation: pulseRing 3.5s ease-out infinite 0.8s;
+          }
+          @keyframes pulseRing {
+            0%   { opacity: 0.6; transform: translate(-50%,-50%) scale(0.7); }
+            100% { opacity: 0;   transform: translate(-50%,-50%) scale(1.4); }
+          }
+
+          .arch-network-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.55rem;
+          }
+          .arch-network-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 1px 8px rgba(0,0,0,0.18);
+          }
+          .arch-network-features {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+          .arch-network-features span {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.92);
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 20px;
+            padding: 0.22rem 0.7rem;
+          }
+          .arch-network-tagline {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.72);
+            max-width: 340px;
+            line-height: 1.4;
+          }
+
+          /* Responsive */
+          @media (max-width: 480px) {
+            .arch-box       { font-size: 0.75rem; padding: 0.45rem 0.65rem; white-space: normal; max-width: 110px; }
+            .arch-network-title { font-size: 0.95rem; }
+            .arch-network-features span { font-size: 0.7rem; }
+          }
+
+          /* ---- FOR CONSUMERS section ---- */
+          .consumer-steps {
+            margin: 1.5rem 0;
+          }
+          .consumer-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+          }
+          .step-num {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent, #00b894);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+          }
+          .step-content h4 {
+            margin: 0 0 0.4rem;
+            font-size: 1rem;
+          }
+          .step-content p {
+            margin: 0.3rem 0;
+            color: var(--text-secondary, #475569);
+            font-size: 0.9rem;
+            line-height: 1.6;
+          }
+        </style>
+
+        <div class="arch-vertical">
+
+          <!-- Row 1: Consumer -->
+          <div class="arch-row arch-consumer">
+            <div class="arch-row-label">Consumer Premises</div>
+            <div class="arch-flow-h">
+              <div class="arch-box arch-box-user">AI Agent<br>(Your App)</div>
+              <div class="arch-arrow-h">&#8594;</div>
+              <div class="arch-box arch-box-sertone">Your Sertone<br>Control Center</div>
+            </div>
+            <div class="arch-row-sublabel">On your premises</div>
+          </div>
+
+          <!-- Arrow down/up between consumer and network -->
+          <div class="arch-arrow-v">
+            <span class="arrow-down">&#9660; A2A JSON-RPC Request</span>
+            <span class="arrow-up">&#9650; Agent Response</span>
+          </div>
+
+          <!-- Row 2: Network -->
+          <div class="arch-row arch-network">
+            <div class="particle p1"></div>
+            <div class="particle p2"></div>
+            <div class="particle p3"></div>
+            <div class="particle p4"></div>
+            <div class="particle p5"></div>
+            <div class="arch-network-content">
+              <div class="arch-network-title">Sertone Global Network</div>
+              <div class="arch-network-features">
+                <span>&#128274; Encrypted</span>
+                <span>&#128279; Automatic Payment</span>
+                <span>&#129302; A2A Agent Cards</span>
+              </div>
+              <div class="arch-network-tagline">900+ services — all A2A-compatible, all discoverable, all paid in USDC</div>
+            </div>
+          </div>
+
+          <!-- Arrow down/up between network and owner -->
+          <div class="arch-arrow-v">
+            <span class="arrow-down">&#9660; A2A JSON-RPC Request</span>
+            <span class="arrow-up">&#9650; Agent Response</span>
+          </div>
+
+          <!-- Row 3: Owner -->
+          <div class="arch-row arch-owner">
+            <div class="arch-row-label">Owner Premises</div>
+            <div class="arch-flow-h">
+              <div class="arch-box arch-box-sertone">Their Sertone<br>Control Center</div>
+              <div class="arch-arrow-h">&#8594;</div>
+              <div class="arch-box arch-box-user">Service<br>Provider</div>
+            </div>
+            <div class="arch-row-sublabel">On their premises</div>
+          </div>
+
+        </div><!-- /arch-vertical -->
+
+        <div style="margin:1.25rem auto 0;max-width:44rem;background:linear-gradient(135deg,rgba(0,184,148,0.06),rgba(0,184,148,0.02));border:1px solid rgba(0,184,148,0.15);border-radius:12px;padding:1rem 1.5rem;">
+          <p style="font-size:0.85rem;color:#475569;line-height:1.65;margin:0;">
+            <strong style="color:#1e293b;">What is the Sertone control center?</strong> A single Docker container you run on your own machine — a laptop, a Raspberry Pi, a cloud server. It connects you to the Sertone Global Network. Through its built-in web console, you browse services, register your own, manage your wallet, and monitor your earnings. Installation takes minutes. It is completely free, forever.
+          </p>
+          <div style="margin-top:0.75rem;">
+            <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+          </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 1.75rem;">
+          <p>Every service registered on the Sertone network automatically generates a standards-compliant A2A agent card. No extra steps for the service owner. No extra integration for the AI agent developer.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Build Your First A2A Agent -->
+    <section style="background:#f8fafc;">
+      <div class="container">
+        <span class="section-label">Quick Start</span>
+        <h2 class="section-title">Build Your First A2A Agent in 5 Minutes</h2>
+        <p style="color:#475569;font-size:1rem;line-height:1.75;max-width:720px;">
+          Here is a complete Python agent that discovers and calls an earthquake monitoring service through the Sertone network using the A2A protocol. Copy, paste, run.
+        </p>
+
+        <!-- Python -->
+        <h3 style="font-size:0.95rem;font-weight:700;color:#1e293b;margin:1.75rem 0 0.5rem;letter-spacing:0.02em;">Python</h3>
+        <div style="background:#0f172a;border-radius:12px;padding:1.5rem;margin:0.5rem 0 1.5rem;overflow-x:auto;">
+<pre style="color:#e2e8f0;font-size:0.82rem;line-height:1.6;margin:0;"><code style="color:#e2e8f0;">#!/usr/bin/env python3
+"""
+My First A2A Agent — discovers and calls services on the Sertone network.
+No SDK needed. Just HTTP requests.
+"""
+import requests
+
+SERTONE = "https://localhost:3000"  # Your Sertone control center
+SECRET  = "YOUR_CONSUMER_SECRET"    # From Settings > Security in your web console
+
+# Step 1: Discover services
+print("Discovering earthquake services...")
+agents = requests.get(f"{SERTONE}/a2a/discover",
+    params={"capability": "earthquake", "limit": 3},
+    verify=False  # remove in production with proper TLS
+).json()
+
+for agent in agents["agents"]:
+    print(f"  Found: {agent['name']} — ${agent['x_sertone']['price_per_call']}/call")
+
+# Step 2: Read the agent card
+uuid = agents["agents"][0]["x_sertone"]["uuid"]
+card = requests.get(f"{SERTONE}/agent/{uuid}/card.json", verify=False).json()
+print(f"\nAgent: {card['name']}")
+print(f"Skills: {[s['name'] for s in card['skills']]}")
+
+# Step 3: Call the service via A2A JSON-RPC
+print(f"\nCalling {card['name']}...")
+response = requests.post(f"{SERTONE}/a2a/message",
+    headers={"X-Consumer-Secret": SECRET, "Content-Type": "application/json"},
+    json={
+        "jsonrpc": "2.0",
+        "method": "message/send",
+        "params": {
+            "api_uuid": uuid,
+            "content": '{"path":"/v1/earthquakes/recent","method":"GET","params":{"min_magnitude":5,"limit":5}}'
+        },
+        "id": 1
+    },
+    verify=False
+).json()
+
+# Step 4: Use the result
+if "result" in response:
+    data = response["result"]["output"]
+    print(f"Status: {response['result']['status']}")
+    if isinstance(data, dict) and "data" in data:
+        for eq in data["data"][:5]:
+            print(f"  M{eq.get('magnitude','?')} — {eq.get('place','?')}")
+    print(f"\nSettlement: automatic, USDC")
+else:
+    print(f"Error: {response.get('error',{}).get('message','unknown')}")</code></pre>
+        </div>
+
+        <!-- Expected output -->
+        <h3 style="font-size:0.95rem;font-weight:700;color:#1e293b;margin:1.75rem 0 0.5rem;letter-spacing:0.02em;">Expected output</h3>
+        <div style="background:#0f172a;border-radius:12px;padding:1.25rem;margin:0.5rem 0 1.5rem;overflow-x:auto;">
+<pre style="color:#e2e8f0;font-size:0.82rem;line-height:1.6;margin:0;"><code style="color:#e2e8f0;">$ python3 my_agent.py
+
+Discovering earthquake services...
+  Found: USGS Earthquake Catalog — $0.001/call
+
+Agent: USGS Earthquake Catalog
+Skills: ['Recent Earthquakes', 'Earthquake Search']
+
+Calling USGS Earthquake Catalog...
+Status: completed
+  M5.2 — 120km SSW of Kodiak, Alaska
+  M5.0 — Vanuatu
+  M5.1 — South Sandwich Islands
+
+Settlement: automatic, USDC</code></pre>
+        </div>
+
+        <!-- JavaScript -->
+        <h3 style="font-size:0.95rem;font-weight:700;color:#1e293b;margin:1.75rem 0 0.5rem;letter-spacing:0.02em;">JavaScript (Node.js)</h3>
+        <div style="background:#0f172a;border-radius:12px;padding:1.5rem;margin:0.5rem 0 1.5rem;overflow-x:auto;">
+<pre style="color:#e2e8f0;font-size:0.82rem;line-height:1.6;margin:0;"><code style="color:#e2e8f0;">#!/usr/bin/env node
+// My First A2A Agent — Node.js version
+const SERTONE = 'https://localhost:3000';
+const SECRET = 'YOUR_CONSUMER_SECRET';
+
+async function main() {
+  // Discover
+  const agents = await fetch(`${SERTONE}/a2a/discover?capability=earthquake&amp;limit=3`)
+    .then(r =&gt; r.json());
+  console.log(`Found ${agents.agents.length} service(s)`);
+
+  // Call via A2A
+  const uuid = agents.agents[0].x_sertone.uuid;
+  const result = await fetch(`${SERTONE}/a2a/message`, {
+    method: 'POST',
+    headers: { 'X-Consumer-Secret': SECRET, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      method: 'message/send',
+      params: { api_uuid: uuid, content: '{"path":"/v1/earthquakes/recent","method":"GET"}' },
+      id: 1,
+    }),
+  }).then(r =&gt; r.json());
+
+  console.log('Result:', JSON.stringify(result.result?.output, null, 2));
+}
+main();</code></pre>
+        </div>
+
+        <!-- curl -->
+        <h3 style="font-size:0.95rem;font-weight:700;color:#1e293b;margin:1.75rem 0 0.5rem;letter-spacing:0.02em;">curl one-liner</h3>
+        <div style="background:#0f172a;border-radius:12px;padding:1.25rem;margin:0.5rem 0 1.5rem;overflow-x:auto;">
+<pre style="color:#e2e8f0;font-size:0.82rem;line-height:1.6;margin:0;"><code style="color:#e2e8f0;"># Discover services
+curl -sk "https://localhost:3000/a2a/discover?capability=earthquake&amp;limit=3" | python3 -m json.tool
+
+# Call a service directly
+curl -sk -X POST "https://localhost:3000/a2a/message" \
+  -H "X-Consumer-Secret: YOUR_CONSUMER_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "message/send",
+    "params": {
+      "api_uuid": "YOUR_SERVICE_UUID",
+      "content": "{\"path\":\"/v1/earthquakes/recent\",\"method\":\"GET\"}"
+    },
+    "id": 1
+  }' | python3 -m json.tool</code></pre>
+        </div>
+
+        <p style="margin:1.25rem 0 0.5rem;color:#475569;font-size:0.95rem;line-height:1.75;max-width:720px;">
+          <strong>That is it.</strong> No SDK, no framework, no library. Just HTTP requests to your own Sertone control center. The A2A protocol is standard JSON-RPC 2.0 — any language that can make HTTP calls can be an A2A agent. Payment settles automatically in USDC on every call.
+        </p>
+      </div>
+    </section>
+
+    <!-- How A2A Works on Sertone -->
+    <section>
+      <div class="container">
+        <span class="section-label">A2A on Sertone</span>
+        <h2 class="section-title">How A2A Works on Sertone</h2>
+        <p style="color:#64748b;font-size:0.95rem;margin-bottom:2rem;">Three steps from zero to a running AI agent that calls paid services over A2A.</p>
+
+        <!-- Step 1 -->
+        <div style="margin-bottom:2.5rem;">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+            <div style="width:32px;height:32px;border-radius:50%;background:#00b894;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0;">1</div>
+            <h3 style="margin:0;font-size:1.1rem;">Discover services by capability</h3>
+          </div>
+          <p style="color:#475569;font-size:0.92rem;line-height:1.7;margin-bottom:0.85rem;">Ask your Sertone to find all services with a given capability. Returns a list of agent cards matching your query.</p>
+          <div class="demo-code" style="margin-bottom:0.85rem;">
+            <div class="demo-code-tabs">
+              <button class="demo-code-tab active" style="cursor:default;">curl</button>
+            </div>
+            <div class="demo-code-panel active" id="step1-code"><span class="c-comment"># Discover services by capability keyword</span>
+<span class="c-comment"># Your Sertone control center runs at localhost:3000</span>
+
+<span class="c-prompt">$</span> curl https://localhost:3000/a2a/discover?capability=earthquake&amp;limit=3</div>
+          </div>
+          <div class="demo-code" style="background:#0f172a;">
+            <div class="demo-code-panel active" id="step1-response">{
+  <span class="json-key">"agents"</span>: [
+    {
+      <span class="json-key">"name"</span>: <span class="json-str">"USGS Earthquake Monitor"</span>,
+      <span class="json-key">"description"</span>: <span class="json-str">"Real-time earthquake data worldwide. Magnitude, depth, location."</span>,
+      <span class="json-key">"url"</span>: <span class="json-str">"https://localhost:3000/agent/a1b2c3d4-e5f6-7890-abcd-ef1234567890/card.json"</span>,
+      <span class="json-key">"capabilities"</span>: [<span class="json-str">"earthquake"</span>, <span class="json-str">"seismic"</span>, <span class="json-str">"geolocation"</span>],
+      <span class="json-key">"price_usdc_per_call"</span>: <span class="json-num">0.0002</span>
+    },
+    {
+      <span class="json-key">"name"</span>: <span class="json-str">"Global Seismic Events API"</span>,
+      <span class="json-key">"description"</span>: <span class="json-str">"Historical and live seismic events. GeoJSON output."</span>,
+      <span class="json-key">"url"</span>: <span class="json-str">"https://localhost:3000/agent/f9e8d7c6-b5a4-3210-fedc-ba9876543210/card.json"</span>,
+      <span class="json-key">"capabilities"</span>: [<span class="json-str">"earthquake"</span>, <span class="json-str">"geojson"</span>, <span class="json-str">"historical"</span>],
+      <span class="json-key">"price_usdc_per_call"</span>: <span class="json-num">0.0005</span>
+    }
+  ],
+  <span class="json-key">"total"</span>: <span class="json-num">2</span>
+}</div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div style="margin-bottom:2.5rem;">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+            <div style="width:32px;height:32px;border-radius:50%;background:#00b894;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0;">2</div>
+            <h3 style="margin:0;font-size:1.1rem;">Read an agent card</h3>
+          </div>
+          <p style="color:#475569;font-size:0.92rem;line-height:1.7;margin-bottom:0.85rem;">Every registered service on Sertone auto-generates a standards-compliant A2A agent card. Fetch it to see full capabilities, supported methods, and authentication requirements.</p>
+          <div class="demo-code" style="margin-bottom:0.85rem;">
+            <div class="demo-code-tabs">
+              <button class="demo-code-tab active" style="cursor:default;">curl</button>
+            </div>
+            <div class="demo-code-panel active"><span class="c-prompt">$</span> curl https://localhost:3000/agent/a1b2c3d4-e5f6-7890-abcd-ef1234567890/card.json</div>
+          </div>
+          <div class="demo-code" style="background:#0f172a;">
+            <div class="demo-code-panel active">{
+  <span class="json-key">"schema_version"</span>: <span class="json-str">"1.0"</span>,
+  <span class="json-key">"name"</span>: <span class="json-str">"USGS Earthquake Monitor"</span>,
+  <span class="json-key">"description"</span>: <span class="json-str">"Real-time earthquake data worldwide. Magnitude, depth, location."</span>,
+  <span class="json-key">"url"</span>: <span class="json-str">"https://localhost:3000/a2a/message"</span>,
+  <span class="json-key">"version"</span>: <span class="json-str">"1.0.0"</span>,
+  <span class="json-key">"capabilities"</span>: {
+    <span class="json-key">"streaming"</span>: <span class="json-bool">false</span>,
+    <span class="json-key">"push_notifications"</span>: <span class="json-bool">false</span>
+  },
+  <span class="json-key">"skills"</span>: [
+    {
+      <span class="json-key">"id"</span>: <span class="json-str">"get_recent_earthquakes"</span>,
+      <span class="json-key">"name"</span>: <span class="json-str">"Get Recent Earthquakes"</span>,
+      <span class="json-key">"description"</span>: <span class="json-str">"Fetch earthquakes above a minimum magnitude in a given time range."</span>,
+      <span class="json-key">"input_modes"</span>: [<span class="json-str">"text"</span>],
+      <span class="json-key">"output_modes"</span>: [<span class="json-str">"data"</span>],
+      <span class="json-key">"examples"</span>: [<span class="json-str">"earthquakes above 5.0 in the last 7 days"</span>]
+    }
+  ],
+  <span class="json-key">"authentication"</span>: {
+    <span class="json-key">"schemes"</span>: [<span class="json-str">"bearer"</span>],
+    <span class="json-key">"note"</span>: <span class="json-str">"Pass X-Consumer-Secret header. Payment auto-settled in USDC."</span>
+  },
+  <span class="json-key">"_sertone"</span>: {
+    <span class="json-key">"api_uuid"</span>: <span class="json-str">"a1b2c3d4-e5f6-7890-abcd-ef1234567890"</span>,
+    <span class="json-key">"price_usdc_per_call"</span>: <span class="json-num">0.0002</span>,
+    <span class="json-key">"settlement"</span>: <span class="json-str">"blockchain"</span>
+  }
+}</div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div style="margin-bottom:1rem;">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+            <div style="width:32px;height:32px;border-radius:50%;background:#00b894;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0;">3</div>
+            <h3 style="margin:0;font-size:1.1rem;">Call the agent via JSON-RPC</h3>
+          </div>
+          <p style="color:#475569;font-size:0.92rem;line-height:1.7;margin-bottom:0.85rem;">Send a standard A2A <code style="font-family:monospace;color:#00b894;">message/send</code> call. Your Sertone routes it through the network, settles the payment automatically, and returns the response.</p>
+          <div class="demo-code" style="margin-bottom:0.85rem;">
+            <div class="demo-code-tabs">
+              <button class="demo-code-tab active" style="cursor:default;">curl</button>
+            </div>
+            <div class="demo-code-panel active"><span class="c-prompt">$</span> curl -X POST https://localhost:3000/a2a/message \
+  -H <span class="c-string">"X-Consumer-Secret: YOUR_SECRET"</span> \
+  -H <span class="c-string">"Content-Type: application/json"</span> \
+  -d <span class="c-string">'{
+    "jsonrpc": "2.0",
+    "method": "message/send",
+    "params": {
+      "api_uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "content": "{\"path\":\"/v1/earthquakes/recent\",\"method\":\"GET\",\"params\":{\"minmagnitude\":\"5.0\",\"limit\":\"5\"}}"
+    },
+    "id": 1
+  }'</span></div>
+          </div>
+          <div class="demo-code" style="background:#0f172a;">
+            <div class="demo-code-panel active">{
+  <span class="json-key">"jsonrpc"</span>: <span class="json-str">"2.0"</span>,
+  <span class="json-key">"result"</span>: {
+    <span class="json-key">"status"</span>: <span class="json-str">"completed"</span>,
+    <span class="json-key">"data"</span>: {
+      <span class="json-key">"type"</span>: <span class="json-str">"FeatureCollection"</span>,
+      <span class="json-key">"features"</span>: [
+        { <span class="json-key">"properties"</span>: { <span class="json-key">"mag"</span>: <span class="json-num">5.4</span>, <span class="json-key">"place"</span>: <span class="json-str">"127km SSE of Kamchatka"</span> } },
+        { <span class="json-key">"properties"</span>: { <span class="json-key">"mag"</span>: <span class="json-num">5.1</span>, <span class="json-key">"place"</span>: <span class="json-str">"Southern Mid-Atlantic Ridge"</span> } }
+      ]
+    },
+    <span class="json-key">"_sertone"</span>: {
+      <span class="json-key">"settled"</span>: <span class="json-bool">true</span>,
+      <span class="json-key">"price_usdc"</span>: <span class="json-str">"0.000200"</span>,
+      <span class="json-key">"latency_ms"</span>: <span class="json-num">67</span>
+    }
+  },
+  <span class="json-key">"id"</span>: <span class="json-num">1</span>
+}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOR CONSUMERS -->
+    <section style="background:#f8fafc;">
+      <div class="container">
+        <span class="section-label">For AI Agent Developers</span>
+        <h2 class="section-title">How to get started</h2>
+
+        <p>Any developer building AI agents can connect to 900+ Sertone services over A2A in minutes. Here is the complete flow from installation to first A2A call:</p>
+
+        <div class="consumer-steps">
+
+          <div class="consumer-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Install your Sertone control center</h4>
+              <p>One Docker command on any machine — your laptop, a Raspberry Pi, a cloud VM.</p>
+              <div class="code-block"><span class="prompt">$</span> docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</div>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Browse agents in the catalog</h4>
+              <p>Open your web console at <code>https://localhost:3002/panel</code>. Go to the Catalog tab. Every service listed has a built-in A2A agent card. Search by capability, category, or keyword.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Preview with demo samples</h4>
+              <p>Click on any service to see its agent card, available skills, and example inputs. Try it in the Swagger sandbox — demo samples are free, no payment needed. See the exact JSON-RPC response format before you spend a cent.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Fund your wallet</h4>
+              <p>Go to the Finance tab. Deposit USDC and a small amount of ETH for gas. Your control center shows both balances and alerts you when they are low. Payment is per-call — no subscriptions, no minimums.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <h4>Integrate A2A in your agent</h4>
+              <p>Copy your consumer secret from Settings. Use the service UUID from the catalog. The A2A endpoint is standard JSON-RPC 2.0 — compatible with LangChain, CrewAI, Google ADK, and any A2A-aware framework:</p>
+              <div class="code-block"><span class="prompt">$</span> curl -X POST https://localhost:3000/a2a/message \
+  -H "X-Consumer-Secret: YOUR_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"message/send","params":{"api_uuid":"SERVICE_UUID","content":"{\"path\":\"/v1/earthquakes/recent\",\"method\":\"GET\"}"},"id":1}'</div>
+              <p>The web console also generates ready-to-use agent integration code (Python, TypeScript, Go) with the UUID pre-filled.</p>
+            </div>
+          </div>
+
+          <div class="consumer-step">
+            <div class="step-num">6</div>
+            <div class="step-content">
+              <h4>Your agent is live</h4>
+              <p>Every A2A call settles automatically in USDC. You pay the service owner's price. No invoices, no payment terms, no chargebacks. Your Finance tab shows every transaction in real time.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Sertone + A2A -->
+    <section>
+      <div class="container">
+        <span class="section-label">The Case for Sertone + A2A</span>
+        <h2 class="section-title">Why Sertone fills the gaps</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;margin-top:1.75rem;">
+
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.25rem 1.5rem;">
+            <div style="font-size:1.5rem;margin-bottom:0.6rem;">&#128269;</div>
+            <h4 style="margin:0 0 0.4rem;color:#1e293b;">A2A has no discovery registry</h4>
+            <p style="color:#64748b;font-size:0.88rem;line-height:1.6;margin:0;">Your Sertone control center IS the registry. Search 900+ services by capability, category, or keyword. Every result includes a standards-compliant agent card.</p>
+          </div>
+
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.25rem 1.5rem;">
+            <div style="font-size:1.5rem;margin-bottom:0.6rem;">&#128181;</div>
+            <h4 style="margin:0 0 0.4rem;color:#1e293b;">A2A has no payment layer</h4>
+            <p style="color:#64748b;font-size:0.88rem;line-height:1.6;margin:0;">Sertone settles every A2A call in USDC automatically via smart contract. No API keys to manage, no invoices, no billing agreements with each service provider.</p>
+          </div>
+
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.25rem 1.5rem;">
+            <div style="font-size:1.5rem;margin-bottom:0.6rem;">&#129302;</div>
+            <h4 style="margin:0 0 0.4rem;color:#1e293b;">Every service is auto-enrolled</h4>
+            <p style="color:#64748b;font-size:0.88rem;line-height:1.6;margin:0;">Service owners do nothing extra. Register a REST API, get an A2A agent card for free. 900+ services are A2A-ready on day one.</p>
+          </div>
+
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.25rem 1.5rem;">
+            <div style="font-size:1.5rem;margin-bottom:0.6rem;">&#128279;</div>
+            <h4 style="margin:0 0 0.4rem;color:#1e293b;">Works with all A2A frameworks</h4>
+            <p style="color:#64748b;font-size:0.88rem;line-height:1.6;margin:0;">Standard JSON-RPC 2.0 over HTTPS. Compatible with LangChain, CrewAI, Google ADK, AutoGen, and any framework that implements the A2A spec.</p>
+          </div>
+
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.25rem 1.5rem;">
+            <div style="font-size:1.5rem;margin-bottom:0.6rem;">&#128274;</div>
+            <h4 style="margin:0 0 0.4rem;color:#1e293b;">End-to-end encrypted</h4>
+            <p style="color:#64748b;font-size:0.88rem;line-height:1.6;margin:0;">All A2A traffic through the Sertone Global Network is fully encrypted. No central server sees your agent's queries or your data in transit.</p>
+          </div>
+
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.25rem 1.5rem;">
+            <div style="font-size:1.5rem;margin-bottom:0.6rem;">&#127968;</div>
+            <h4 style="margin:0 0 0.4rem;color:#1e293b;">Runs on a Raspberry Pi</h4>
+            <p style="color:#64748b;font-size:0.88rem;line-height:1.6;margin:0;">Your A2A-capable Sertone control center is a single Docker container. Run it anywhere — your laptop, a Raspberry Pi, a cloud VM. Free, forever.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Demo -->
+    <section style="background: #f8fafc;">
+      <div class="container">
+        <span class="section-label">Try It</span>
+        <h2 class="section-title" style="margin-bottom: 1.75rem;">Run a Live A2A Query</h2>
+
+        <div class="demo-interactive">
+          <div class="demo-interactive-header">
+            <span class="dot red"></span>
+            <span class="dot amber"></span>
+            <span class="dot green"></span>
+            <span class="header-title">POST /a2a/message — A2A JSON-RPC call through the Sertone Global Network</span>
+          </div>
+          <div class="demo-interactive-body">
+            <div class="demo-form-row">
+              <div class="demo-form-field">
+                <label for="a2a-capability">Capability</label>
+                <select id="a2a-capability">
+                  <option value="earthquake">earthquake</option>
+                  <option value="weather">weather</option>
+                  <option value="currency">currency exchange</option>
+                </select>
+              </div>
+              <div class="demo-form-field">
+                <label for="a2a-limit">Max Agents</label>
+                <select id="a2a-limit">
+                  <option value="2">2 agents</option>
+                  <option value="3" selected>3 agents</option>
+                  <option value="5">5 agents</option>
+                </select>
+              </div>
+              <button class="btn-run" id="a2a-run" onclick="runA2ADemo()">
+                <span class="run-icon">&#9654;</span> Discover &amp; Call
+              </button>
+            </div>
+
+            <div class="demo-result" id="a2a-result">
+              <div class="demo-result-bar">
+                <span class="result-status" id="a2a-status">Waiting</span>
+                <span class="latency-badge hidden" id="a2a-latency">—</span>
+              </div>
+              <div class="demo-result-body" id="a2a-body">
+                <div class="demo-result-placeholder">Select a capability above and click Discover &amp; Call</div>
+              </div>
+            </div>
+            <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+              Simulated A2A discovery + call through the Sertone Global Network. Install your own Sertone to make real calls.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section>
+      <div class="container">
+        <span class="section-label">Code Samples</span>
+        <h2 class="section-title" style="margin-bottom: 1.75rem;">Integrate A2A in Your Agent</h2>
+        <p style="color:#64748b; margin-bottom: 1.5rem; font-size: 0.95rem;">
+          Your Sertone control center runs at <code style="font-family:monospace; color:#00b894;">localhost:3000</code>. The service UUID comes from the catalog or a discovery call. Everything else is standard A2A JSON-RPC 2.0.
+        </p>
+
+        <div class="demo-code">
+          <div class="demo-code-tabs">
+            <button class="demo-code-tab active" onclick="switchTab(this, 'tab-a2a-curl')">curl</button>
+            <button class="demo-code-tab" onclick="switchTab(this, 'tab-a2a-python')">Python</button>
+            <button class="demo-code-tab" onclick="switchTab(this, 'tab-a2a-js')">JavaScript</button>
+          </div>
+
+          <div class="demo-code-panel active" id="tab-a2a-curl"><span class="c-comment"># Step 1: Discover agents by capability</span>
+<span class="c-prompt">$</span> curl "https://localhost:3000/a2a/discover?capability=earthquake&amp;limit=3"
+
+<span class="c-comment"># Step 2: Read the agent card</span>
+<span class="c-prompt">$</span> curl https://localhost:3000/agent/SERVICE_UUID/card.json
+
+<span class="c-comment"># Step 3: Send an A2A message/send call</span>
+<span class="c-prompt">$</span> curl -X POST https://localhost:3000/a2a/message \
+  -H <span class="c-string">"X-Consumer-Secret: YOUR_SECRET"</span> \
+  -H <span class="c-string">"Content-Type: application/json"</span> \
+  -d <span class="c-string">'{
+    "jsonrpc": "2.0",
+    "method": "message/send",
+    "params": {
+      "api_uuid": "SERVICE_UUID",
+      "content": "{\"path\":\"/v1/earthquakes/recent\",\"method\":\"GET\",\"params\":{\"minmagnitude\":\"5.0\",\"limit\":\"5\"}}"
+    },
+    "id": 1
+  }'</span>
+
+<span class="c-comment"># Response includes your data + settlement confirmation:</span>
+<span class="c-comment"># { "jsonrpc":"2.0", "result": { "status":"completed", "data": {...}, "_sertone": { "settled":true, "price_usdc":"0.000200" } }, "id":1 }</span>
+</div>
+
+          <div class="demo-code-panel" id="tab-a2a-python"><span class="c-comment"># Python — standard requests library + A2A pattern</span>
+<span class="c-comment"># pip install requests</span>
+<span class="c-comment"># SERVICE_UUID: from /a2a/discover or the catalog. YOUR_SECRET: from Settings tab.</span>
+
+<span class="c-keyword">import</span> <span class="c-var">requests</span>, <span class="c-var">json</span>
+
+BASE <span class="c-keyword">=</span> <span class="c-string">'https://localhost:3000'</span>
+SECRET <span class="c-keyword">=</span> <span class="c-string">'YOUR_SECRET'</span>
+
+<span class="c-comment"># 1. Discover agents</span>
+<span class="c-var">agents</span> = <span class="c-var">requests</span>.<span class="c-func">get</span>(<span class="c-string">f'{BASE}/a2a/discover'</span>,
+    params={<span class="c-string">'capability'</span>: <span class="c-string">'earthquake'</span>, <span class="c-string">'limit'</span>: <span class="c-string">'3'</span>}).<span class="c-func">json</span>()
+
+<span class="c-var">uuid</span> = <span class="c-var">agents</span>[<span class="c-string">'agents'</span>][<span class="c-num">0</span>][<span class="c-string">'url'</span>].<span class="c-func">split</span>(<span class="c-string">'/'</span>)[<span class="c-num">-2</span>]  <span class="c-comment"># extract UUID</span>
+
+<span class="c-comment"># 2. Send A2A message/send</span>
+<span class="c-var">r</span> = <span class="c-var">requests</span>.<span class="c-func">post</span>(<span class="c-string">f'{BASE}/a2a/message'</span>,
+    headers={<span class="c-string">'X-Consumer-Secret'</span>: SECRET},
+    json={
+        <span class="c-string">'jsonrpc'</span>: <span class="c-string">'2.0'</span>,
+        <span class="c-string">'method'</span>: <span class="c-string">'message/send'</span>,
+        <span class="c-string">'params'</span>: {
+            <span class="c-string">'api_uuid'</span>: <span class="c-var">uuid</span>,
+            <span class="c-string">'content'</span>: <span class="c-var">json</span>.<span class="c-func">dumps</span>({<span class="c-string">'path'</span>: <span class="c-string">'/v1/earthquakes/recent'</span>, <span class="c-string">'method'</span>: <span class="c-string">'GET'</span>}),
+        },
+        <span class="c-string">'id'</span>: <span class="c-num">1</span>,
+    })
+
+<span class="c-var">result</span> = <span class="c-var">r</span>.<span class="c-func">json</span>()[<span class="c-string">'result'</span>]
+<span class="c-func">print</span>(<span class="c-var">result</span>[<span class="c-string">'data'</span>])      <span class="c-comment"># your earthquake data</span>
+<span class="c-func">print</span>(<span class="c-var">result</span>[<span class="c-string">'_sertone'</span>])  <span class="c-comment"># settled: True, price_usdc: '0.000200'</span>
+</div>
+
+          <div class="demo-code-panel" id="tab-a2a-js"><span class="c-comment">// Node.js or browser — plain fetch(), no SDK needed</span>
+<span class="c-comment">// SERVICE_UUID: from /a2a/discover or the catalog.</span>
+<span class="c-comment">// YOUR_SECRET: from Settings tab in your web console.</span>
+
+<span class="c-keyword">const</span> BASE = <span class="c-string">'https://localhost:3000'</span>;
+<span class="c-keyword">const</span> SECRET = <span class="c-string">'YOUR_SECRET'</span>;
+
+<span class="c-comment">// 1. Discover agents by capability</span>
+<span class="c-keyword">const</span> discovery = <span class="c-keyword">await</span> <span class="c-func">fetch</span>(<span class="c-string">`${BASE}/a2a/discover?capability=earthquake&amp;limit=3`</span>);
+<span class="c-keyword">const</span> { agents } = <span class="c-keyword">await</span> discovery.<span class="c-func">json</span>();
+<span class="c-keyword">const</span> uuid = agents[<span class="c-num">0</span>].url.<span class="c-func">split</span>(<span class="c-string">'/'</span>).at(<span class="c-num">-2</span>);  <span class="c-comment">// extract UUID from card URL</span>
+
+<span class="c-comment">// 2. Send A2A message/send</span>
+<span class="c-keyword">const</span> res = <span class="c-keyword">await</span> <span class="c-func">fetch</span>(<span class="c-string">`${BASE}/a2a/message`</span>, {
+  method: <span class="c-string">'POST'</span>,
+  headers: {
+    <span class="c-string">'X-Consumer-Secret'</span>: SECRET,
+    <span class="c-string">'Content-Type'</span>: <span class="c-string">'application/json'</span>,
+  },
+  body: <span class="c-var">JSON</span>.<span class="c-func">stringify</span>({
+    jsonrpc: <span class="c-string">'2.0'</span>,
+    method:  <span class="c-string">'message/send'</span>,
+    params: {
+      api_uuid: uuid,
+      content:  <span class="c-var">JSON</span>.<span class="c-func">stringify</span>({ path: <span class="c-string">'/v1/earthquakes/recent'</span>, method: <span class="c-string">'GET'</span> }),
+    },
+    id: <span class="c-num">1</span>,
+  }),
+});
+
+<span class="c-keyword">const</span> { result } = <span class="c-keyword">await</span> res.<span class="c-func">json</span>();
+<span class="c-var">console</span>.<span class="c-func">log</span>(result.data);       <span class="c-comment">// earthquake features</span>
+<span class="c-var">console</span>.<span class="c-func">log</span>(result._sertone);  <span class="c-comment">// { settled: true, price_usdc: '0.000200', latency_ms: 67 }</span>
+
+<span class="c-comment">// Your Sertone handles routing, billing, and settlement automatically.</span>
+<span class="c-comment">// Check your balance in the Finance tab of your web console.</span>
+</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Next demos -->
+    <section style="background:#f8fafc;">
+      <div class="container text-center">
+        <h2 class="section-title">Explore More Demos</h2>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+          <a href="/demos/rest-api" class="btn btn-secondary">REST API</a>
+          <a href="/demos/graphql" class="btn btn-secondary">GraphQL</a>
+          <a href="/demos/smart-contract" class="btn btn-secondary">Smart Contract</a>
+          <a href="/demos/streaming" class="btn btn-secondary">Streaming</a>
+          <a href="/demos/cross-geography" class="btn btn-secondary">Cross-Geography</a>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /demo-page -->
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/docs/" style="color:#64748b;font-size:0.85rem;">Docs</a>
+        <a href="/pricing" style="color:#64748b;font-size:0.85rem;">Pricing</a>
+        <a href="/trust" style="color:#64748b;font-size:0.85rem;">Trust</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy</a>
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+  <script src="/modal.js"></script>
+
+  <script>
+    /* ---------- Tab switching ---------- */
+    function switchTab(btn, panelId) {
+      btn.closest('.demo-code').querySelectorAll('.demo-code-tab').forEach(t => t.classList.remove('active'));
+      btn.closest('.demo-code').querySelectorAll('.demo-code-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(panelId).classList.add('active');
+    }
+
+    /* ---------- Demo data ---------- */
+    const A2A_AGENTS = {
+      earthquake: [
+        { name: 'USGS Earthquake Monitor', uuid: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', description: 'Real-time earthquake data worldwide. Magnitude, depth, location.', capabilities: ['earthquake','seismic','geolocation'], price: 0.0002 },
+        { name: 'Global Seismic Events API', uuid: 'f9e8d7c6-b5a4-3210-fedc-ba9876543210', description: 'Historical and live seismic events. GeoJSON output.', capabilities: ['earthquake','geojson','historical'], price: 0.0005 },
+        { name: 'Pacific Ring of Fire Monitor', uuid: 'c3d4e5f6-a7b8-9012-cdef-345678901234', description: 'Specialized seismic monitoring for the Pacific Rim.', capabilities: ['earthquake','pacific','real-time'], price: 0.0003 },
+        { name: 'European Seismic Network', uuid: 'b2c3d4e5-f6a7-8901-bcde-234567890123', description: 'European seismological data from EMSC.', capabilities: ['earthquake','europe','emsc'], price: 0.0002 },
+        { name: 'IRIS Seismograph Network', uuid: 'd4e5f6a7-b8c9-0123-defa-456789012345', description: 'Broadband seismograph data from IRIS.', capabilities: ['earthquake','broadband','iris'], price: 0.0004 },
+      ],
+      weather: [
+        { name: 'Open-Meteo Forecast', uuid: 'e5f6a7b8-c9d0-1234-efab-567890123456', description: '7-day weather forecast. Hourly resolution, 50+ variables.', capabilities: ['weather','forecast','temperature'], price: 0.0001 },
+        { name: 'Storm Track API', uuid: '76543210-fedc-ba98-7654-321098765432', description: 'Hurricane and tropical storm tracking with landfall prediction.', capabilities: ['weather','storm','hurricane'], price: 0.0008 },
+        { name: 'Air Quality Index Global', uuid: '65432109-edcb-a987-6543-210987654321', description: 'Real-time AQI data for 10,000+ stations worldwide.', capabilities: ['weather','air-quality','aqi'], price: 0.0003 },
+        { name: 'Agricultural Weather API', uuid: '54321098-dcba-9876-5432-109876543210', description: 'Soil temperature, precipitation, frost alerts for farming.', capabilities: ['weather','agriculture','soil'], price: 0.0006 },
+        { name: 'Historical Climate Data', uuid: '43210987-cba9-8765-4321-098765432109', description: 'Historical weather data since 1940. Daily averages by location.', capabilities: ['weather','historical','climate'], price: 0.0004 },
+      ],
+      currency: [
+        { name: 'ECB Exchange Rates', uuid: '32109876-ba98-7654-3210-987654321098', description: 'Official ECB exchange rates. Updated daily. 40+ currencies.', capabilities: ['currency','exchange','ecb'], price: 0.00005 },
+        { name: 'Crypto Spot Prices', uuid: '21098765-a987-6543-2109-876543210987', description: 'Real-time crypto prices. BTC, ETH, 500+ tokens. Sub-second updates.', capabilities: ['currency','crypto','realtime'], price: 0.0001 },
+        { name: 'Forex Live Feed', uuid: '10987654-9876-5432-1098-765432109876', description: 'Live forex rates. 170 currency pairs. Institutional grade.', capabilities: ['currency','forex','live'], price: 0.0002 },
+        { name: 'Purchasing Power Parity', uuid: '09876543-8765-4321-0987-654321098765', description: 'PPP-adjusted exchange rates for economic analysis.', capabilities: ['currency','ppp','economics'], price: 0.0003 },
+        { name: 'Historical FX Archive', uuid: '98765432-7654-3210-9876-543210987654', description: 'Historical forex data from 1990. Daily OHLC for all major pairs.', capabilities: ['currency','historical','forex'], price: 0.0004 },
+      ],
+    };
+
+    const A2A_CALL_RESULTS = {
+      earthquake: { place: '127km SSE of Petropavlovsk-Kamchatsky', mag: 5.4, depth: 52.0, time: '2026-03-27T09:44:05Z' },
+      weather:    { location: 'New York, NY', temp_c: 12.4, wind_kph: 18, condition: 'Partly Cloudy', forecast_day: '2026-03-30' },
+      currency:   { base: 'USD', rates: { EUR: 0.9182, GBP: 0.7934, JPY: 149.62, CHF: 0.9041 }, timestamp: '2026-03-30T08:00:00Z' },
+    };
+
+    function colorJson(json) {
+      return json
+        .replace(/("(?:[^"\\]|\\.)*")(\s*:)/g, '<span class="json-key">$1</span>$2')
+        .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span class="json-str">$1</span>')
+        .replace(/:\s*(\b\d+\.?\d*\b)/g, ': <span class="json-num">$1</span>')
+        .replace(/:\s*(true|false)/g, ': <span class="json-bool">$1</span>')
+        .replace(/:\s*(null)/g, ': <span class="json-null">$1</span>');
+    }
+
+    function runA2ADemo() {
+      const capability = document.getElementById('a2a-capability').value;
+      const limit      = parseInt(document.getElementById('a2a-limit').value);
+      const btn        = document.getElementById('a2a-run');
+      const status     = document.getElementById('a2a-status');
+      const latency    = document.getElementById('a2a-latency');
+      const body       = document.getElementById('a2a-body');
+
+      btn.classList.add('loading');
+      btn.textContent = 'Discovering…';
+      status.textContent = 'Discovering agents via Sertone Global Network…';
+      status.className = 'result-status';
+      latency.classList.add('hidden');
+      body.innerHTML = '<div class="demo-result-placeholder">Routing discovery request through the Sertone Global Network…</div>';
+
+      const t0 = Date.now();
+      const simDiscover = 28 + Math.floor(Math.random() * 30);  // 28–58ms for discovery
+      const simCall     = 40 + Math.floor(Math.random() * 60);  // 40–100ms for A2A call
+
+      // Phase 1: Discovery
+      setTimeout(() => {
+        btn.textContent = 'Calling…';
+        status.textContent = 'Agents found — sending A2A message/send call…';
+
+        const agents = (A2A_AGENTS[capability] || A2A_AGENTS.earthquake).slice(0, limit);
+        const chosen = agents[0];
+
+        // Phase 2: A2A call
+        setTimeout(() => {
+          const callResult = A2A_CALL_RESULTS[capability] || A2A_CALL_RESULTS.earthquake;
+          const totalMs = Date.now() - t0;
+
+          const response = {
+            discovery: {
+              agents: agents.map(a => ({
+                name: a.name,
+                url: `https://localhost:3000/agent/${a.uuid}/card.json`,
+                capabilities: a.capabilities,
+                price_usdc_per_call: a.price,
+              })),
+              total: agents.length,
+              _sertone: { latency_ms: simDiscover },
+            },
+            a2a_call: {
+              jsonrpc: '2.0',
+              result: {
+                status: 'completed',
+                agent: chosen.name,
+                data: callResult,
+                _sertone: {
+                  settled: true,
+                  price_usdc: chosen.price.toFixed(6),
+                  latency_ms: simCall,
+                  routed_via: 'Sertone Global Network',
+                },
+              },
+              id: 1,
+            },
+          };
+
+          const json = JSON.stringify(response, null, 2);
+          body.innerHTML = colorJson(json);
+
+          status.textContent = `200 OK — ${agents.length} agent(s) discovered, call completed`;
+          status.className = 'result-status ok';
+          latency.textContent = `${totalMs}ms total`;
+          latency.classList.remove('hidden');
+
+          btn.classList.remove('loading');
+          btn.innerHTML = '<span class="run-icon">&#9654;</span> Discover &amp; Call';
+        }, simCall + 200);
+
+      }, simDiscover + 200);
+    }
+  </script>
+
+</body>
+</html>

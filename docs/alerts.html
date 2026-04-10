@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alerts — Sertone Docs | Balance & Activity Notifications</title>
+  <meta name="description" content="Configure notifications, balance thresholds, and email alerts in your Sertone web console. Get notified when your wallet balance is low or when API activity spikes.">
+  <meta name="keywords" content="API alerts, wallet balance notification, API monitoring alerts, USDC balance alert, Sertone notifications">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/alerts">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/alerts">
+  <meta property="og:title" content="Alerts — Sertone Docs | Balance & Activity Notifications">
+  <meta property="og:description" content="Configure notifications, balance thresholds, and email alerts in your Sertone web console.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Alerts — Sertone Docs">
+  <meta name="twitter:description" content="Configure notifications, balance thresholds, and email alerts in your Sertone web console.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Alerts — Sertone",
+    "description": "Configure notifications, balance thresholds, and email alerts in your Sertone web console.",
+    "url": "https://sertone.net/docs/alerts",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link active">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Alerts &amp; Notifications</h1>
+      <p class="lead">Stay informed about balance changes, errors, and system events with configurable notifications.</p>
+
+      <h2 id="notifications-tab">The Notifications tab</h2>
+      <p>Click <strong>Notifications</strong> in the sidebar to open the notifications panel. At the top, a table lists all recent alerts with four columns:</p>
+      <table>
+        <thead>
+          <tr><th>Column</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Time</strong></td><td>When the notification was triggered</td></tr>
+          <tr><td><strong>Type</strong></td><td>Category of alert (e.g., low balance, gas alert, error spike)</td></tr>
+          <tr><td><strong>Message</strong></td><td>Details about what happened</td></tr>
+          <tr><td><strong>Status</strong></td><td>Whether the alert is new, acknowledged, or resolved</td></tr>
+        </tbody>
+      </table>
+      <p>Click <strong>Refresh</strong> to reload the latest notifications.</p>
+
+      <h2 id="notification-rules">Notification rules</h2>
+      <p>Below the notifications table, the <strong>Notification Rules</strong> section lets you configure how you are alerted for each event type. For each rule, choose a notification level:</p>
+      <ul>
+        <li><strong>Off</strong> &mdash; no alert</li>
+        <li><strong>Panel Only</strong> &mdash; shows in the web console only</li>
+        <li><strong>Email</strong> &mdash; sends an email notification</li>
+        <li><strong>Email + Webhook</strong> &mdash; sends both email and webhook</li>
+      </ul>
+      <p>The available notification rules are:</p>
+      <table>
+        <thead>
+          <tr><th>Rule</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Low USDC Balance</strong></td><td>Triggers when your USDC balance falls below the configured threshold</td></tr>
+          <tr><td><strong>Low Gas Balance</strong></td><td>Triggers when your ETH (gas) balance falls below the configured threshold</td></tr>
+          <tr><td><strong>Auto-Pause Active</strong></td><td>Indicates that API serving has been paused due to low balance (managed in the Finance tab)</td></tr>
+          <tr><td><strong>Error Spike</strong></td><td>Triggers when more than 5 errors occur within 5 minutes</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="webhook">Webhook integration</h2>
+      <p>Optionally enter a <strong>Webhook URL</strong> (e.g., a Slack webhook) to receive notifications in your team chat. Click <strong>Save Webhook</strong> to store the URL, and <strong>Test Webhook</strong> to send a test message.</p>
+
+      <h2 id="thresholds">Balance thresholds</h2>
+      <p>Balance thresholds are configured in the <strong>Finance</strong> tab under "Thresholds &amp; Auto-Pause":</p>
+      <ul>
+        <li><strong>Low USDC Threshold</strong> &mdash; the USDC amount below which alerts and auto-pause trigger</li>
+        <li><strong>Low Gas Threshold (ETH)</strong> &mdash; the ETH amount below which alerts trigger</li>
+      </ul>
+      <p>Set these values and click <strong>Save Thresholds</strong>. When your balance drops below either threshold, you receive a notification at the level you configured in the notification rules.</p>
+
+      <h2 id="auto-pause">Auto-pause</h2>
+      <p>Also in the Finance tab, enable <strong>auto-pause</strong> to automatically stop serving API calls when your balance drops below the configured thresholds. This prevents failed transactions when funds are too low.</p>
+      <ul>
+        <li>Toggle <strong>Enable auto-pause</strong> on or off</li>
+        <li><strong>Pause Now</strong> &mdash; manually pause serving immediately</li>
+        <li><strong>Resume</strong> &mdash; manually resume serving</li>
+      </ul>
+
+      <div class="info-box">
+        <p><strong>Demo mode still works.</strong> Auto-pause only affects paid API calls. Demo mode calls are always free and always work regardless of your balance.</p>
+      </div>
+
+      <h2 id="email-setup">Email configuration</h2>
+      <p>To receive email alerts, make sure your email address is set in <a href="/docs/settings">Settings &gt; Email / SMTP</a>. The built-in mail sender works out of the box, or you can configure an external SMTP server for better deliverability.</p>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/settings" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Settings</span>
+        </a>
+        <a href="/docs/tutorial-sell-api" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Sell Your API</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#notifications-tab" class="toc-link">The Notifications tab</a>
+      <a href="#notification-rules" class="toc-link">Notification rules</a>
+      <a href="#webhook" class="toc-link">Webhook integration</a>
+      <a href="#thresholds" class="toc-link">Balance thresholds</a>
+      <a href="#auto-pause" class="toc-link">Auto-pause</a>
+      <a href="#email-setup" class="toc-link">Email configuration</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

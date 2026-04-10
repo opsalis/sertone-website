@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery Failover — Never Lose an API Response — Sertone</title>
+  <meta name="description" content="Sertone delivery failover chain: Sertone Global Network delivery, cloud relay, backup relay. If one path fails, the next kicks in automatically. Your API response always arrives.">
+  <meta name="keywords" content="API failover, delivery failover, reliable API delivery, encrypted network failover, cloud relay, Sertone, API marketplace">
+  <link rel="canonical" href="https://sertone.net/demos/failover/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/failover/">
+  <meta property="og:title" content="Delivery Failover — Never Lose an API Response">
+  <meta property="og:description" content="Sertone Global Network → cloud relay → backup relay. If one delivery path fails, the next kicks in. Your API response always arrives.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Delivery Failover — Never Lose an API Response">
+  <meta name="twitter:description" content="Sertone Global Network → cloud relay → backup relay. If one delivery path fails, the next kicks in. Your API response always arrives.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Sertone",
+        "applicationCategory": "DeveloperApplication",
+        "description": "API marketplace with automatic delivery failover: Sertone Global Network, cloud relay, and backup relay.",
+        "url": "https://sertone.net",
+        "operatingSystem": "Linux, Docker",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "description": "Free self-hosted Docker container"
+        }
+      },
+      {
+        "@type": "HowTo",
+        "name": "How Sertone Delivery Failover Works",
+        "description": "Set up automatic delivery failover so API responses always arrive, even if the primary delivery path fails.",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "position": 1,
+            "name": "Install Sertone",
+            "text": "Pull and run the Sertone Docker container on your own infrastructure."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 2,
+            "name": "Configure BYO-Cloud Storage",
+            "text": "Add your S3-compatible cloud storage credentials as the secondary delivery path."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 3,
+            "name": "Enable On-Chain Relay",
+            "text": "Activate the backup relay as the tertiary fallback for maximum reliability."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 4,
+            "name": "Failover Is Automatic",
+            "text": "If Sertone Global Network delivery fails, Sertone automatically tries cloud relay, then backup relay. No configuration needed."
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div class="demo-container">
+    <nav class="demo-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>&rsaquo;</span>
+      <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+      <a href="/demos/">Delivery</a> <span>&rsaquo;</span>
+      Delivery Failover
+    </nav>
+  </div>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Reliable Delivery</p>
+      <h1>Delivery Failover</h1>
+      <p class="demo-tagline">If Sertone Global Network delivery fails, Sertone automatically falls back to cloud storage or backup relay. Your API response always arrives.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="Failover chain architecture diagram">
+      <h2>Three-Layer Delivery Failover</h2>
+
+      <style>
+        .arch-vertical { display: flex; flex-direction: column; align-items: stretch; gap: 0; max-width: 680px; margin: 0 auto; font-family: inherit; }
+        .arch-row { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1.1rem 1.5rem 1rem; background: #f1f5f9; border: 1px solid #e2e8f0; }
+        .arch-row.arch-consumer { border-radius: 14px 14px 0 0; border-bottom: none; }
+        .arch-row.arch-owner { border-radius: 0 0 14px 14px; border-top: none; }
+        .arch-row-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #94a3b8; }
+        .arch-row-sublabel { font-size: 0.72rem; color: #94a3b8; font-style: italic; }
+        .arch-flow-h { display: flex; align-items: center; gap: 0.6rem; }
+        .arch-box { background: #fff; border: 1.5px solid #cbd5e1; border-radius: 9px; padding: 0.55rem 0.9rem; font-size: 0.82rem; font-weight: 600; color: #1e293b; text-align: center; line-height: 1.35; white-space: nowrap; }
+        .arch-box-user { background: #fff; border: 2px solid #1e293b; border-radius: 12px; padding: 0.9rem 1.3rem; font-size: 1rem; font-weight: 700; color: #1e293b; text-align: center; line-height: 1.35; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .arch-box-sertone { background: linear-gradient(135deg, rgba(0,184,148,0.08), rgba(0,184,148,0.03)); border: 1.5px solid rgba(0,184,148,0.4); border-radius: 9px; padding: 0.5rem 0.8rem; font-size: 0.78rem; font-weight: 600; color: #047857; text-align: center; line-height: 1.35; }
+        .arch-arrow-h { font-size: 1.1rem; color: #94a3b8; flex-shrink: 0; }
+        .arch-arrow-v { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0.15rem 0; position: relative; z-index: 2; }
+        .arch-arrow-v .arrow-down, .arch-arrow-v .arrow-up { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; padding: 0.18rem 0.65rem; border-radius: 20px; }
+        .arch-arrow-v .arrow-down { color: #00b894; background: #e6faf4; border: 1px solid #b2edd8; }
+        .arch-arrow-v .arrow-up { color: #0ea5e9; background: #e0f4fd; border: 1px solid #b3e4f9; }
+        .arch-network { position: relative; overflow: hidden; border-radius: 24px; background: linear-gradient(135deg, #00b894 0%, #00a381 55%, #007d65 100%); border: none; padding: 2rem 1.5rem; min-height: 160px; justify-content: center; box-shadow: 0 4px 32px rgba(0,184,148,0.22), 0 1px 4px rgba(0,0,0,0.06); }
+        .particle { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.12); animation: floatUp 6s ease-in-out infinite; }
+        .particle.p1 { width: 48px; height: 48px; left: 8%; bottom: -20px; animation-duration: 7s; animation-delay: 0s; }
+        .particle.p2 { width: 28px; height: 28px; left: 28%; bottom: -14px; animation-duration: 5s; animation-delay: 1.4s; }
+        .particle.p3 { width: 64px; height: 64px; left: 58%; bottom: -28px; animation-duration: 9s; animation-delay: 0.7s; }
+        .particle.p4 { width: 20px; height: 20px; left: 80%; bottom: -10px; animation-duration: 6s; animation-delay: 2.5s; }
+        .particle.p5 { width: 36px; height: 36px; left: 45%; bottom: -18px; animation-duration: 8s; animation-delay: 3.2s; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0.10; } 40% { transform: translateY(-70px) scale(1.08); opacity: 0.18; } 80% { transform: translateY(-130px) scale(0.95); opacity: 0.07; } 100% { transform: translateY(-160px) scale(0.9); opacity: 0; } }
+        .arch-network::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 180px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.15); animation: pulseRing 3.5s ease-out infinite; }
+        .arch-network::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 280px; height: 280px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.08); animation: pulseRing 3.5s ease-out infinite 0.8s; }
+        @keyframes pulseRing { 0% { opacity: 0.6; transform: translate(-50%,-50%) scale(0.7); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.4); } }
+        .arch-network-content { position: relative; z-index: 3; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+        .arch-network-title { font-size: 1.15rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,0.18); }
+        .arch-network-features { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+        .arch-network-features span { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.92); background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 0.22rem 0.7rem; }
+        .arch-network-tagline { font-size: 0.72rem; color: rgba(255,255,255,0.72); max-width: 340px; line-height: 1.4; }
+        @media (max-width: 480px) { .arch-box { font-size: 0.75rem; padding: 0.45rem 0.65rem; white-space: normal; max-width: 110px; } .arch-network-title { font-size: 0.95rem; } .arch-network-features span { font-size: 0.7rem; } }
+      </style>
+
+      <div class="arch-vertical">
+        <div class="arch-row arch-consumer">
+          <div class="arch-row-label">Consumer Premises</div>
+          <div class="arch-flow-h">
+            <div class="arch-box arch-box-user">Your App</div>
+            <div class="arch-arrow-h">&#8594;</div>
+            <div class="arch-box arch-box-sertone">Your Sertone<br>Control Center</div>
+          </div>
+          <div class="arch-row-sublabel">On your premises</div>
+        </div>
+        <div class="arch-arrow-v">
+          <span class="arrow-down">&#9660; Request</span>
+          <span class="arrow-up">&#9650; Response</span>
+        </div>
+        <div class="arch-row arch-network">
+          <div class="particle p1"></div><div class="particle p2"></div><div class="particle p3"></div><div class="particle p4"></div><div class="particle p5"></div>
+          <div class="arch-network-content">
+            <div class="arch-network-title">Sertone Global Network</div>
+            <div class="arch-network-features">
+              <span>&#128274; Encrypted</span>
+              <span>&#128279; Automatic Payment</span>
+              <span>&#127760; 5 Delivery Methods</span>
+            </div>
+            <div class="arch-network-tagline">Proprietary fully encrypted protocol with automatic payment settlement</div>
+          </div>
+        </div>
+        <div class="arch-arrow-v">
+          <span class="arrow-down">&#9660; Request</span>
+          <span class="arrow-up">&#9650; Response</span>
+        </div>
+        <div class="arch-row arch-owner">
+          <div class="arch-row-label">Owner Premises</div>
+          <div class="arch-flow-h">
+            <div class="arch-box arch-box-sertone">Their Sertone<br>Control Center</div>
+          </div>
+          <div class="arch-row-sublabel">On their premises</div>
+        </div>
+      </div><!-- /arch-vertical -->
+
+      <p class="arch-caption" style="margin-top:1.25rem;">Three-layer failover: Sertone Global Network (fastest), BYO-cloud relay (encrypted S3/MinIO), backup relay (guaranteed delivery). No API response is ever lost.</p>
+      <div style="margin:1.25rem auto 0;max-width:44rem;background:linear-gradient(135deg,rgba(0,184,148,0.06),rgba(0,184,148,0.02));border:1px solid rgba(0,184,148,0.15);border-radius:12px;padding:1rem 1.5rem;">
+        <p style="font-size:0.85rem;color:#475569;line-height:1.65;margin:0;">
+          <strong style="color:#1e293b;">What is the Sertone control center?</strong> A single Docker container you run on your own machine — a laptop, a Raspberry Pi, a cloud server. It connects you to the Sertone Global Network. Through its built-in web console, you browse services, register your own, manage your wallet, and monitor your earnings. Installation takes minutes. It is completely free, forever.
+        </p>
+        <div style="margin-top:0.75rem;">
+          <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- Network Tagline -->
+    <section style="padding:2rem 0 0;">
+      <div class="demo-container">
+        <div style="background:rgba(0,184,148,0.05);border:1px solid rgba(0,184,148,0.2);border-radius:10px;padding:1rem 1.25rem;">
+          <p style="font-size:0.85rem;color:#475569;margin:0;">The Sertone Global Network uses a proprietary fully encrypted protocol. All traffic is end-to-end encrypted. Payment is automatic.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why Delivery Failover Matters</h2>
+      <p>In production systems, network failures happen. Firewalls change, network connections drop, servers restart. A single delivery path means a single point of failure — and in an API marketplace where real money settles per call, a lost response means a lost payment and a broken integration.</p>
+      <p>Sertone solves this with a three-layer failover chain. The primary path is delivery through the Sertone Global Network — the fastest option at around 50ms between nodes. If the primary path fails (network partition, firewall change, node restart), Sertone automatically uploads the encrypted response to the consumer's BYO-cloud storage (S3, MinIO, Backblaze). The consumer polls their own bucket and retrieves the response.</p>
+      <p>If even cloud delivery fails (storage outage, credential rotation), the final fallback is the backup relay. The encrypted response is stored and always retrievable. Slower (~3 seconds), but guaranteed to arrive. No API response is ever lost.</p>
+    </section>
+
+    <!-- Interactive Demo -->
+    <section class="demo-interactive">
+      <h2>Live Demo: Failover Chain Simulation</h2>
+      <div class="demo-interactive-layout">
+
+        <div class="demo-form-panel">
+          <h3>Failover Scenario</h3>
+          <p style="color:#64748b; font-size:0.85rem; margin-bottom:1.25rem;">Select which delivery paths to simulate as "failed" and watch the failover chain in action. The demo shows typical timing for each delivery path.</p>
+
+          <div class="demo-field">
+            <label for="fail-scenario">Scenario</label>
+            <select id="fail-scenario">
+              <option value="all-ok">All paths available (Sertone Network succeeds)</option>
+              <option value="p2p-fail">Sertone Network fails → Cloud relay</option>
+              <option value="p2p-cloud-fail">Sertone Network + Cloud fail → On-chain relay</option>
+            </select>
+          </div>
+
+          <div class="demo-field">
+            <label for="fail-api">API to Call</label>
+            <select id="fail-api">
+              <option value="bb-sse-ticker">SSE Ticker (Stock Quote)</option>
+              <option value="bb-graphql">GraphQL (User Query)</option>
+              <option value="bb-soap">SOAP (Account Balance)</option>
+            </select>
+          </div>
+
+          <button class="demo-run-btn" id="run-failover-btn" onclick="runFailoverDemo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Simulate Failover</span>
+          </button>
+          <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:0.5rem;">
+            Live call through the Sertone Global Network. Install your own Sertone to make unlimited calls.
+          </div>
+        </div>
+
+        <div class="result-panel" id="failover-result">
+          <div class="result-placeholder">
+            Select a failure scenario and click "Simulate Failover" to see the delivery chain in action with real timing data.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Code Samples</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">cURL</button>
+        <button class="code-tab" data-tab="javascript">JavaScript</button>
+        <button class="code-tab" data-tab="python">Python</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+<span class="comment"># Failover is automatic — Sertone Global Network → cloud relay → backup relay</span>
+<span class="prompt">$</span> curl -X POST https://localhost:3000/internal/call \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_CONSUMER_SECRET" \
+  -d '{"api_id_public": "API_UUID_FROM_CATALOG", "method": "GET", "path": "/quote/AAPL", "params": {}}'</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code><span class="comment">// Call the API through YOUR local Sertone control center</span>
+<span class="comment">// Consumer secret is in Settings &gt; Security</span>
+const response = await fetch('https://localhost:3000/internal/call', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+  },
+  body: JSON.stringify({
+    api_id_public: 'API_UUID_FROM_CATALOG',
+    method: 'GET',
+    path: '/quote/AAPL',
+    params: {}
+  })
+});
+const data = await response.json();
+console.log(data.result);</code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code><span class="comment"># Call the API through YOUR local Sertone control center</span>
+import requests
+
+response = requests.post(
+    'https://localhost:3000/internal/call',
+    headers={
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer YOUR_CONSUMER_SECRET'
+    },
+    json={
+        'api_id_public': 'API_UUID_FROM_CATALOG',
+        'method': 'GET',
+        'path': '/quote/AAPL',
+        'params': {}
+    }
+)
+print(response.json()['result'])</code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Self-Host with Failover</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Install the Control Center</h4>
+          <p>Run the free Sertone Docker container. No cloud account needed.</p>
+          <pre class="code-block"><code><span class="prompt">$</span> docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  sertone/wrapper:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Open the Web Console</h4>
+          <p>Go to <code>https://localhost:3002/panel</code> in your browser. Create your account, accept terms, and your wallet is generated automatically.</p>
+          <pre class="code-block"><code># Add cloud storage in Sertone control center
+{
+  "delivery": {
+    "cloud_relay": {
+      "provider": "minio",
+      "endpoint": "https://minio.yourserver.com",
+      "bucket": "sertone-responses",
+      "access_key": "your-key",
+      "secret_key": "your-secret"
+    }
+  }
+}</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Browse the Catalog</h4>
+          <p>Click <strong>Catalog &amp; SDKs</strong> in the sidebar. Search for APIs, try them in demo mode (free), then switch to production when ready.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Make Your First Call</h4>
+          <p>Copy your consumer secret from <strong>Settings &gt; Security</strong>, then use the code samples above to call any API from your own code.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FAQ Schema + CTA Footer -->
+    <section class="demo-footer-cta">
+      <h2>Never Lose an API Response</h2>
+      <p>Deploy Sertone with three-layer delivery failover. Free Docker container, your infrastructure, guaranteed delivery.</p>
+      <a href="/try" class="btn">Get Started</a>
+      <a href="/docs/" class="btn btn-secondary" style="margin-left: 0.75rem;">Read the Docs</a>
+
+      <div class="related-demos" style="margin-top: 2.5rem;">
+        <a href="/demos/s3-delivery/" class="related-demo-link">BYO-Cloud / S3</a>
+        <a href="/demos/cross-geography/" class="related-demo-link">Cross-Geography</a>
+        <a href="/demos/webhook-delivery/" class="related-demo-link">Webhook Delivery</a>
+        <a href="/demos/security/" class="related-demo-link">Zero-Knowledge Security</a>
+        <a href="/demos/pay-per-use/" class="related-demo-link">Pay-Per-Use</a>
+        <a href="/demos/rest-api/" class="related-demo-link">REST API</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- FAQ JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What happens if Sertone Global Network delivery fails?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sertone automatically falls back to cloud relay (your S3-compatible storage), then to backup relay. The failover is transparent — consumers always receive their API response."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How fast is each delivery method?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sertone Global Network delivery is the fastest at approximately 50ms. Cloud relay takes around 200ms. Backup relay takes approximately 3 seconds but provides guaranteed delivery."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need to configure failover?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Backup relay works out of the box. Cloud relay requires adding your S3-compatible storage credentials. Sertone Global Network delivery is always the primary path. Failover between paths is fully automatic."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    function runFailoverDemo() {
+      var btn = document.getElementById('run-failover-btn');
+      var resultEl = document.getElementById('failover-result');
+      setLoading(btn, true);
+
+      var scenario = document.getElementById('fail-scenario').value;
+      var apiId = document.getElementById('fail-api').value;
+
+      var apiNames = {
+        'bb-sse-ticker': 'SSE Ticker — AAPL Quote',
+        'bb-graphql': 'GraphQL — User Query',
+        'bb-soap': 'SOAP — Account Balance'
+      };
+
+      var scenarios = {
+        'all-ok': {
+          paths: [
+            { name: 'Sertone Network', status: 'success', latency: 47 + Math.round(Math.random() * 20), color: '#10b981' }
+          ]
+        },
+        'p2p-fail': {
+          paths: [
+            { name: 'Sertone Network', status: 'failed', latency: 5002, color: '#ef4444', reason: 'Connection timeout — peer unreachable' },
+            { name: 'BYO-Cloud Relay', status: 'success', latency: 187 + Math.round(Math.random() * 40), color: '#f59e0b' }
+          ]
+        },
+        'p2p-cloud-fail': {
+          paths: [
+            { name: 'Sertone Network', status: 'failed', latency: 5001, color: '#ef4444', reason: 'Connection timeout — peer unreachable' },
+            { name: 'BYO-Cloud Relay', status: 'failed', latency: 3004, color: '#ef4444', reason: 'Storage endpoint unreachable — credential rotation in progress' },
+            { name: 'On-Chain Relay', status: 'success', latency: 2847 + Math.round(Math.random() * 400), color: '#ef4444' }
+          ]
+        }
+      };
+
+      var chain = scenarios[scenario].paths;
+      var currentPath = 0;
+      var totalLatency = 0;
+
+      function animatePath() {
+        if (currentPath >= chain.length) {
+          var successPath = chain[chain.length - 1];
+          var deliveryMethod = currentPath === 1 ? 'p2p' : currentPath === 2 ? 'cloud-relay' : 'onchain-relay';
+
+          var finalResult = {
+            api: apiNames[apiId],
+            delivery_method: deliveryMethod,
+            failover_attempts: chain.length,
+            delivery_chain: chain.map(function(p) {
+              return {
+                path: p.name,
+                status: p.status,
+                latency_ms: p.latency,
+                reason: p.reason || null
+              };
+            }),
+            total_latency_ms: totalLatency,
+            response: {
+              status: 200,
+              data: apiId === 'bb-sse-ticker'
+                ? { symbol: 'AAPL', price: 189.42, change: '+1.23%' }
+                : apiId === 'bb-graphql'
+                ? { users: [{ id: 1, name: 'Alice', email: 'alice@example.com' }] }
+                : { account: 'ACC-1234', balance: '$12,450.00' }
+            }
+          };
+
+          var latencyClass = totalLatency < 200 ? 'fast' : totalLatency < 1000 ? 'medium' : 'slow';
+
+          resultEl.innerHTML =
+            '<div class="result-header">' +
+              '<span class="latency-badge ' + latencyClass + '">' + totalLatency + 'ms total</span>' +
+              '<span class="status-badge">' + deliveryMethod + '</span>' +
+            '</div>' +
+            '<pre><code>' + escapeHtml(JSON.stringify(finalResult, null, 2)) + '</code></pre>';
+
+          setLoading(btn, false);
+          return;
+        }
+
+        var path = chain[currentPath];
+        var pathsHtml = '';
+        for (var i = 0; i <= currentPath; i++) {
+          var p = chain[i];
+          var isDone = i < currentPath;
+          var isCurrent = i === currentPath;
+
+          var statusIcon = isDone ? (p.status === 'success' ? '&#x2713;' : '&#x2717;') : '&#x25CF;';
+          var statusColor = isDone ? (p.status === 'success' ? '#10b981' : '#ef4444') : '#f59e0b';
+
+          pathsHtml +=
+            '<div style="padding:0.75rem 0; border-bottom:1px solid #1e293b;">' +
+              '<div style="display:flex; align-items:center; gap:0.75rem;">' +
+                '<span style="color:' + statusColor + '; font-size:1.2rem; min-width:1.2rem; text-align:center;">' + statusIcon + '</span>' +
+                '<div style="flex:1;">' +
+                  '<div style="color:#e2e8f0; font-size:0.9rem; font-weight:600;">' + escapeHtml(p.name) + '</div>' +
+                  (isDone ? '<div style="color:' + (p.status === 'success' ? '#10b981' : '#ef4444') + '; font-size:0.8rem;">' + p.status.toUpperCase() + ' — ' + p.latency + 'ms' + (p.reason ? ' — ' + escapeHtml(p.reason) : '') + '</div>' : '<div style="color:#f59e0b; font-size:0.8rem;">Attempting delivery...</div>') +
+                '</div>' +
+              '</div>' +
+            '</div>';
+        }
+
+        resultEl.innerHTML = pathsHtml;
+        totalLatency += path.latency;
+        currentPath++;
+
+        var delay = path.status === 'failed' ? 800 : 500;
+        setTimeout(animatePath, delay);
+      }
+
+      totalLatency = 0;
+      currentPath = 0;
+      resultEl.innerHTML = '<div style="color:#94a3b8; text-align:center; padding:2rem;">Initiating API call via ' + escapeHtml(apiNames[apiId]) + '...</div>';
+      setTimeout(animatePath, 400);
+    }
+  </script>
+
+</body>
+</html>

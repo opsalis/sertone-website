@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calling APIs — Sertone Docs | Pay Per Call in USDC</title>
+  <meta name="description" content="How to call APIs from the Sertone marketplace. Sub-second response times, automatic USDC billing, and support for REST, GraphQL, gRPC, SOAP, JSON-RPC, XML-RPC.">
+  <meta name="keywords" content="call API Sertone, consume API USDC, API billing USDC, API marketplace consumer guide">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/calling-apis">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/calling-apis">
+  <meta property="og:title" content="Calling APIs — Sertone Docs | Pay Per Call in USDC">
+  <meta property="og:description" content="Call APIs from the Sertone marketplace with sub-second response times and automatic USDC billing.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Calling APIs — Sertone Docs">
+  <meta name="twitter:description" content="Call APIs from the Sertone marketplace with sub-second response times and automatic USDC billing.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Calling APIs — Sertone",
+    "description": "How to call APIs from the Sertone marketplace. Sub-second response times, automatic USDC billing.",
+    "url": "https://sertone.net/docs/calling-apis",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link active">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Calling APIs</h1>
+      <p class="lead">Browse, click, get results. Or use a generated SDK in your code.</p>
+
+      <h2 id="from-console">Calling from the web console</h2>
+      <p>The easiest way to call an API is directly from the web console:</p>
+      <ol>
+        <li>Go to <strong>My APIs</strong> and click on any API you have selected</li>
+        <li>Click <strong>Try in Swagger</strong> to open the interactive API explorer</li>
+        <li>Enter your parameters in the form fields</li>
+        <li>Click <strong>Execute</strong></li>
+        <li>The response appears below &mdash; typically in under a second</li>
+      </ol>
+      <p>The Swagger panel shows all available endpoints, parameters, and response schemas for each API.</p>
+
+      <h2 id="from-code">Calling from your code</h2>
+      <p>For programmatic access, generate an SDK from the web console (see <a href="/docs/sdks">SDKs</a>). The SDK gives you a typed client library in your language of choice &mdash; just import it and call methods.</p>
+      <p>Example in TypeScript:</p>
+      <pre><code>import { WeatherApi } from './weather-api';
+
+const api = new WeatherApi({ token: 'YOUR_SECRET' });
+
+const forecast = await api.getForecast({
+  city: 'Paris',
+  days: 5
+});
+
+console.log(forecast.data);</code></pre>
+
+      <h2 id="response">What you get back</h2>
+      <p>Every API call returns the actual response from the API, along with metadata showing the cost of the call and a request ID for your records.</p>
+
+      <h2 id="auth">Authentication</h2>
+      <p>You authenticate to your <strong>own</strong> control center using a secret token shown in the web console under <strong>Settings</strong>. You never need API keys for the target API &mdash; the owner handles that on their side.</p>
+
+      <h2 id="errors">Error handling</h2>
+      <p>If something goes wrong, you get a clear error with an HTTP status code and a description of the problem:</p>
+      <table>
+        <thead>
+          <tr><th>Status</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>400</code></td><td>Invalid request (missing fields, bad API name)</td></tr>
+          <tr><td><code>401</code></td><td>Invalid authentication token</td></tr>
+          <tr><td><code>402</code></td><td>Insufficient USDC balance</td></tr>
+          <tr><td><code>404</code></td><td>API not found in catalog</td></tr>
+          <tr><td><code>502</code></td><td>The API owner's server returned an error</td></tr>
+          <tr><td><code>504</code></td><td>The API owner's server is unreachable</td></tr>
+        </tbody>
+      </table>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/browsing-apis" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Browsing APIs</span>
+        </a>
+        <a href="/docs/sdks" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">SDKs</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#from-console" class="toc-link">From the web console</a>
+      <a href="#from-code" class="toc-link">From your code</a>
+      <a href="#response" class="toc-link">What you get back</a>
+      <a href="#auth" class="toc-link">Authentication</a>
+      <a href="#errors" class="toc-link">Error handling</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>
