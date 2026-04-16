@@ -4,3 +4,6 @@
 /product/try.html / 301
 /product/terms.html /terms 301
 /security /trust 301
+
+# LoadTester domain ownership verification token echo
+/.well-known/loadtester-verify/:testId /lt-verify/:testId 200
