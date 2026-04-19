@@ -104,9 +104,9 @@ async function handleSmartContract(request) {
       { headers: { Accept: 'application/json' } }
     );
     const cgData = await cgResp.json();
-    const ethPrice = cgData.ethereum && cgData.ethereum.usd ? cgData.ethereum.usd : 3200;
+    const ethPrice = cgData.ethereum && cgData.ethereum.usd ? cgData.ethereum.usd : 2298;
     const ethChange = cgData.ethereum && cgData.ethereum.usd_24h_change ? cgData.ethereum.usd_24h_change : 1.2;
-    const btcPrice = cgData.bitcoin && cgData.bitcoin.usd ? cgData.bitcoin.usd : 65000;
+    const btcPrice = cgData.bitcoin && cgData.bitcoin.usd ? cgData.bitcoin.usd : 74990;
     const btcChange = cgData.bitcoin && cgData.bitcoin.usd_24h_change ? cgData.bitcoin.usd_24h_change : 0.8;
     const prices = {
       'ETH/USD': { price: ethPrice, change: ethChange },
@@ -129,8 +129,8 @@ async function handleSmartContract(request) {
   } catch (e) {
     return jsonResp(sertoneWrap({
       function: fnName, pair,
-      answer: 320000000000, price: 3200,
-      price_formatted: '$3,200.00', change_24h: '+1.20%',
+      answer: 229800000000, price: 2298,
+      price_formatted: '$2,298.00', change_24h: '+1.20%',
       decimals: 8, source: 'Chainlink Oracle (cached)', chain_id: chain,
     }));
   }
