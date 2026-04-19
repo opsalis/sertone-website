@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agents — Sertone Docs | Expose Any Service Behind a Firewall</title>
+  <meta name="description" content="Sertone Agents let you monetize any private service — a Minecraft server, a SAP instance, a home automation hub — without opening firewall ports or exposing your IP address.">
+  <meta name="keywords" content="Sertone agent, API gateway reverse tunnel, behind firewall API, private server monetize, Minecraft API, SAP API gateway">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/agents">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/agents">
+  <meta property="og:title" content="Agents — Sertone Docs | Expose Any Service Behind a Firewall">
+  <meta property="og:description" content="Monetize any private service without opening firewall ports. No public IP needed.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Agents — Sertone Docs">
+  <meta name="twitter:description" content="Expose any service to paying consumers without opening firewall ports or a public IP.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Agents — Sertone",
+    "description": "How to expose a private service to paying consumers using a Sertone Agent, without firewall rules or a public IP address.",
+    "url": "https://sertone.net/docs/agents",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+        <a href="/docs/wallet" class="nav-link">Wallet</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Advanced</div>
+        <a href="/docs/agents" class="nav-link active">Agents</a>
+        <a href="/docs/phone-recovery" class="nav-link">Phone Recovery Key</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Agents</h1>
+      <p class="lead">Expose any private service to paying consumers — without opening firewall ports, without a public IP address, and without changing your existing setup.</p>
+
+      <h2 id="the-problem">The problem agents solve</h2>
+      <p>Most API monetization requires your service to be publicly reachable. That means:</p>
+      <ul>
+        <li>A static public IP address</li>
+        <li>Firewall rules allowing inbound traffic</li>
+        <li>A domain name and TLS certificate</li>
+        <li>Exposure of your server's location to the public internet</li>
+      </ul>
+      <p>This rules out most private services: a Minecraft server on your home network, a private SAP instance, a local weather station, a corporate ERP, a game server behind CGNAT. These services work fine but cannot be sold because they are not reachable.</p>
+
+      <p>Agents solve this by <strong>reversing the connection</strong>. Instead of waiting for consumers to connect to your service, your service connects outbound to your Sertone control center. Your control center then relays consumer requests through that persistent connection — and your service never needs to be publicly visible.</p>
+
+      <h2 id="how-it-works">How it works</h2>
+
+      <div class="flow-diagram">
+        <div class="flow-step">
+          <div class="flow-icon">1</div>
+          <div class="flow-text">
+            <strong>Agent connects outbound</strong><br>
+            The agent process runs on the same machine as your private service. It connects out to your Sertone control center over a persistent WebSocket. No inbound ports required.
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="flow-icon">2</div>
+          <div class="flow-text">
+            <strong>Consumer calls your API</strong><br>
+            The consumer makes a normal HTTPS call to your control center. The control center receives the request and identifies it as destined for an agent-connected service.
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="flow-icon">3</div>
+          <div class="flow-text">
+            <strong>Request relayed through agent</strong><br>
+            The control center forwards the HTTP request through the agent's WebSocket connection. The agent receives it, calls your local service (on localhost), and sends the response back.
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="flow-icon">4</div>
+          <div class="flow-text">
+            <strong>Response delivered, payment settled</strong><br>
+            The response travels back through the relay. The consumer gets the result. USDC settlement runs automatically — just like any other Sertone API.
+          </div>
+        </div>
+      </div>
+
+      <style>
+        .flow-diagram { max-width: 600px; margin: 1.5rem 0 2rem; }
+        .flow-step { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; }
+        .flow-icon { width: 28px; height: 28px; background: #2563eb; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+        .flow-text { font-size: 0.92rem; line-height: 1.6; color: #334155; }
+        .flow-arrow { text-align: center; font-size: 1.4rem; color: #94a3b8; margin: 0.25rem 0; }
+      </style>
+
+      <h2 id="real-world-uses">Real-world uses</h2>
+
+      <table>
+        <thead>
+          <tr><th>Your private service</th><th>APIs you can sell</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Minecraft server</strong> (home network)</td>
+            <td>Server status, player list, in-game commands, whitelist management</td>
+          </tr>
+          <tr>
+            <td><strong>SAP / ERP system</strong> (corporate network)</td>
+            <td>Inventory queries, order lookup, employee directory</td>
+          </tr>
+          <tr>
+            <td><strong>Home automation hub</strong> (local network)</td>
+            <td>Sensor readings, device control, energy usage</td>
+          </tr>
+          <tr>
+            <td><strong>Private AI model</strong> (no GPU hosting fees)</td>
+            <td>Text generation, classification, embeddings</td>
+          </tr>
+          <tr>
+            <td><strong>Database / data warehouse</strong></td>
+            <td>Read-only query APIs, analytics endpoints, export feeds</td>
+          </tr>
+          <tr>
+            <td><strong>Legacy system</strong> (SOAP, XML-RPC)</td>
+            <td>Modernize to REST while keeping the original service untouched</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="install">Installing the Agent</h2>
+
+      <h3>Requirements</h3>
+      <ul>
+        <li>Docker 20.10+ on the machine where your service runs</li>
+        <li>Outbound HTTPS access from that machine (port 443)</li>
+        <li>Your Sertone control center's address and a pairing token</li>
+      </ul>
+
+      <h3>Step 1: Generate a pairing token</h3>
+      <p>In your control center's web console, navigate to <strong>Agents &rsaquo; Add Agent</strong>. Enter a name for the agent (e.g. "Minecraft Server") and click <strong>Generate Token</strong>. Copy the token — it is shown only once.</p>
+
+      <h3>Step 2: Run the agent</h3>
+      <pre><code>docker run -d \
+  --name sertone-agent \
+  --network host \
+  -e PAIRING_TOKEN=your_token_here \
+  -e CONTROL_CENTER=https://your-control-center:3002 \
+  sertone/agent:latest</code></pre>
+
+      <p>The agent starts, connects to your control center, and appears as "Connected" in the Agents panel within a few seconds.</p>
+
+      <h3>Step 3: Register APIs pointing to your local service</h3>
+      <p>In the control center, go to <strong>Agents &rsaquo; your agent &rsaquo; Add API</strong>. Configure:</p>
+      <ul>
+        <li><strong>API path</strong> — the path consumers will call (e.g., <code>/status</code>)</li>
+        <li><strong>Target URL</strong> — where the agent should forward requests (e.g., <code>http://localhost:8080/api/status</code>)</li>
+        <li><strong>Method</strong> — GET, POST, etc.</li>
+        <li><strong>Price</strong> — per-call price in USDC</li>
+      </ul>
+
+      <p>Your API is now registered in the global catalog. Consumers can discover and call it immediately.</p>
+
+      <h2 id="security">Security</h2>
+
+      <h3>Your service stays private</h3>
+      <p>The agent connects outbound only. Your private service's IP address and network location are never exposed. Consumers never connect directly to your machine — all traffic goes through your control center, which you own and control.</p>
+
+      <h3>Authenticated relay</h3>
+      <p>The WebSocket connection between the agent and your control center is authenticated with the pairing token and secured with TLS. A compromised token can be revoked instantly from the control center — the agent disconnects within seconds.</p>
+
+      <h3>Request filtering</h3>
+      <p>Requests are filtered by your control center before being forwarded. Only requests for registered APIs reach your private service. Invalid paths, unauthorized consumers, and malformed requests are rejected at the control center before they ever touch the agent.</p>
+
+      <h2 id="minecraft-example">Example: Minecraft Server APIs</h2>
+      <p>Here is a complete walkthrough of turning a Minecraft Java Edition server into a set of monetized APIs.</p>
+
+      <h3>Architecture</h3>
+      <pre><code>Consumer → Sertone network → Your control center → Agent → Minecraft server
+                                                          ↑
+                                        (localhost, same machine, no port open)</code></pre>
+
+      <h3>The three APIs</h3>
+
+      <p><strong>GET /mc/status</strong> — Server status</p>
+      <pre><code>{
+  "online": true,
+  "version": "1.21.4",
+  "players_online": 7,
+  "players_max": 20,
+  "motd": "Welcome to the server!",
+  "latency_ms": 12
+}</code></pre>
+
+      <p><strong>GET /mc/players</strong> — Current player list</p>
+      <pre><code>{
+  "online": ["Steve", "Alex", "Notch"],
+  "count": 3,
+  "max": 20
+}</code></pre>
+
+      <p><strong>POST /mc/say</strong> — Broadcast a message in-game</p>
+      <pre><code>// Request
+{ "message": "Hello from the API!" }
+
+// Response
+{ "sent": true, "at": "2026-04-19T22:00:00Z" }</code></pre>
+
+      <h3>How the Minecraft plugin works</h3>
+      <p>A lightweight Minecraft plugin (Bukkit/Spigot/Paper) exposes these three endpoints locally on <code>http://localhost:8123</code>. The agent forwards consumer requests to this local server. The Minecraft server process and the API server never see the public internet.</p>
+
+      <p>Consumers call the APIs at normal Sertone API prices (e.g., $0.001/call). The plugin author earns 95% of every call, settled automatically in USDC.</p>
+
+      <div class="info-box">
+        See the <a href="/demos/agents">Agents demo</a> for a live interactive example showing this flow.
+      </div>
+
+      <h2 id="faq">Frequently asked questions</h2>
+
+      <h3>Can an agent expose multiple services?</h3>
+      <p>Yes. Each registered API can target a different local URL. One agent can proxy requests to a Minecraft server, a local Python API, and a home automation hub — all at the same time.</p>
+
+      <h3>What happens if the agent disconnects?</h3>
+      <p>The agent reconnects automatically with exponential backoff. While disconnected, calls to its APIs return a service unavailable response. The control center shows the agent status as "Disconnected" and sends an alert if configured.</p>
+
+      <h3>Does this work with WebSocket or SSE services?</h3>
+      <p>Yes. The agent relay supports streaming protocols. SSE streams and WebSocket connections are relayed transparently through the persistent connection.</p>
+
+      <h3>Can I run multiple agent instances for redundancy?</h3>
+      <p>Yes. Register two agents with the same APIs. The control center round-robins requests across available agents automatically. If one goes down, the other takes all traffic.</p>
+
+      <h3>Is there a cost to run the agent?</h3>
+      <p>The agent image is free. It uses minimal resources — roughly the same as a very light web server. On a typical VPS it uses under 50MB of RAM and less than 1% CPU when idle.</p>
+
+      <div class="next-steps">
+        <h2>Next steps</h2>
+        <a href="/demos/agents" class="next-link">Live demo →</a>
+        <a href="/docs/registering-apis" class="next-link">Registering APIs →</a>
+        <a href="/docs/quick-start" class="next-link">Quick Start →</a>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>
