@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phone Recovery Key — Sertone Docs | Hardware-Backed Backup</title>
+  <meta name="description" content="Enroll your phone as a hardware-backed recovery key for your Sertone control center. If your identity is ever lost, your phone restores it in seconds — protected by biometric authentication.">
+  <meta name="keywords" content="Sertone recovery, API control center backup, phone recovery key, Android Keystore backup, biometric wallet recovery">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/phone-recovery">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/phone-recovery">
+  <meta property="og:title" content="Phone Recovery Key — Sertone Docs">
+  <meta property="og:description" content="Enroll your phone as a hardware-backed recovery key for your Sertone control center. Biometric-protected, zero cloud dependency.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Phone Recovery Key — Sertone Docs">
+  <meta name="twitter:description" content="Enroll your phone as a hardware-backed recovery key. Biometric-protected, zero cloud dependency.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Phone Recovery Key — Sertone",
+    "description": "How to enroll your phone as a hardware-backed recovery key for your Sertone control center.",
+    "url": "https://sertone.net/docs/phone-recovery",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+        <a href="/docs/wallet" class="nav-link">Wallet</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Security &amp; Recovery</div>
+        <a href="/docs/phone-recovery" class="nav-link active">Phone Recovery Key</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Phone Recovery Key</h1>
+      <p class="lead">Enroll your Android phone as a hardware-backed recovery key for your Sertone control center. If your identity is ever lost — disk failure, corrupted backup, container wipe — your phone restores it in under a minute.</p>
+
+      <div class="info-box">
+        <strong>Requires the Sertone App</strong> — Download it on Android to enroll your phone. The app is free. It never uploads your key to any server.
+      </div>
+
+      <h2 id="how-it-works">How it works</h2>
+      <p>Your Sertone control center has an identity: a cryptographic key that proves ownership of your wallet, your API registrations, and your earning history. This identity is stored encrypted on disk. If that file is lost, the control center enters recovery mode and cannot serve APIs until the identity is restored.</p>
+
+      <p>The Phone Recovery Key gives you a second copy of that identity, stored on your Android phone inside the hardware-backed Android Keystore — the same chip that protects your phone's payment credentials and fingerprints. Accessing the key always requires biometric authentication (fingerprint or face) or your device PIN.</p>
+
+      <h3>Enrollment — one-time setup</h3>
+      <ol>
+        <li>Open the Sertone App on your phone.</li>
+        <li>Navigate to the <strong>Recovery</strong> tab.</li>
+        <li>Tap <strong>Enroll</strong> next to the control center you want to protect.</li>
+        <li>The app contacts your control center (you must be logged in) and retrieves the identity key.</li>
+        <li>Your phone stores the key in Android Keystore, protected by biometric.</li>
+        <li>Done. Your phone is now a recovery device. You can enroll multiple phones.</li>
+      </ol>
+
+      <h3>Recovery — restoring a lost identity</h3>
+      <ol>
+        <li>Open your control center's web console. If the identity is missing, you will see a <strong>Recovery Mode</strong> banner.</li>
+        <li>Click <strong>Generate Recovery QR</strong>. A QR code appears — valid for 30 minutes.</li>
+        <li>On your phone, open the Sertone App, go to the <strong>Recovery</strong> tab, and tap <strong>Restore a Control Center</strong>.</li>
+        <li>Scan the QR code with your phone's camera.</li>
+        <li>Authenticate with your biometric or PIN.</li>
+        <li>The app encrypts the recovery key using the session token from the QR code and sends it directly to your control center.</li>
+        <li>The control center decrypts it, restores the identity, and restarts. It is online again within a few seconds.</li>
+      </ol>
+
+      <h2 id="security">Security design</h2>
+
+      <h3>What is stored on the phone</h3>
+      <p>The phone stores your control center's identity key — the root secret from which the wallet, API registration keys, and earning history are all derived. The file is stored as an encrypted item inside Android Keystore.</p>
+      <p>Android Keystore is a hardware-backed secure element available on Android 6.0 and above. The key is stored inside dedicated security hardware (the Trusted Execution Environment or a dedicated secure chip) and can only be accessed after biometric verification. It cannot be extracted by software, even on a rooted phone.</p>
+
+      <h3>Transfer encryption</h3>
+      <p>When you scan the QR code, the control center has generated a one-time 32-byte random session token. This token is the encryption key for the transfer:</p>
+      <ol>
+        <li>The app reads your identity key from Android Keystore (biometric required).</li>
+        <li>The app encrypts the key with AES-256-GCM using the session token.</li>
+        <li>The encrypted payload is sent to your control center over HTTPS.</li>
+        <li>The control center decrypts it using the same token (which it generated and held in memory).</li>
+        <li>The session token is discarded immediately and cannot be reused.</li>
+      </ol>
+      <p>The identity key is never visible in plaintext outside of your phone's hardware secure element and your control center's own memory.</p>
+
+      <h3>What if my phone is stolen?</h3>
+      <p>The identity key is locked behind biometric authentication. Without your fingerprint, face, or device PIN, the key cannot be read — not by software, and not by someone with physical access to the phone. The Sertone App does not store the key anywhere else.</p>
+
+      <h3>Dual transport</h3>
+      <p>The recovery QR contains your control center's URL. The phone connects directly to that URL — there is no relay server, no cloud service. If the URL in the QR is temporarily unreachable (for example, your IP changed), use your router's IP or update the URL in the app's settings.</p>
+
+      <h2 id="managing-devices">Managing enrolled phones</h2>
+
+      <h3>View enrolled devices</h3>
+      <p>In the web console, go to <strong>Settings &rsaquo; Recovery Devices</strong>. You will see a list of all phones currently enrolled, the date they were enrolled, and the last time each one was used.</p>
+
+      <h3>Revoke a device</h3>
+      <p>To remove a phone as a recovery device:</p>
+      <ul>
+        <li><strong>From the web console:</strong> Go to Settings &rsaquo; Recovery Devices, find the device, and click <strong>Revoke</strong>.</li>
+        <li><strong>From the Sertone App:</strong> On the Recovery tab, tap <strong>Revoke</strong> next to the control center. This also deletes the key from your phone's Keystore.</li>
+      </ul>
+
+      <h3>What happens when I uninstall the app?</h3>
+      <p>When you uninstall the Sertone App, Android Keystore automatically deletes all keys associated with the app. Your recovery key is gone from that phone. The control center still works — it does not depend on any phone. You should enroll another phone, or use a different backup method, before uninstalling.</p>
+
+      <h2 id="other-backups">Phone recovery is not your only backup</h2>
+      <p>Sertone provides multiple layers of protection for your identity:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>How to use it</th>
+            <th>Best for</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Phone recovery key</strong></td>
+            <td>Enroll phone, scan QR to restore</td>
+            <td>Fast self-service recovery, no passwords needed</td>
+          </tr>
+          <tr>
+            <td><strong>Encrypted backup file</strong></td>
+            <td>Download from Settings, restore from file</td>
+            <td>Offline cold storage, long-term archive</td>
+          </tr>
+          <tr>
+            <td><strong>Email backup</strong></td>
+            <td>Automatic encrypted backup to your inbox</td>
+            <td>Automatic off-site copy</td>
+          </tr>
+          <tr>
+            <td><strong>On-chain backup</strong></td>
+            <td>Stored on the network, restore from console</td>
+            <td>Geographic disaster, total hardware loss</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warn-box">
+        <strong>Use at least two backup methods.</strong> If your phone is lost and your backup file is on the same disk as the control center, you have no fallback. Store backups in at least two different physical locations.
+      </div>
+
+      <h2 id="faq">Frequently asked questions</h2>
+
+      <h3>Does Sertone ever see my recovery key?</h3>
+      <p>No. The key is transferred directly from your phone to your control center over an encrypted connection. Sertone has no relay server in the path and no access to your data.</p>
+
+      <h3>Can I enroll multiple phones?</h3>
+      <p>Yes. There is no limit. Each enrolled phone gets a separate device entry in the control center. You can revoke individual phones independently.</p>
+
+      <h3>Does this work if my control center is behind a firewall?</h3>
+      <p>Yes, as long as your phone can reach the control center's IP on port 3002. If you are on the same local network, it works automatically. If you need remote access, configure port forwarding or use the VPN feature in the control center (Settings &rsaquo; VPN).</p>
+
+      <h3>What Android version is required?</h3>
+      <p>Android 6.0 (API 23) or newer. All Android phones manufactured after 2016 qualify.</p>
+
+      <h3>Is there an iOS version?</h3>
+      <p>An iOS version of the Sertone App is planned. Until then, use encrypted backup files or email backup as your primary recovery method on iOS.</p>
+
+      <h3>The QR code expires. What if I miss the 30-minute window?</h3>
+      <p>Close the QR modal in the web console and click <strong>Generate Recovery QR</strong> again. A fresh 30-minute session starts immediately.</p>
+
+      <div class="next-steps">
+        <h2>Next steps</h2>
+        <a href="/docs/settings" class="next-link">Settings →</a>
+        <a href="/docs/faq" class="next-link">FAQ →</a>
+        <a href="/docs/installation" class="next-link">Installation →</a>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>
