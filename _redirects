@@ -7,3 +7,5 @@
 
 # LoadTester domain ownership verification token echo
 /.well-known/loadtester-verify/:testId /lt-verify/:testId 200
+/demos/streaming /demos/sse-streaming/ 301
+/demos/a2a /demos/a2a.html 200
