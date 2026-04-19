@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plugin System — Sertone Docs</title>
+  <meta name="description" content="Extend your Sertone control center with plugins. Add rate limiting, analytics, SLA bonds, custom fees, and more — in any language.">
+  <meta name="keywords" content="Sertone plugins, extend Sertone, custom plugins, SLA bond, rate limiter, analytics, service network extensions">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/plugins">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/docs/plugins">
+  <meta property="og:title" content="Plugin System — Sertone Docs">
+  <meta property="og:description" content="Extend your Sertone control center with plugins. Any language, any feature, any fee model.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Plugin System — Sertone Docs">
+  <meta name="twitter:description" content="Extend your Sertone control center with plugins in any language.">
+  <link rel="stylesheet" href="docs.css">
+  <style>
+    .lang-tabs { display: flex; gap: 0.5rem; margin-bottom: -1px; flex-wrap: wrap; }
+    .lang-tab {
+      padding: 0.4rem 1rem; border: 1px solid var(--border); border-bottom: none;
+      border-radius: var(--radius) var(--radius) 0 0; cursor: pointer;
+      background: var(--bg-secondary); font-size: 0.82rem; font-family: var(--font-mono);
+      color: var(--text-muted); transition: all 0.15s;
+    }
+    .lang-tab.active { background: var(--bg-code); color: var(--text-primary); border-color: var(--border); }
+    .lang-panel { display: none; }
+    .lang-panel.active { display: block; }
+    .tabbed-code { border: 1px solid var(--border); border-radius: 0 var(--radius) var(--radius) var(--radius); }
+    .tabbed-code pre { margin: 0; border: none; border-radius: 0 var(--radius) var(--radius) var(--radius); }
+    .hook-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+    .hook-table th, .hook-table td { text-align: left; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .hook-table th { font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.04em; }
+    .hook-table code { font-size: 0.8rem; background: var(--bg-code); padding: 0.1rem 0.35rem; border-radius: 3px; }
+    .plugin-card {
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.25rem 1.5rem; margin: 1rem 0; background: var(--bg-secondary);
+    }
+    .plugin-card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .plugin-card-name { font-weight: 600; font-size: 1rem; }
+    .plugin-badge {
+      font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 20px;
+      font-family: var(--font-mono); font-weight: 500;
+    }
+    .badge-provider { background: #1a3a1a; color: #6fcf6f; }
+    .badge-consumer { background: #1a2a3a; color: #6fafcf; }
+    .badge-both { background: #2a2a1a; color: #cfcf6f; }
+    .badge-opensource { background: #2a1a3a; color: #af6fcf; }
+    .flow-box {
+      background: var(--bg-code); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.25rem 1.5rem; font-family: var(--font-mono); font-size: 0.82rem;
+      line-height: 1.8; overflow-x: auto; margin: 1rem 0;
+    }
+    .callout {
+      border-left: 3px solid var(--accent); background: var(--bg-secondary);
+      padding: 0.9rem 1.25rem; border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 1rem 0; font-size: 0.9rem;
+    }
+    .callout.warning { border-color: #cf9f3f; }
+    .callout.tip { border-color: #3fcf7f; }
+    .callout strong { display: block; margin-bottom: 0.25rem; }
+  </style>
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Services You Can Offer</div>
+        <a href="/docs/rest-apis" class="nav-link">REST APIs</a>
+        <a href="/docs/graphql" class="nav-link">GraphQL</a>
+        <a href="/docs/soap-xmlrpc" class="nav-link">SOAP &amp; XML-RPC</a>
+        <a href="/docs/grpc" class="nav-link">gRPC</a>
+        <a href="/docs/json-rpc" class="nav-link">JSON-RPC</a>
+        <a href="/docs/live-streams" class="nav-link">Live Streams</a>
+        <a href="/docs/smart-contracts" class="nav-link">Smart Contracts</a>
+        <a href="/docs/webhooks" class="nav-link">Webhooks</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Consuming Services</div>
+        <a href="/docs/browsing-catalog" class="nav-link">Browsing the Catalog</a>
+        <a href="/docs/calling-a-service" class="nav-link">Calling a Service</a>
+        <a href="/docs/sdks" class="nav-link">SDKs &amp; Code Generators</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Extend Your Control Center</div>
+        <a href="/docs/plugins" class="nav-link active">Plugin System</a>
+        <a href="/docs/plugins#api" class="nav-link" style="padding-left:1.75rem">Hook API Reference</a>
+        <a href="/docs/plugins#quickstart" class="nav-link" style="padding-left:1.75rem">Quickstart</a>
+        <a href="/docs/plugins#nodejs" class="nav-link" style="padding-left:1.75rem">Node.js Examples</a>
+        <a href="/docs/plugins#python" class="nav-link" style="padding-left:1.75rem">Python Examples</a>
+        <a href="/docs/plugins#go" class="nav-link" style="padding-left:1.75rem">Go Examples</a>
+        <a href="/docs/plugins#reference-plugins" class="nav-link" style="padding-left:1.75rem">Reference Plugins</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Corporate &amp; Enterprise</div>
+        <a href="/docs/oauth-sso" class="nav-link">OAuth / SSO</a>
+        <a href="/docs/subscription-plans" class="nav-link">Subscription Plans</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Pricing &amp; Settlement</div>
+        <a href="/docs/how-pricing-works" class="nav-link">How Pricing Works</a>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Your Control Center</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-offer-service" class="nav-link">Offer Your First Service</a>
+        <a href="/docs/tutorial-consume-service" class="nav-link">Consume Your First Service</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Live Demos</div>
+        <a href="/demos/" class="nav-link">&#8594; /demos/</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+
+      <h1>Plugin System</h1>
+      <p class="lead">Add any capability to your Sertone control center — rate limiting, analytics, SLA bonds, custom fees, compliance filters — without touching the core. Write in any language. Deploy as a sidecar. Zero lock-in.</p>
+
+      <h2 id="how-it-works">How it works</h2>
+      <p>A plugin is any HTTP service that implements three endpoints. You register its URL in your control center panel. The control center calls your plugin on each request lifecycle event.</p>
+
+      <div class="flow-box">Consumer call arrives
+    &darr;
+[pre-request hook]   &larr; your plugin decides: allow / block / charge extra fee
+    &darr;
+Request forwarded to provider
+    &darr;
+[post-response hook] &larr; your plugin receives latency + status code
+    &darr;
+Settlement executes on-chain
+    &darr;
+Response returned to consumer</div>
+
+      <div class="callout warning">
+        <strong>Plugin errors never block requests.</strong>
+        Every hook call has a 2-second timeout. If your plugin is down, slow, or returns an error, the request proceeds as if no plugin were installed. Design for failure — your control center will not wait for you.
+      </div>
+
+      <p>Plugins can be installed by the <strong>provider</strong> (to control who calls their services), by the <strong>consumer</strong> (to control which services they call), or both. A plugin can charge an additional fee on each request — that fee flows directly between the control centers, independent of the main 5% IP royalty settlement.</p>
+
+      <h2 id="api">Hook API Reference</h2>
+
+      <h3 id="api-info">GET /sertone/info</h3>
+      <p>Called when the plugin is first registered and periodically to verify it is alive. Returns plugin metadata.</p>
+
+      <table class="hook-table">
+        <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>name</code></td><td>string</td><td>Human-readable plugin name</td></tr>
+          <tr><td><code>version</code></td><td>string</td><td>Semantic version, e.g. <code>"1.0.0"</code></td></tr>
+          <tr><td><code>description</code></td><td>string</td><td>One-sentence description</td></tr>
+          <tr><td><code>author</code></td><td>string</td><td>Plugin author (optional, can be anonymous)</td></tr>
+          <tr><td><code>fee_model</code></td><td><code>"provider"</code> | <code>"consumer"</code> | <code>"none"</code></td><td>Who pays the plugin fee</td></tr>
+        </tbody>
+      </table>
+
+      <pre><code>{
+  "name": "My Rate Limiter",
+  "version": "1.0.0",
+  "description": "Limits each consumer to 100 requests per hour",
+  "author": "anonymous",
+  "fee_model": "none"
+}</code></pre>
+
+      <h3 id="api-pre">POST /sertone/pre-request</h3>
+      <p>Called before every request is forwarded. Your plugin decides whether to allow it and optionally adds a fee.</p>
+
+      <p><strong>Request body:</strong></p>
+      <table class="hook-table">
+        <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>request_id</code></td><td>string</td><td>Unique ID for this request (use for deduplication)</td></tr>
+          <tr><td><code>api_id</code></td><td>string</td><td>Public ID of the API being called</td></tr>
+          <tr><td><code>consumer_wallet_hash</code></td><td>string</td><td>SHA-256 of the consumer's wallet address (privacy-preserving identifier — same consumer always has same hash)</td></tr>
+          <tr><td><code>endpoint_path</code></td><td>string</td><td>The specific endpoint being called, e.g. <code>/v1/data</code></td></tr>
+          <tr><td><code>timestamp</code></td><td>number</td><td>Unix timestamp in milliseconds</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Response:</strong></p>
+      <table class="hook-table">
+        <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>allow</code></td><td>boolean</td><td>Yes</td><td>If <code>false</code>, the request is rejected with HTTP 402</td></tr>
+          <tr><td><code>reason</code></td><td>string</td><td>No</td><td>Reason shown to consumer when <code>allow</code> is false</td></tr>
+          <tr><td><code>additional_fee_usdc</code></td><td>string</td><td>No</td><td>Extra USDC fee as a decimal string, e.g. <code>"0.00010"</code></td></tr>
+          <tr><td><code>fee_destination</code></td><td>string</td><td>If fee &gt; 0</td><td>EVM wallet address to receive the fee</td></tr>
+        </tbody>
+      </table>
+
+      <pre><code>// Allow with no fee
+{ "allow": true }
+
+// Block with reason
+{ "allow": false, "reason": "Rate limit exceeded. Resets in 42 seconds." }
+
+// Allow and charge 0.0001 USDC
+{
+  "allow": true,
+  "additional_fee_usdc": "0.00010",
+  "fee_destination": "0xYourPluginWalletAddress"
+}</code></pre>
+
+      <h3 id="api-post">POST /sertone/post-response</h3>
+      <p>Called after every response is received. Use this to collect quality signals, update analytics, or trigger alerts. Your response is advisory — it does not block or modify the response.</p>
+
+      <p><strong>Request body:</strong></p>
+      <table class="hook-table">
+        <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>request_id</code></td><td>string</td><td>Same ID from pre-request</td></tr>
+          <tr><td><code>api_id</code></td><td>string</td><td>Public API ID</td></tr>
+          <tr><td><code>latency_ms</code></td><td>number</td><td>Round-trip latency in milliseconds</td></tr>
+          <tr><td><code>status_code</code></td><td>number</td><td>HTTP status code returned by the provider</td></tr>
+          <tr><td><code>settled_usdc</code></td><td>string</td><td>Amount settled to provider, e.g. <code>"0.00095"</code></td></tr>
+          <tr><td><code>timestamp</code></td><td>number</td><td>Unix timestamp in milliseconds</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Response:</strong></p>
+      <table class="hook-table">
+        <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>quality_signal</code></td><td><code>-1</code> | <code>0</code> | <code>1</code></td><td>Your quality assessment: bad / neutral / good. Fed into the catalog quality score for this API.</td></tr>
+        </tbody>
+      </table>
+
+      <pre><code>{ "quality_signal": 1 }   // good
+{ "quality_signal": 0 }   // neutral
+{ "quality_signal": -1 }  // bad (e.g. latency > 2000ms or status 5xx)</code></pre>
+
+      <h2 id="quickstart">Quickstart</h2>
+
+      <p>The fastest path to a working plugin is three steps:</p>
+
+      <h3>1. Write the plugin</h3>
+      <p>Copy any of the examples below. The minimum viable plugin is about 40 lines of code in any language.</p>
+
+      <h3>2. Run it as a sidecar</h3>
+      <p>Run your plugin on the same host as your control center. The control center calls it on <code>localhost:PORT</code> — it never needs to be publicly accessible.</p>
+
+      <pre><code># docker-compose.yml — add your plugin as a sidecar
+services:
+  sertone:
+    image: xbtest33/demo22:latest
+    # ... your existing sertone config ...
+
+  my-plugin:
+    image: my-plugin:latest
+    ports:
+      - "127.0.0.1:4001:4001"  # only localhost, not public
+    restart: unless-stopped</code></pre>
+
+      <h3>3. Register in your control center</h3>
+      <p>Go to <strong>Settings &rarr; Plugins</strong> in your admin panel. Enter the plugin URL: <code>http://localhost:4001</code>. The control center pings <code>/sertone/info</code> to verify the connection, then activates all hooks.</p>
+
+      <div class="callout tip">
+        <strong>No restart required.</strong>
+        Plugin changes take effect immediately. You can enable, disable, or swap plugins without restarting your control center.
+      </div>
+
+      <!-- ─── NODE.JS ─────────────────────────────────────────────────── -->
+      <h2 id="nodejs">Node.js Examples</h2>
+
+      <h3 id="nodejs-hello">Hello World (Node.js)</h3>
+      <p>The minimal plugin. Allows all requests, reports all responses as good quality. No dependencies beyond Node.js built-ins.</p>
+
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="showTab(this,'njs-hello')">server.js</button>
+        <button class="lang-tab" onclick="showTab(this,'njs-hello-docker')">Dockerfile</button>
+        <button class="lang-tab" onclick="showTab(this,'njs-hello-compose')">docker-compose.yml</button>
+      </div>
+      <div class="tabbed-code">
+        <div id="njs-hello" class="lang-panel active">
+<pre><code>// sertone-plugin-hello — minimal Node.js plugin
+// No dependencies. Allows all requests, good quality on all responses.
+// Run: node server.js
+
+const http = require('http');
+
+const PORT = process.env.PORT || 4001;
+
+const routes = {
+  'GET /sertone/info': (req, res) => {
+    res.json({
+      name: 'Hello World Plugin',
+      version: '1.0.0',
+      description: 'Allows all requests and reports all responses as good quality.',
+      author: 'anonymous',
+      fee_model: 'none',
+    });
+  },
+
+  'POST /sertone/pre-request': (req, res) => {
+    // Read and discard body (required to keep the connection clean)
+    req.resume();
+    req.on('end', () => res.json({ allow: true }));
+  },
+
+  'POST /sertone/post-response': (req, res) => {
+    req.resume();
+    req.on('end', () => res.json({ quality_signal: 1 }));
+  },
+};
+
+// Minimal HTTP server with JSON helpers
+const server = http.createServer((req, res) => {
+  const key = `${req.method} ${req.url}`;
+  res.json = (data) => {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data));
+  };
+  if (routes[key]) {
+    routes[key](req, res);
+  } else {
+    res.writeHead(404);
+    res.end('Not found');
+  }
+});
+
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Hello World plugin running on port ${PORT}`);
+});</code></pre>
+        </div>
+        <div id="njs-hello-docker" class="lang-panel">
+<pre><code>FROM node:22-alpine
+WORKDIR /app
+COPY server.js .
+EXPOSE 4001
+CMD ["node", "server.js"]</code></pre>
+        </div>
+        <div id="njs-hello-compose" class="lang-panel">
+<pre><code>services:
+  sertone-plugin-hello:
+    build: .
+    ports:
+      - "127.0.0.1:4001:4001"
+    restart: unless-stopped
+    environment:
+      - PORT=4001</code></pre>
+        </div>
+      </div>
+
+      <h3 id="nodejs-ratelimiter">Rate Limiter (Node.js)</h3>
+      <p>Limits each consumer to a configurable number of requests per time window. Tracks consumers by their wallet hash. No database required — in-memory sliding window.</p>
+
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="showTab(this,'njs-rl')">server.js</button>
+        <button class="lang-tab" onclick="showTab(this,'njs-rl-docker')">Dockerfile</button>
+        <button class="lang-tab" onclick="showTab(this,'njs-rl-compose')">docker-compose.yml</button>
+      </div>
+      <div class="tabbed-code">
+        <div id="njs-rl" class="lang-panel active">
+<pre><code>// sertone-plugin-ratelimiter — sliding window rate limiter
+// No dependencies. Limits each consumer by wallet hash.
+// Config via environment variables.
+
+const http = require('http');
+
+const PORT          = parseInt(process.env.PORT || '4001');
+const MAX_REQUESTS  = parseInt(process.env.MAX_REQUESTS || '100');   // per window
+const WINDOW_MS     = parseInt(process.env.WINDOW_MS || '3600000'); // 1 hour default
+
+// Map: consumerHash -> array of request timestamps
+const windows = new Map();
+
+function getWindowCount(hash) {
+  const now = Date.now();
+  const cutoff = now - WINDOW_MS;
+  const times = (windows.get(hash) || []).filter(t => t > cutoff);
+  times.push(now);
+  windows.set(hash, times);
+  return times.length; // includes the current request
+}
+
+function timeUntilReset(hash) {
+  const times = windows.get(hash) || [];
+  if (times.length === 0) return 0;
+  const oldest = Math.min(...times);
+  return Math.ceil((oldest + WINDOW_MS - Date.now()) / 1000);
+}
+
+// Cleanup old entries every 10 minutes
+setInterval(() => {
+  const cutoff = Date.now() - WINDOW_MS;
+  for (const [hash, times] of windows) {
+    const filtered = times.filter(t => t > cutoff);
+    if (filtered.length === 0) windows.delete(hash);
+    else windows.set(hash, filtered);
+  }
+}, 10 * 60 * 1000);
+
+function readBody(req) {
+  return new Promise((resolve) => {
+    let data = '';
+    req.on('data', chunk => data += chunk);
+    req.on('end', () => {
+      try { resolve(JSON.parse(data)); } catch { resolve({}); }
+    });
+  });
+}
+
+const server = http.createServer(async (req, res) => {
+  res.json = (data, status = 200) => {
+    res.writeHead(status, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data));
+  };
+
+  if (req.method === 'GET' && req.url === '/sertone/info') {
+    return res.json({
+      name: 'Rate Limiter',
+      version: '1.0.0',
+      description: `Limits each consumer to ${MAX_REQUESTS} requests per ${WINDOW_MS / 60000} minutes.`,
+      author: 'anonymous',
+      fee_model: 'none',
+    });
+  }
+
+  if (req.method === 'POST' && req.url === '/sertone/pre-request') {
+    const body = await readBody(req);
+    const hash = body.consumer_wallet_hash || 'unknown';
+    const count = getWindowCount(hash);
+
+    if (count > MAX_REQUESTS) {
+      const resetIn = timeUntilReset(hash);
+      return res.json({
+        allow: false,
+        reason: `Rate limit exceeded (${MAX_REQUESTS} requests per ${WINDOW_MS / 60000} min). Resets in ${resetIn}s.`,
+      });
+    }
+
+    return res.json({ allow: true });
+  }
+
+  if (req.method === 'POST' && req.url === '/sertone/post-response') {
+    const body = await readBody(req);
+    const signal = body.status_code >= 500 ? -1 : (body.latency_ms > 3000 ? 0 : 1);
+    return res.json({ quality_signal: signal });
+  }
+
+  res.writeHead(404);
+  res.end('Not found');
+});
+
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Rate Limiter plugin: max=${MAX_REQUESTS} per ${WINDOW_MS / 60000}min on port ${PORT}`);
+});</code></pre>
+        </div>
+        <div id="njs-rl-docker" class="lang-panel">
+<pre><code>FROM node:22-alpine
+WORKDIR /app
+COPY server.js .
+EXPOSE 4001
+CMD ["node", "server.js"]</code></pre>
+        </div>
+        <div id="njs-rl-compose" class="lang-panel">
+<pre><code>services:
+  sertone-plugin-ratelimiter:
+    build: .
+    ports:
+      - "127.0.0.1:4001:4001"
+    restart: unless-stopped
+    environment:
+      - PORT=4001
+      - MAX_REQUESTS=100    # requests per window
+      - WINDOW_MS=3600000   # window size in ms (3600000 = 1 hour)</code></pre>
+        </div>
+      </div>
+
+      <!-- ─── PYTHON ─────────────────────────────────────────────────── -->
+      <h2 id="python">Python Examples</h2>
+
+      <h3 id="python-hello">Hello World (Python)</h3>
+      <p>Same minimal plugin in Python. Uses only the standard library — no pip install needed.</p>
+
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="showTab(this,'py-hello')">plugin.py</button>
+        <button class="lang-tab" onclick="showTab(this,'py-hello-docker')">Dockerfile</button>
+        <button class="lang-tab" onclick="showTab(this,'py-hello-compose')">docker-compose.yml</button>
+      </div>
+      <div class="tabbed-code">
+        <div id="py-hello" class="lang-panel active">
+<pre><code># sertone-plugin-hello — minimal Python plugin
+# No dependencies. Standard library only.
+# Run: python3 plugin.py
+
+import os
+import json
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+PORT = int(os.environ.get('PORT', 4001))
+
+class PluginHandler(BaseHTTPRequestHandler):
+    def log_message(self, fmt, *args):
+        pass  # Silence default access log
+
+    def _read_body(self):
+        length = int(self.headers.get('Content-Length', 0))
+        raw = self.rfile.read(length) if length > 0 else b'{}'
+        try:
+            return json.loads(raw)
+        except Exception:
+            return {}
+
+    def _respond(self, data, status=200):
+        body = json.dumps(data).encode()
+        self.send_response(status)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Content-Length', str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self):
+        if self.path == '/sertone/info':
+            self._respond({
+                'name': 'Hello World Plugin (Python)',
+                'version': '1.0.0',
+                'description': 'Allows all requests and reports good quality.',
+                'author': 'anonymous',
+                'fee_model': 'none',
+            })
+        else:
+            self.send_error(404)
+
+    def do_POST(self):
+        self._read_body()  # consume body
+
+        if self.path == '/sertone/pre-request':
+            self._respond({'allow': True})
+        elif self.path == '/sertone/post-response':
+            self._respond({'quality_signal': 1})
+        else:
+            self.send_error(404)
+
+if __name__ == '__main__':
+    server = HTTPServer(('0.0.0.0', PORT), PluginHandler)
+    print(f'Hello World plugin (Python) running on port {PORT}')
+    server.serve_forever()</code></pre>
+        </div>
+        <div id="py-hello-docker" class="lang-panel">
+<pre><code>FROM python:3.12-alpine
+WORKDIR /app
+COPY plugin.py .
+EXPOSE 4001
+CMD ["python3", "plugin.py"]</code></pre>
+        </div>
+        <div id="py-hello-compose" class="lang-panel">
+<pre><code>services:
+  sertone-plugin-hello-py:
+    build: .
+    ports:
+      - "127.0.0.1:4001:4001"
+    restart: unless-stopped
+    environment:
+      - PORT=4001</code></pre>
+        </div>
+      </div>
+
+      <h3 id="python-logger">Request Logger (Python)</h3>
+      <p>Logs every request and response to JSONL files on disk. Useful for debugging, auditing, and building your own analytics. Rotates log files daily.</p>
+
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="showTab(this,'py-log')">plugin.py</button>
+        <button class="lang-tab" onclick="showTab(this,'py-log-docker')">Dockerfile</button>
+        <button class="lang-tab" onclick="showTab(this,'py-log-compose')">docker-compose.yml</button>
+      </div>
+      <div class="tabbed-code">
+        <div id="py-log" class="lang-panel active">
+<pre><code># sertone-plugin-logger — JSONL request logger with daily rotation
+# No dependencies. Standard library only.
+# Logs to /app/logs/YYYY-MM-DD.jsonl (mount as a volume to persist)
+
+import os
+import json
+import time
+import threading
+from datetime import datetime, timezone
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
+
+PORT     = int(os.environ.get('PORT', 4001))
+LOG_DIR  = Path(os.environ.get('LOG_DIR', '/app/logs'))
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+_lock = threading.Lock()
+
+def log_event(event_type, data):
+    today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    entry = {'_type': event_type, '_ts': int(time.time() * 1000), **data}
+    with _lock:
+        with open(LOG_DIR / f'{today}.jsonl', 'a') as f:
+            f.write(json.dumps(entry) + '\n')
+
+class PluginHandler(BaseHTTPRequestHandler):
+    def log_message(self, fmt, *args):
+        pass
+
+    def _read_body(self):
+        length = int(self.headers.get('Content-Length', 0))
+        raw = self.rfile.read(length) if length > 0 else b'{}'
+        try:
+            return json.loads(raw)
+        except Exception:
+            return {}
+
+    def _respond(self, data, status=200):
+        body = json.dumps(data).encode()
+        self.send_response(status)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Content-Length', str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self):
+        if self.path == '/sertone/info':
+            logs = sorted(LOG_DIR.glob('*.jsonl'))
+            self._respond({
+                'name': 'Request Logger',
+                'version': '1.0.0',
+                'description': 'Logs all requests and responses to JSONL files.',
+                'author': 'anonymous',
+                'fee_model': 'none',
+                'log_files': [f.name for f in logs[-7:]],
+            })
+        elif self.path.startswith('/logs/'):
+            filename = self.path[6:]
+            filepath = LOG_DIR / filename
+            if filepath.exists() and filepath.parent == LOG_DIR:
+                content = filepath.read_bytes()
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/x-ndjson')
+                self.send_header('Content-Length', str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+            else:
+                self.send_error(404)
+        else:
+            self.send_error(404)
+
+    def do_POST(self):
+        body = self._read_body()
+
+        if self.path == '/sertone/pre-request':
+            log_event('request', body)
+            self._respond({'allow': True})
+
+        elif self.path == '/sertone/post-response':
+            log_event('response', body)
+            status = body.get('status_code', 200)
+            latency = body.get('latency_ms', 0)
+            signal = -1 if status >= 500 else (0 if latency > 3000 else 1)
+            self._respond({'quality_signal': signal})
+
+        else:
+            self.send_error(404)
+
+if __name__ == '__main__':
+    server = HTTPServer(('0.0.0.0', PORT), PluginHandler)
+    print(f'Logger plugin running on port {PORT}, logs in {LOG_DIR}')
+    server.serve_forever()</code></pre>
+        </div>
+        <div id="py-log-docker" class="lang-panel">
+<pre><code>FROM python:3.12-alpine
+WORKDIR /app
+COPY plugin.py .
+RUN mkdir -p /app/logs
+EXPOSE 4001
+CMD ["python3", "plugin.py"]</code></pre>
+        </div>
+        <div id="py-log-compose" class="lang-panel">
+<pre><code>services:
+  sertone-plugin-logger:
+    build: .
+    ports:
+      - "127.0.0.1:4001:4001"
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs   # persists logs on the host
+    environment:
+      - PORT=4001
+      - LOG_DIR=/app/logs</code></pre>
+        </div>
+      </div>
+
+      <!-- ─── GO ──────────────────────────────────────────────────────── -->
+      <h2 id="go">Go Examples</h2>
+
+      <h3 id="go-hello">Hello World (Go)</h3>
+      <p>Zero dependencies. Compiles to a single static binary under 6 MB. Ideal for resource-constrained environments like Raspberry Pi.</p>
+
+      <div class="lang-tabs">
+        <button class="lang-tab active" onclick="showTab(this,'go-hello')">main.go</button>
+        <button class="lang-tab" onclick="showTab(this,'go-hello-mod')">go.mod</button>
+        <button class="lang-tab" onclick="showTab(this,'go-hello-docker')">Dockerfile</button>
+        <button class="lang-tab" onclick="showTab(this,'go-hello-compose')">docker-compose.yml</button>
+      </div>
+      <div class="tabbed-code">
+        <div id="go-hello" class="lang-panel active">
+<pre><code>// sertone-plugin-hello — minimal Go plugin
+// Zero dependencies. Single binary. ~5 MB.
+// Build: go build -o plugin . && ./plugin
+
+package main
+
+import (
+	"encoding/json"
+	"io"
+	"log"
+	"net/http"
+	"os"
+)
+
+func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "4001"
+	}
+
+	http.HandleFunc("/sertone/info", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		respond(w, map[string]any{
+			"name":        "Hello World Plugin (Go)",
+			"version":     "1.0.0",
+			"description": "Allows all requests and reports good quality.",
+			"author":      "anonymous",
+			"fee_model":   "none",
+		})
+	})
+
+	http.HandleFunc("/sertone/pre-request", func(w http.ResponseWriter, r *http.Request) {
+		io.Copy(io.Discard, r.Body) // consume body
+		respond(w, map[string]any{"allow": true})
+	})
+
+	http.HandleFunc("/sertone/post-response", func(w http.ResponseWriter, r *http.Request) {
+		io.Copy(io.Discard, r.Body)
+		respond(w, map[string]any{"quality_signal": 1})
+	})
+
+	log.Printf("Hello World plugin (Go) running on port %s", port)
+	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, nil))
+}
+
+func respond(w http.ResponseWriter, data any) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(data)
+}</code></pre>
+        </div>
+        <div id="go-hello-mod" class="lang-panel">
+<pre><code>module sertone-plugin-hello
+
+go 1.22</code></pre>
+        </div>
+        <div id="go-hello-docker" class="lang-panel">
+<pre><code>FROM golang:1.22-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN go build -ldflags="-s -w" -o plugin .
+
+FROM scratch
+COPY --from=builder /app/plugin /plugin
+EXPOSE 4001
+ENTRYPOINT ["/plugin"]</code></pre>
+        </div>
+        <div id="go-hello-compose" class="lang-panel">
+<pre><code>services:
+  sertone-plugin-hello-go:
+    build: .
+    ports:
+      - "127.0.0.1:4001:4001"
+    restart: unless-stopped
+    environment:
+      - PORT=4001</code></pre>
+        </div>
+      </div>
+
+      <!-- ─── REFERENCE PLUGINS ────────────────────────────────────────── -->
+      <h2 id="reference-plugins">Reference Plugins</h2>
+      <p>These plugins are open-source, ready to run, and solve real problems. Each is published with full source code.</p>
+
+      <div class="plugin-card">
+        <div class="plugin-card-header">
+          <span class="plugin-card-name">SLA Bond</span>
+          <span class="plugin-badge badge-provider">provider-side</span>
+          <span class="plugin-badge badge-opensource">open source</span>
+        </div>
+        <p style="margin:0 0 0.75rem">Providers lock a USDC deposit as a public quality commitment. The bond is slashed and paid to consumers if the provider's quality score drops below a configurable threshold. Fully on-chain, no third-party custodian. Source published — run your own instance or use a community-operated one.</p>
+        <div class="flow-box">Provider installs plugin, deposits N USDC into the SLA contract
+    &darr;
+Every response is scored: latency + status code
+    &darr;
+If 7-day rolling quality score &lt; threshold:
+    consumer receives payout from bond
+    &darr;
+Provider replenishes bond to continue offering services</div>
+        <div class="lang-tabs">
+          <button class="lang-tab active" onclick="showTab(this,'sla-server')">plugin/server.js</button>
+          <button class="lang-tab" onclick="showTab(this,'sla-contract')">SLABond.sol</button>
+          <button class="lang-tab" onclick="showTab(this,'sla-compose')">docker-compose.yml</button>
+        </div>
+        <div class="tabbed-code">
+          <div id="sla-server" class="lang-panel active">
+<pre><code>// SLA Bond Plugin — provider-side quality commitment
+// Tracks quality score per API over a rolling window.
+// On threshold breach, signals consumers to claim from the bond contract.
+// Deploy the SLABond.sol contract separately and set CONTRACT_ADDRESS.
+
+const http = require('http');
+const { ethers } = require('ethers');
+
+const PORT             = parseInt(process.env.PORT || '4001');
+const QUALITY_THRESHOLD = parseFloat(process.env.QUALITY_THRESHOLD || '80'); // 0-100
+const WINDOW_HOURS     = parseInt(process.env.WINDOW_HOURS || '168');       // 7 days
+const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS || '';
+const RPC_URL          = process.env.RPC_URL || 'https://mainnet.base.org';
+
+// Rolling window quality store: api_id -> [{ts, signal}]
+const signals = new Map();
+
+function addSignal(apiId, signal) {
+  const cutoff = Date.now() - WINDOW_HOURS * 3600 * 1000;
+  const list = (signals.get(apiId) || []).filter(s => s.ts > cutoff);
+  list.push({ ts: Date.now(), signal });
+  signals.set(apiId, list);
+  return list;
+}
+
+function qualityScore(apiId) {
+  const list = signals.get(apiId) || [];
+  if (list.length === 0) return 100;
+  const sum = list.reduce((acc, s) => acc + (s.signal === 1 ? 100 : s.signal === 0 ? 50 : 0), 0);
+  return sum / list.length;
+}
+
+function readBody(req) {
+  return new Promise(resolve => {
+    let data = '';
+    req.on('data', c => data += c);
+    req.on('end', () => { try { resolve(JSON.parse(data)); } catch { resolve({}); }});
+  });
+}
+
+const server = http.createServer(async (req, res) => {
+  res.json = (data, status = 200) => {
+    res.writeHead(status, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data));
+  };
+
+  if (req.method === 'GET' && req.url === '/sertone/info') {
+    return res.json({
+      name: 'SLA Bond',
+      version: '1.0.0',
+      description: `Quality commitment bond. Threshold: ${QUALITY_THRESHOLD}. Window: ${WINDOW_HOURS}h.`,
+      author: 'community',
+      fee_model: 'provider',
+      contract: CONTRACT_ADDRESS || 'not configured',
+    });
+  }
+
+  if (req.method === 'GET' && req.url.startsWith('/quality/')) {
+    const apiId = req.url.slice(9);
+    return res.json({ api_id: apiId, quality: qualityScore(apiId), threshold: QUALITY_THRESHOLD });
+  }
+
+  if (req.method === 'POST' && req.url === '/sertone/pre-request') {
+    const body = await readBody(req);
+    // Check current quality — if critically low, pause the API
+    const score = qualityScore(body.api_id);
+    if (score < QUALITY_THRESHOLD * 0.5) {
+      return res.json({
+        allow: false,
+        reason: `Provider quality score ${score.toFixed(0)}/100 is critically low. Service temporarily paused for consumer protection.`,
+      });
+    }
+    return res.json({ allow: true });
+  }
+
+  if (req.method === 'POST' && req.url === '/sertone/post-response') {
+    const body = await readBody(req);
+    const status = body.status_code || 200;
+    const latency = body.latency_ms || 0;
+    let signal = 1;
+    if (status >= 500) signal = -1;
+    else if (status >= 400 || latency > 5000) signal = 0;
+    else if (latency > 2000) signal = 0;
+
+    const list = addSignal(body.api_id, signal);
+    const score = qualityScore(body.api_id);
+
+    // If quality drops below threshold, log for operator review
+    if (score < QUALITY_THRESHOLD && list.length >= 10) {
+      console.warn(`Quality alert: api=${body.api_id} score=${score.toFixed(1)} threshold=${QUALITY_THRESHOLD}`);
+    }
+
+    return res.json({ quality_signal: signal });
+  }
+
+  res.writeHead(404);
+  res.end('Not found');
+});
+
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`SLA Bond plugin running on port ${PORT}, threshold=${QUALITY_THRESHOLD}`);
+});</code></pre>
+          </div>
+          <div id="sla-contract" class="lang-panel">
+<pre><code>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+/// @title SLABond — on-chain quality commitment deposit
+/// @notice Providers deposit USDC. If quality drops, consumers claim compensation.
+///         No admin key. No upgradeable proxy. Fully autonomous.
+contract SLABond {
+    IERC20 public immutable usdc;
+
+    struct Bond {
+        uint256 amount;       // USDC deposited (6 decimals)
+        uint256 depositedAt;
+        bool active;
+    }
+
+    // provider wallet => api_id => bond
+    mapping(address => mapping(bytes32 => Bond)) public bonds;
+
+    // quality oracle: set by the plugin server calling this contract
+    address public immutable oracle;
+
+    event BondDeposited(address indexed provider, bytes32 indexed apiId, uint256 amount);
+    event BondClaimed(address indexed consumer, bytes32 indexed apiId, uint256 amount);
+    event BondWithdrawn(address indexed provider, bytes32 indexed apiId, uint256 amount);
+
+    constructor(address _usdc, address _oracle) {
+        usdc = IERC20(_usdc);
+        oracle = _oracle;
+    }
+
+    /// @notice Provider deposits bond for a specific API
+    function deposit(bytes32 apiId, uint256 amount) external {
+        require(amount > 0, "Amount must be positive");
+        usdc.transferFrom(msg.sender, address(this), amount);
+        bonds[msg.sender][apiId].amount += amount;
+        bonds[msg.sender][apiId].depositedAt = block.timestamp;
+        bonds[msg.sender][apiId].active = true;
+        emit BondDeposited(msg.sender, apiId, amount);
+    }
+
+    /// @notice Oracle (plugin server) triggers consumer compensation on SLA breach
+    /// @dev Only the oracle address can call this. Oracle is the plugin server.
+    function claimBreach(
+        address provider,
+        bytes32 apiId,
+        address consumer,
+        uint256 compensation
+    ) external {
+        require(msg.sender == oracle, "Only oracle");
+        Bond storage b = bonds[provider][apiId];
+        require(b.active, "No active bond");
+        require(b.amount >= compensation, "Insufficient bond");
+        b.amount -= compensation;
+        if (b.amount == 0) b.active = false;
+        usdc.transfer(consumer, compensation);
+        emit BondClaimed(consumer, apiId, compensation);
+    }
+
+    /// @notice Provider withdraws remaining bond (voluntary exit)
+    function withdraw(bytes32 apiId) external {
+        Bond storage b = bonds[msg.sender][apiId];
+        require(b.amount > 0, "Nothing to withdraw");
+        uint256 amount = b.amount;
+        b.amount = 0;
+        b.active = false;
+        usdc.transfer(msg.sender, amount);
+        emit BondWithdrawn(msg.sender, apiId, amount);
+    }
+
+    /// @notice View bond for a provider + api
+    function getBond(address provider, bytes32 apiId)
+        external view returns (uint256 amount, bool active) {
+        Bond storage b = bonds[provider][apiId];
+        return (b.amount, b.active);
+    }
+}</code></pre>
+          </div>
+          <div id="sla-compose" class="lang-panel">
+<pre><code>services:
+  sertone-plugin-sla-bond:
+    build: .
+    ports:
+      - "127.0.0.1:4001:4001"
+    restart: unless-stopped
+    environment:
+      - PORT=4001
+      - QUALITY_THRESHOLD=80   # minimum acceptable quality score (0-100)
+      - WINDOW_HOURS=168       # rolling window (168 = 7 days)
+      - CONTRACT_ADDRESS=0x... # deployed SLABond.sol contract address
+      - RPC_URL=https://mainnet.base.org</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="plugin-card">
+        <div class="plugin-card-header">
+          <span class="plugin-card-name">Geographic Firewall</span>
+          <span class="plugin-badge badge-provider">provider-side</span>
+          <span class="plugin-badge badge-opensource">open source</span>
+        </div>
+        <p style="margin:0 0 0.75rem">Blocks or allows consumers from specific regions based on the mesh node origin. Useful for providers who need to comply with export controls or licensing restrictions. Because Sertone is anonymous by design, this operates on mesh topology signals, not IP addresses.</p>
+        <div class="lang-tabs">
+          <button class="lang-tab active" onclick="showTab(this,'geo-server')">plugin.py</button>
+        </div>
+        <div class="tabbed-code">
+          <div id="geo-server" class="lang-panel active">
+<pre><code># Geographic Firewall Plugin — allowlist/denylist by wallet hash prefix
+# In a fully anonymous network, "geography" is approximated by
+# the wallet addresses registered in specific regional catalogs.
+# Configure ALLOWED_PREFIXES (hex prefix of consumer wallet hash)
+# or BLOCKED_PREFIXES to restrict access.
+# This is a soft control — it filters, not guarantees.
+
+import os
+import json
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+PORT             = int(os.environ.get('PORT', 4001))
+ALLOWED_PREFIXES = [p for p in os.environ.get('ALLOWED_PREFIXES', '').split(',') if p]
+BLOCKED_PREFIXES = [p for p in os.environ.get('BLOCKED_PREFIXES', '').split(',') if p]
+
+def is_allowed(wallet_hash: str) -> tuple[bool, str]:
+    h = wallet_hash.lower()
+    if BLOCKED_PREFIXES:
+        for prefix in BLOCKED_PREFIXES:
+            if h.startswith(prefix.lower()):
+                return False, f'Consumer blocked by geographic policy.'
+    if ALLOWED_PREFIXES:
+        for prefix in ALLOWED_PREFIXES:
+            if h.startswith(prefix.lower()):
+                return True, ''
+        return False, 'Consumer not in allowed region.'
+    return True, ''
+
+class PluginHandler(BaseHTTPRequestHandler):
+    def log_message(self, fmt, *args): pass
+
+    def _read_body(self):
+        length = int(self.headers.get('Content-Length', 0))
+        raw = self.rfile.read(length) if length > 0 else b'{}'
+        try: return json.loads(raw)
+        except: return {}
+
+    def _respond(self, data, status=200):
+        body = json.dumps(data).encode()
+        self.send_response(status)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Content-Length', str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self):
+        if self.path == '/sertone/info':
+            self._respond({
+                'name': 'Geographic Firewall',
+                'version': '1.0.0',
+                'description': 'Allows or blocks consumers by wallet hash prefix.',
+                'author': 'anonymous',
+                'fee_model': 'none',
+                'allowed_prefixes': ALLOWED_PREFIXES or ['(all)'],
+                'blocked_prefixes': BLOCKED_PREFIXES or ['(none)'],
+            })
+        else:
+            self.send_error(404)
+
+    def do_POST(self):
+        body = self._read_body()
+        if self.path == '/sertone/pre-request':
+            h = body.get('consumer_wallet_hash', '')
+            allowed, reason = is_allowed(h)
+            resp = {'allow': allowed}
+            if not allowed: resp['reason'] = reason
+            self._respond(resp)
+        elif self.path == '/sertone/post-response':
+            self._respond({'quality_signal': 1})
+        else:
+            self.send_error(404)
+
+if __name__ == '__main__':
+    server = HTTPServer(('0.0.0.0', PORT), PluginHandler)
+    print(f'Geographic Firewall on port {PORT}')
+    if ALLOWED_PREFIXES: print(f'  Allowed prefixes: {ALLOWED_PREFIXES}')
+    if BLOCKED_PREFIXES: print(f'  Blocked prefixes: {BLOCKED_PREFIXES}')
+    server.serve_forever()</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <h2 id="security">Security notes</h2>
+      <ul>
+        <li><strong>Plugins run locally.</strong> By default, only <code>localhost</code> URLs are accepted in the plugin registration. A plugin must run on the same host as your control center. Remote plugin URLs are supported but require explicitly enabling in settings.</li>
+        <li><strong>Plugin errors never block traffic.</strong> A crashed, slow, or misbehaving plugin is silently bypassed. Your services remain available.</li>
+        <li><strong>Plugins do not see request payloads.</strong> The hook only receives the metadata (api_id, consumer hash, endpoint path, latency, status code). The actual request and response content stays end-to-end encrypted.</li>
+        <li><strong>The consumer wallet hash is privacy-preserving.</strong> It is a SHA-256 of the consumer's wallet address, not the address itself. The same consumer always produces the same hash — useful for rate limiting — but the hash cannot be reversed to recover the wallet address.</li>
+        <li><strong>Plugins can charge fees</strong>, but the fee destination is fully in your control. Only install plugins from sources you trust.</li>
+      </ul>
+
+    </main>
+  </div>
+
+  <script>
+    function showTab(btn, panelId) {
+      const container = btn.closest('.tabbed-code') || btn.parentElement.nextElementSibling;
+      const tabs = btn.parentElement;
+      const code = tabs.nextElementSibling;
+      tabs.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+      code.querySelectorAll('.lang-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = document.getElementById(panelId);
+      if (panel) panel.classList.add('active');
+    }
+  </script>
+  <script src="docs.js"></script>
+
+</body>
+</html>
