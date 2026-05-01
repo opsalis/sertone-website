@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Built-in VPN Demo — Sertone</title>
+  <meta name="description" content="Every Sertone gateway includes a built-in VPN server. Connect any device securely from anywhere in minutes — no subscription, no third-party service.">
+  <meta name="keywords" content="Sertone VPN, built-in VPN server, WireGuard VPN, gateway VPN, secure remote access demo">
+  <link rel="canonical" href="https://sertone.net/demos/vpn/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/vpn/">
+  <meta property="og:title" content="Built-in VPN Demo — Sertone">
+  <meta property="og:description" content="Every Sertone gateway includes a built-in VPN server. Connect any device securely from anywhere — no third-party VPN service required.">
+  <meta property="og:site_name" content="Sertone">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Built-in VPN Demo — Sertone">
+  <meta name="twitter:description" content="Built-in VPN server in every Sertone gateway. Connect any device from anywhere in minutes.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Sertone Built-in VPN",
+    "applicationCategory": "DeveloperApplication",
+    "description": "Every Sertone gateway includes a built-in VPN server. Connect any device securely from anywhere — no third-party VPN service required.",
+    "url": "https://sertone.net/demos/vpn/",
+    "operatingSystem": "Docker (Linux, macOS, Windows)",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+  <style>
+    /* Platform selector */
+    .platform-tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .platform-tab {
+      padding: 0.45rem 1rem;
+      border-radius: 20px;
+      border: 1.5px solid #334155;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .platform-tab.active,
+    .platform-tab:hover {
+      border-color: rgba(0,184,148,0.6);
+      color: #00b894;
+      background: rgba(0,184,148,0.06);
+    }
+    .platform-panel { display: none; }
+    .platform-panel.active { display: block; }
+
+    /* Device visual */
+    .vpn-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+    .vpn-device {
+      background: rgba(255,255,255,0.03);
+      border: 1.5px solid #1e293b;
+      border-radius: 12px;
+      padding: 1.1rem 1.5rem;
+      text-align: center;
+      min-width: 120px;
+      transition: border-color 0.4s, background 0.4s;
+    }
+    .vpn-device.connected { border-color: rgba(0,184,148,0.5); background: rgba(0,184,148,0.05); }
+    .vpn-device-icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
+    .vpn-device-name { font-size: 0.78rem; font-weight: 700; color: #e2e8f0; }
+    .vpn-device-status { font-size: 0.65rem; color: #64748b; margin-top: 0.2rem; }
+
+    .vpn-tunnel {
+      flex: 1;
+      min-width: 80px;
+      max-width: 160px;
+      text-align: center;
+    }
+    .vpn-tunnel-line {
+      height: 3px;
+      border-radius: 2px;
+      background: #1e293b;
+      transition: background 0.6s;
+      position: relative;
+      overflow: visible;
+    }
+    .vpn-tunnel-line.active {
+      background: linear-gradient(90deg, rgba(0,184,148,0.3), rgba(0,184,148,0.9), rgba(0,184,148,0.3));
+    }
+    .vpn-tunnel-label {
+      font-size: 0.65rem;
+      color: #475569;
+      margin-top: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+    }
+    .vpn-tunnel-label.active { color: #00b894; }
+
+    .vpn-gateway {
+      background: linear-gradient(135deg, rgba(0,184,148,0.1), rgba(0,184,148,0.04));
+      border: 1.5px solid rgba(0,184,148,0.35);
+      border-radius: 12px;
+      padding: 1.1rem 1.5rem;
+      text-align: center;
+      min-width: 130px;
+    }
+    .vpn-gateway-icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
+    .vpn-gateway-name { font-size: 0.78rem; font-weight: 700; color: #00b894; }
+    .vpn-gateway-sub  { font-size: 0.65rem; color: #64748b; margin-top: 0.2rem; }
+
+    /* Status pill */
+    .vpn-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      margin-top: 0.35rem;
+    }
+    .vpn-pill.disconnected { background: rgba(100,116,139,0.12); color: #64748b; border: 1px solid rgba(100,116,139,0.25); }
+    .vpn-pill.connecting   { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+    .vpn-pill.connected    { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.25); }
+    .vpn-pill .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .vpn-pill.connected .dot { animation: pdot 2s ease-in-out infinite; }
+    @keyframes pdot { 0%,100%{opacity:1}50%{opacity:.4} }
+
+    /* Devices grid */
+    .vpn-devices-grid {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 1.25rem 0;
+    }
+    .vpn-small-device {
+      background: rgba(255,255,255,0.03);
+      border: 1.5px solid #1e293b;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      text-align: center;
+      min-width: 90px;
+      transition: border-color 0.4s, background 0.4s;
+    }
+    .vpn-small-device.on  { border-color: rgba(0,184,148,0.5); background: rgba(0,184,148,0.05); }
+    .vpn-small-device-icon { font-size: 1.3rem; }
+    .vpn-small-device-label { font-size: 0.68rem; font-weight: 600; color: #94a3b8; margin-top: 0.25rem; }
+
+    /* Log */
+    .vpn-log {
+      background: #0a0f1a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-family: monospace;
+      font-size: 0.78rem;
+      max-height: 180px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    .vpn-log-line { padding: 0.1rem 0; }
+    .vpn-log-line .ts  { color: #475569; margin-right: 0.5rem; }
+    .vpn-log-line.ok   .msg { color: #10b981; }
+    .vpn-log-line.warn .msg { color: #f59e0b; }
+    .vpn-log-line.info .msg { color: #94a3b8; }
+
+    /* Connect button */
+    .vpn-btn {
+      padding: 0.65rem 1.4rem;
+      border-radius: 8px;
+      border: 1.5px solid #334155;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .vpn-btn:hover:not(:disabled) { border-color: rgba(0,184,148,0.6); color: #00b894; background: rgba(0,184,148,0.05); }
+    .vpn-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .vpn-btn.danger:hover:not(:disabled) { border-color: rgba(248,113,113,0.5); color: #f87171; background: rgba(248,113,113,0.05); }
+
+    /* Step instructions */
+    .vpn-step-box {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .vpn-step-box h4 { margin: 0 0 0.5rem; font-size: 0.9rem; color: #e2e8f0; }
+    .vpn-step-box p  { margin: 0; font-size: 0.83rem; color: #94a3b8; line-height: 1.55; }
+    .vpn-step-box code { background: #0a0f1a; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.8rem; color: #00b894; }
+
+    @media (max-width: 540px) {
+      .vpn-visual { flex-direction: column; }
+      .vpn-tunnel-line { width: 3px; height: 60px; margin: 0 auto; background: #1e293b; }
+      .vpn-tunnel { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <nav class="demo-breadcrumb demo-container" aria-label="Breadcrumb">
+    <a href="/">Home</a> <span>&rsaquo;</span>
+    <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+    Built-in VPN
+  </nav>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Built-in VPN</p>
+      <h1>Your Gateway Includes a VPN Server.</h1>
+      <p class="demo-tagline">No subscription. No third-party service. Every Sertone gateway ships with a built-in VPN server. Generate a config file in your admin panel and connect any device in under two minutes.</p>
+    </div>
+  </section>
+
+  <article class="demo-container">
+
+    <!-- What you get -->
+    <section class="demo-business">
+      <h2>What You Get, Out of the Box</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem;margin-top:1.25rem;">
+        <div style="background:rgba(0,184,148,0.05);border:1px solid rgba(0,184,148,0.15);border-radius:10px;padding:1.1rem 1.25rem;">
+          <div style="font-size:1.3rem;margin-bottom:0.5rem;">🔒</div>
+          <strong style="color:#e2e8f0;">Secure remote access</strong>
+          <p style="font-size:0.85rem;color:#64748b;margin:0.4rem 0 0;line-height:1.55;">Manage your gateway from anywhere as if you were on the same local network — without exposing it to the public internet.</p>
+        </div>
+        <div style="background:rgba(0,184,148,0.05);border:1px solid rgba(0,184,148,0.15);border-radius:10px;padding:1.1rem 1.25rem;">
+          <div style="font-size:1.3rem;margin-bottom:0.5rem;">📱</div>
+          <strong style="color:#e2e8f0;">Up to 253 devices</strong>
+          <p style="font-size:0.85rem;color:#64748b;margin:0.4rem 0 0;line-height:1.55;">Laptops, phones, tablets — each gets its own config. Revoke a device at any time from your admin panel.</p>
+        </div>
+        <div style="background:rgba(0,184,148,0.05);border:1px solid rgba(0,184,148,0.15);border-radius:10px;padding:1.1rem 1.25rem;">
+          <div style="font-size:1.3rem;margin-bottom:0.5rem;">🌐</div>
+          <strong style="color:#e2e8f0;">Works everywhere</strong>
+          <p style="font-size:0.85rem;color:#64748b;margin:0.4rem 0 0;line-height:1.55;">The same config file works on Windows, macOS, iOS, Android, and Linux. Free VPN client apps on every platform.</p>
+        </div>
+        <div style="background:rgba(0,184,148,0.05);border:1px solid rgba(0,184,148,0.15);border-radius:10px;padding:1.1rem 1.25rem;">
+          <div style="font-size:1.3rem;margin-bottom:0.5rem;">💸</div>
+          <strong style="color:#e2e8f0;">No extra cost</strong>
+          <p style="font-size:0.85rem;color:#64748b;margin:0.4rem 0 0;line-height:1.55;">The VPN server is part of your gateway. You are not paying for a VPN service — you own the server.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive demo -->
+    <section class="demo-interactive" style="margin-top:2rem;">
+      <h2>Live Connection Demo</h2>
+      <p style="color:#64748b;font-size:0.9rem;margin-bottom:1.25rem;">See what connecting a device to your gateway looks like. Click a device to simulate connecting it.</p>
+
+      <!-- Device + tunnel + gateway visual -->
+      <div class="vpn-visual">
+        <div id="demo-device" class="vpn-device">
+          <div class="vpn-device-icon" id="device-icon">💻</div>
+          <div class="vpn-device-name" id="device-name">Your Laptop</div>
+          <div class="vpn-device-status">Anywhere in the world</div>
+          <div class="vpn-pill disconnected" id="device-pill"><span class="dot"></span><span id="pill-label">Not Connected</span></div>
+        </div>
+
+        <div class="vpn-tunnel">
+          <div class="vpn-tunnel-line" id="tunnel-line"></div>
+          <div class="vpn-tunnel-label" id="tunnel-label">Encrypted Tunnel</div>
+        </div>
+
+        <div class="vpn-gateway">
+          <div class="vpn-gateway-icon">🖥️</div>
+          <div class="vpn-gateway-name">Your Gateway</div>
+          <div class="vpn-gateway-sub">Your server, your admin panel</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.25rem;">
+        <h3 style="font-size:0.88rem;color:#94a3b8;margin-bottom:0.6rem;">Connected devices</h3>
+        <div class="vpn-devices-grid">
+          <div class="vpn-small-device" id="dev-laptop" onclick="selectDevice('laptop','💻','Your Laptop')">
+            <div class="vpn-small-device-icon">💻</div>
+            <div class="vpn-small-device-label">Laptop</div>
+          </div>
+          <div class="vpn-small-device" id="dev-phone" onclick="selectDevice('phone','📱','Your Phone')">
+            <div class="vpn-small-device-icon">📱</div>
+            <div class="vpn-small-device-label">Phone</div>
+          </div>
+          <div class="vpn-small-device" id="dev-tablet" onclick="selectDevice('tablet','📟','Your Tablet')">
+            <div class="vpn-small-device-icon">📟</div>
+            <div class="vpn-small-device-label">Tablet</div>
+          </div>
+          <div class="vpn-small-device" id="dev-desktop" onclick="selectDevice('desktop','🖥️','Office PC')">
+            <div class="vpn-small-device-icon">🖥️</div>
+            <div class="vpn-small-device-label">Office PC</div>
+          </div>
+          <div class="vpn-small-device" id="dev-pi" onclick="selectDevice('pi','🍓','Raspberry Pi')">
+            <div class="vpn-small-device-icon">🍓</div>
+            <div class="vpn-small-device-label">Pi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vpn-log" id="vpn-log">
+        <div class="vpn-log-line info"><span class="ts" id="init-ts"></span><span class="msg">Gateway VPN server running — waiting for connections</span></div>
+      </div>
+
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="vpn-btn" id="btn-connect" onclick="doConnect()">🔒 Connect Device</button>
+        <button class="vpn-btn danger" id="btn-disconnect" onclick="doDisconnect()" disabled>Disconnect</button>
+      </div>
+      <p style="font-size:0.73rem;color:#475569;margin-top:0.6rem;">Simulation only — demonstrates the connection flow you will see in your WireGuard client.</p>
+    </section>
+
+    <!-- How to connect — step-by-step with platform selector -->
+    <section class="demo-selfhost" style="margin-top:2rem;">
+      <h2>Connect a Device in 3 Steps</h2>
+
+      <div class="platform-tabs" id="platform-tabs">
+        <button class="platform-tab active" onclick="switchPlatform('windows',this)">🪟 Windows</button>
+        <button class="platform-tab" onclick="switchPlatform('mac',this)">🍎 macOS</button>
+        <button class="platform-tab" onclick="switchPlatform('ios',this)">📱 iPhone / iPad</button>
+        <button class="platform-tab" onclick="switchPlatform('android',this)">🤖 Android</button>
+        <button class="platform-tab" onclick="switchPlatform('linux',this)">🐧 Linux</button>
+      </div>
+
+      <!-- Step 1 — always the same -->
+      <div class="vpn-step-box">
+        <h4>Step 1 — Get your config file from the admin panel</h4>
+        <p>Open your gateway's admin panel &rarr; <strong>Settings &rarr; VPN</strong>. Click <strong>Generate config</strong>. A <code>.conf</code> file downloads to your device. Each device gets its own file — do not share them.</p>
+      </div>
+
+      <!-- Step 2 — platform-specific install -->
+      <div class="vpn-step-box">
+        <h4>Step 2 — Install the WireGuard app</h4>
+
+        <div id="platform-windows" class="platform-panel active">
+          <p>Download the <strong>WireGuard installer</strong> from <a href="https://www.wireguard.com/install/" target="_blank" rel="noopener" style="color:#00b894;">wireguard.com/install</a> and run it. No account required. Completely free.</p>
+        </div>
+        <div id="platform-mac" class="platform-panel">
+          <p>Install WireGuard from the <strong>Mac App Store</strong> (search "WireGuard") or via Homebrew: <code>brew install wireguard-tools</code>. Both are free.</p>
+        </div>
+        <div id="platform-ios" class="platform-panel">
+          <p>Install the <strong>WireGuard</strong> app from the <strong>App Store</strong>. Search for "WireGuard" — it is published by WireGuard Development Team. Free.</p>
+        </div>
+        <div id="platform-android" class="platform-panel">
+          <p>Install the <strong>WireGuard</strong> app from <strong>Google Play</strong>. Search for "WireGuard". Free. Also available from F-Droid if you prefer.</p>
+        </div>
+        <div id="platform-linux" class="platform-panel">
+          <p>Install WireGuard from your package manager. Examples:<br>
+            Ubuntu/Debian: <code>sudo apt install wireguard</code><br>
+            Fedora: <code>sudo dnf install wireguard-tools</code><br>
+            Arch: <code>sudo pacman -S wireguard-tools</code></p>
+        </div>
+      </div>
+
+      <!-- Step 3 — import and activate -->
+      <div class="vpn-step-box">
+        <h4>Step 3 — Import and connect</h4>
+
+        <div id="platform-windows-3" class="platform-panel active">
+          <p>Open WireGuard &rarr; click <strong>Import tunnel(s) from file</strong> &rarr; select the <code>.conf</code> file &rarr; click <strong>Activate</strong>. You are connected.</p>
+        </div>
+        <div id="platform-mac-3" class="platform-panel">
+          <p>Open WireGuard &rarr; click <strong>Import tunnel(s) from file&hellip;</strong> &rarr; select the <code>.conf</code> file &rarr; click <strong>Activate</strong>. You are connected.</p>
+        </div>
+        <div id="platform-ios-3" class="platform-panel">
+          <p>Open WireGuard &rarr; tap <strong>+</strong> &rarr; <strong>Create from file or archive</strong> &rarr; select the <code>.conf</code> file. Tap the toggle to connect. iOS will ask for VPN permission — tap Allow.</p>
+        </div>
+        <div id="platform-android-3" class="platform-panel">
+          <p>Open WireGuard &rarr; tap <strong>+</strong> &rarr; <strong>Import from file or archive</strong> &rarr; select the <code>.conf</code> file. Tap the toggle to activate. Android will ask for VPN permission — tap OK.</p>
+        </div>
+        <div id="platform-linux-3" class="platform-panel">
+          <p>Bring the tunnel up with: <code>sudo wg-quick up /path/to/your-device.conf</code><br>To make it start on boot: <code>sudo systemctl enable --now wg-quick@your-device</code></p>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;text-align:center;">
+        <a href="/docs/vpn" class="btn">Full VPN Documentation</a>
+        <a href="/docs/installation" class="btn btn-secondary" style="margin-left:0.75rem;">Gateway Installation</a>
+      </div>
+    </section>
+
+    <!-- Managing devices -->
+    <section class="demo-business" style="margin-top:2rem;">
+      <h2>Managing Connected Devices</h2>
+      <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:1.25rem;">From <strong>Settings &rarr; VPN</strong> in your admin panel you can see every device, when it last connected, and whether it is currently active.</p>
+
+      <div style="background:#0a0f1a;border:1px solid #1e293b;border-radius:12px;overflow:hidden;">
+        <!-- Fake admin panel table -->
+        <div style="padding:0.75rem 1.25rem;border-bottom:1px solid #1e293b;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:0.8rem;font-weight:700;color:#e2e8f0;">VPN Devices (4 connected)</span>
+          <span style="font-size:0.75rem;padding:0.3rem 0.8rem;background:rgba(0,184,148,0.1);color:#00b894;border:1px solid rgba(0,184,148,0.25);border-radius:6px;font-weight:600;">+ Generate config</span>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
+          <thead>
+            <tr style="border-bottom:1px solid #1e293b;">
+              <th style="padding:0.6rem 1.25rem;text-align:left;color:#475569;font-weight:600;">Device</th>
+              <th style="padding:0.6rem 1rem;text-align:left;color:#475569;font-weight:600;">Status</th>
+              <th style="padding:0.6rem 1rem;text-align:left;color:#475569;font-weight:600;">Last seen</th>
+              <th style="padding:0.6rem 1rem;text-align:right;color:#475569;font-weight:600;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid rgba(30,41,59,0.6);">
+              <td style="padding:0.65rem 1.25rem;color:#e2e8f0;">💻 My Laptop</td>
+              <td style="padding:0.65rem 1rem;"><span style="color:#10b981;font-weight:600;">● Active</span></td>
+              <td style="padding:0.65rem 1rem;color:#64748b;">Just now</td>
+              <td style="padding:0.65rem 1rem;text-align:right;"><span style="color:#f87171;font-size:0.75rem;cursor:pointer;">Revoke</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(30,41,59,0.6);">
+              <td style="padding:0.65rem 1.25rem;color:#e2e8f0;">📱 iPhone</td>
+              <td style="padding:0.65rem 1rem;"><span style="color:#10b981;font-weight:600;">● Active</span></td>
+              <td style="padding:0.65rem 1rem;color:#64748b;">2 min ago</td>
+              <td style="padding:0.65rem 1rem;text-align:right;"><span style="color:#f87171;font-size:0.75rem;cursor:pointer;">Revoke</span></td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(30,41,59,0.6);">
+              <td style="padding:0.65rem 1.25rem;color:#e2e8f0;">🖥️ Office PC</td>
+              <td style="padding:0.65rem 1rem;"><span style="color:#94a3b8;font-weight:600;">○ Offline</span></td>
+              <td style="padding:0.65rem 1rem;color:#64748b;">3 days ago</td>
+              <td style="padding:0.65rem 1rem;text-align:right;"><span style="color:#f87171;font-size:0.75rem;cursor:pointer;">Revoke</span></td>
+            </tr>
+            <tr>
+              <td style="padding:0.65rem 1.25rem;color:#e2e8f0;">📟 iPad</td>
+              <td style="padding:0.65rem 1rem;"><span style="color:#10b981;font-weight:600;">● Active</span></td>
+              <td style="padding:0.65rem 1rem;color:#64748b;">18 min ago</td>
+              <td style="padding:0.65rem 1rem;text-align:right;"><span style="color:#f87171;font-size:0.75rem;cursor:pointer;">Revoke</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:0.78rem;color:#475569;margin-top:0.75rem;">Revoking a device immediately invalidates its config. It cannot reconnect unless you generate a new config for it.</p>
+    </section>
+
+    <div style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+      <a href="/demos/" style="color:#64748b;font-size:0.85rem;">&#8592; All Demos</a>
+      <a href="/demos/high-availability" style="color:#64748b;font-size:0.85rem;">High Availability Demo &#8594;</a>
+    </div>
+
+  </article>
+
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/docs/" style="color:#64748b;font-size:0.85rem;">Docs</a>
+        <a href="/pricing" style="color:#64748b;font-size:0.85rem;">Pricing</a>
+        <a href="/trust" style="color:#64748b;font-size:0.85rem;">Trust</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy</a>
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+
+  <script src="/modal.js"></script>
+  <script>
+    document.getElementById('init-ts').textContent = new Date().toLocaleTimeString();
+
+    /* Platform switcher */
+    const platforms = ['windows','mac','ios','android','linux'];
+    function switchPlatform(p, btn) {
+      // Update tab active state
+      document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      // Show/hide step-2 panels
+      platforms.forEach(id => {
+        const el2 = document.getElementById('platform-' + id);
+        const el3 = document.getElementById('platform-' + id + '-3');
+        if (el2) el2.classList.toggle('active', id === p);
+        if (el3) el3.classList.toggle('active', id === p);
+      });
+    }
+
+    /* Device selector */
+    let currentDevice = { id: 'laptop', icon: '💻', name: 'Your Laptop' };
+    let connectionState = 'disconnected'; // disconnected | connecting | connected
+
+    function selectDevice(id, icon, name) {
+      if (connectionState !== 'disconnected') return;
+      currentDevice = { id, icon, name };
+      document.getElementById('device-icon').textContent = icon;
+      document.getElementById('device-name').textContent = name;
+      // Highlight selected small device
+      platforms.forEach(() => {});
+      ['laptop','phone','tablet','desktop','pi'].forEach(d => {
+        document.getElementById('dev-' + d).classList.remove('on');
+      });
+      document.getElementById('dev-' + id).classList.add('on');
+    }
+
+    /* Log helper */
+    function logLine(cls, msg) {
+      const log = document.getElementById('vpn-log');
+      const ts = new Date().toLocaleTimeString();
+      const line = document.createElement('div');
+      line.className = 'vpn-log-line ' + cls;
+      line.innerHTML = `<span class="ts">${ts}</span><span class="msg">${msg}</span>`;
+      log.insertBefore(line, log.firstChild);
+    }
+
+    /* Connection simulation */
+    function setPill(state) {
+      const pill = document.getElementById('device-pill');
+      const label = document.getElementById('pill-label');
+      const tunnel = document.getElementById('tunnel-line');
+      const tunnelLabel = document.getElementById('tunnel-label');
+      const device = document.getElementById('demo-device');
+
+      pill.className = 'vpn-pill ' + state;
+      tunnel.className = 'vpn-tunnel-line' + (state === 'connected' ? ' active' : '');
+      tunnelLabel.className = 'vpn-tunnel-label' + (state === 'connected' ? ' active' : '');
+      device.className = 'vpn-device' + (state === 'connected' ? ' connected' : '');
+
+      if (state === 'disconnected') { label.textContent = 'Not Connected'; pill.innerHTML = '<span class="dot"></span>Not Connected'; }
+      if (state === 'connecting')   { label.textContent = 'Connecting…';   pill.innerHTML = '<span class="dot"></span>Connecting…'; }
+      if (state === 'connected')    { label.textContent = 'Connected';      pill.innerHTML = '<span class="dot"></span>Connected'; }
+    }
+
+    function doConnect() {
+      if (connectionState !== 'disconnected') return;
+      connectionState = 'connecting';
+      document.getElementById('btn-connect').disabled = true;
+      setPill('connecting');
+      logLine('warn', currentDevice.name + ' — handshake initiated');
+
+      setTimeout(() => {
+        logLine('info', 'Verifying device config…');
+      }, 600);
+
+      setTimeout(() => {
+        logLine('ok', 'Handshake complete — encrypted tunnel established');
+        setPill('connected');
+        connectionState = 'connected';
+        document.getElementById('btn-disconnect').disabled = false;
+        ['laptop','phone','tablet','desktop','pi'].forEach(d => {
+          if ('dev-' + d === 'dev-' + currentDevice.id) {
+            document.getElementById('dev-' + d).classList.add('on');
+          }
+        });
+      }, 1600);
+    }
+
+    function doDisconnect() {
+      if (connectionState !== 'connected') return;
+      connectionState = 'disconnected';
+      logLine('warn', currentDevice.name + ' — disconnected');
+      setPill('disconnected');
+      document.getElementById('btn-connect').disabled = false;
+      document.getElementById('btn-disconnect').disabled = true;
+      ['laptop','phone','tablet','desktop','pi'].forEach(d => {
+        document.getElementById('dev-' + d).classList.remove('on');
+      });
+    }
+  </script>
+</body>
+</html>

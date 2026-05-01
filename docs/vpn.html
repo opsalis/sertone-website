@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VPN Server — Sertone Docs</title>
+  <meta name="description" content="Every Sertone gateway includes a built-in VPN server. Connect any device securely from anywhere — no third-party VPN service required.">
+  <meta name="keywords" content="Sertone VPN, built-in VPN server, secure remote access, WireGuard VPN, gateway VPN">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/vpn">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/vpn">
+  <meta property="og:title" content="VPN Server — Sertone Docs">
+  <meta property="og:description" content="Every Sertone gateway includes a built-in VPN server. Connect your devices securely from anywhere.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="VPN Server — Sertone Docs">
+  <meta name="twitter:description" content="Built-in VPN server in every Sertone gateway. Connect any device securely from anywhere.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "VPN Server — Sertone",
+    "description": "Every Sertone gateway includes a built-in VPN server. Connect any device securely from anywhere — no third-party VPN service required.",
+    "url": "https://sertone.net/docs/vpn",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Reliability &amp; Access</div>
+        <a href="/docs/high-availability" class="nav-link">High Availability</a>
+        <a href="/docs/vpn" class="nav-link active">VPN Server</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>VPN Server</h1>
+      <p class="lead">Your Sertone gateway includes a built-in VPN server. Any device you own — laptop, phone, tablet — can connect to your gateway securely from anywhere in the world. No third-party VPN subscription, no extra software to install on the server side. It is already running.</p>
+
+      <h2 id="what-you-get">What You Get</h2>
+      <p>Every Sertone gateway runs a VPN server that accepts connections from your devices. Once a device is connected:</p>
+      <ul>
+        <li><strong>Secure remote access</strong> — manage your gateway from anywhere as if you were on the same local network. Access the admin panel, monitor services, and adjust settings without exposing your gateway to the public internet.</li>
+        <li><strong>Encrypted tunnel</strong> — all traffic between your device and your gateway is fully encrypted. Nobody on the network between you can see what you are doing.</li>
+        <li><strong>Up to 253 devices</strong> — connect laptops, phones, tablets, or servers. Each gets its own config and can be revoked individually at any time.</li>
+        <li><strong>Works everywhere</strong> — WireGuard clients are available for Windows, macOS, iOS, Android, and Linux. The same config works on all of them.</li>
+      </ul>
+
+      <div class="callout callout-info">
+        <strong>No subscription, no third-party service.</strong> The VPN server is part of your Sertone gateway and runs on your own machine. You are not paying for a VPN service — you own the server.
+      </div>
+
+      <h2 id="how-to-connect">How to Connect a Device</h2>
+
+      <h3>Step 1 — Get your VPN config</h3>
+      <p>In your gateway's admin panel, go to <strong>Settings &rarr; VPN</strong>. Click <strong>Generate config</strong>. A <code>.conf</code> file downloads to your device immediately. Each device should have its own config — do not share config files between devices.</p>
+
+      <h3>Step 2 — Install WireGuard</h3>
+      <p>Download the free WireGuard client for your device:</p>
+      <ul>
+        <li><a href="https://www.wireguard.com/install/" target="_blank" rel="noopener">Windows</a> — official installer from wireguard.com</li>
+        <li><a href="https://www.wireguard.com/install/" target="_blank" rel="noopener">macOS</a> — available on the Mac App Store or via Homebrew</li>
+        <li><a href="https://www.wireguard.com/install/" target="_blank" rel="noopener">iOS</a> — WireGuard app on the App Store</li>
+        <li><a href="https://www.wireguard.com/install/" target="_blank" rel="noopener">Android</a> — WireGuard app on Google Play</li>
+        <li><a href="https://www.wireguard.com/install/" target="_blank" rel="noopener">Linux</a> — available in all major package managers</li>
+      </ul>
+
+      <h3>Step 3 — Import and connect</h3>
+      <p>Open WireGuard, click <strong>Add tunnel</strong> (or the + button on mobile), and select the <code>.conf</code> file you downloaded. Then click <strong>Activate</strong>. You are connected.</p>
+
+      <h2 id="firewall">Firewall Note</h2>
+      <p>If your gateway machine is behind a firewall or router, you need to allow inbound UDP traffic on port <strong>51820</strong> and forward it to your gateway machine. This is the only port the VPN server uses.</p>
+      <p>If your gateway is on a cloud server with a firewall (AWS security group, DigitalOcean firewall, Hetzner firewall rules, etc.), add a rule to allow UDP port 51820 from anywhere.</p>
+
+      <h2 id="managing-clients">Managing Connected Devices</h2>
+      <p>In <strong>Settings &rarr; VPN</strong> you can see:</p>
+      <ul>
+        <li>All devices that have a config — whether or not they are currently connected</li>
+        <li>Last seen time for each device (when it last made a handshake)</li>
+        <li>Which devices are currently active</li>
+      </ul>
+      <p>To <strong>disconnect a device permanently</strong>, click <strong>Revoke</strong> next to it. Its config immediately stops working. The device cannot reconnect unless you generate a new config for it.</p>
+      <p>To <strong>rotate a device's config</strong> (e.g. if the config file was lost or compromised), click <strong>Reset config</strong>. A new config is generated and the old one is invalidated immediately.</p>
+
+      <h2 id="faq">Frequently Asked Questions</h2>
+
+      <h3>Does the VPN affect my API traffic?</h3>
+      <p>No. The VPN is a separate channel for managing your gateway. API calls from consumers go through the Sertone network as normal — they are unaffected by whether you have the VPN active.</p>
+
+      <h3>Can I use the VPN as a general internet VPN?</h3>
+      <p>By default, only traffic destined for your gateway's local network routes through the VPN. Your general internet traffic goes through your regular connection. If you want to route all your internet traffic through your gateway, you can enable full-tunnel mode in your WireGuard client by changing the <strong>Allowed IPs</strong> setting to <code>0.0.0.0/0</code> in the imported config.</p>
+
+      <h3>Does my gateway need a public IP for the VPN to work?</h3>
+      <p>Yes — your gateway machine needs a reachable address so your devices can connect to it. A public IP or a domain name pointing to it is required. If your gateway is behind NAT (e.g., a home router), you will need to set up port forwarding for UDP port 51820.</p>
+
+      <h3>How many devices can connect at the same time?</h3>
+      <p>Up to 253 devices can have configs. There is no limit on how many can be connected simultaneously.</p>
+
+      <h3>Is my VPN traffic logged?</h3>
+      <p>No. Your gateway does not log VPN traffic. The gateway is yours — it runs on your machine, and only you have access to it.</p>
+
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <nav>
+        <a href="#what-you-get">What You Get</a>
+        <a href="#how-to-connect">How to Connect a Device</a>
+        <a href="#firewall">Firewall Note</a>
+        <a href="#managing-clients">Managing Devices</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>
