@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wallet Management — Sertone Docs | USDC Wallet on Base L2</title>
-  <meta name="description" content="Your Sertone wallet is created automatically. You hold your own keys. Manage USDC funds, export backups, and view transaction history from the web console.">
-  <meta name="keywords" content="USDC wallet, Base L2 wallet, API payments wallet, Sertone wallet, manage wallet">
+  <title>Wallet Management — Sertone Docs | Your USDC Wallet</title>
+  <meta name="description" content="Your Sertone control center includes a built-in USDC wallet. Add funds with Visa, Mastercard, or a crypto transfer. You hold your own keys.">
+  <meta name="keywords" content="USDC wallet, buy USDC with Visa, Mastercard crypto, Coinbase onramp, Sertone wallet, API payments wallet">
   <meta name="author" content="Sertone">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://sertone.net/docs/wallet">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://sertone.net/docs/wallet">
-  <meta property="og:title" content="Wallet Management — Sertone Docs | USDC Wallet on Base L2">
-  <meta property="og:description" content="Your Sertone wallet is created automatically. You hold your own keys. Manage USDC funds and export backups.">
+  <meta property="og:title" content="Wallet Management — Sertone Docs | Your USDC Wallet">
+  <meta property="og:description" content="Built-in USDC wallet. Add funds with Visa, Mastercard, or a crypto transfer. You hold your own keys.">
   <meta property="og:site_name" content="Sertone">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Wallet Management — Sertone Docs">
-  <meta name="twitter:description" content="Your Sertone wallet is yours — you hold your own keys. Manage USDC on Base L2.">
+  <meta name="twitter:description" content="Built-in USDC wallet. Add funds with a credit card or crypto. You hold your own keys.">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Wallet Management — Sertone",
-    "description": "Your Sertone wallet is created automatically. You hold your own keys. Manage USDC funds, export backups, and view transaction history.",
+    "description": "Your Sertone control center includes a built-in USDC wallet. Add funds with Visa, Mastercard, or a crypto transfer. You hold your own keys.",
     "url": "https://sertone.net/docs/wallet",
     "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
   }
@@ -57,13 +57,14 @@
         <div class="nav-section-title">Selling APIs</div>
         <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
         <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
       </div>
       <div class="nav-section">
         <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
         <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
         <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
         <a href="/docs/sdks" class="nav-link">SDKs</a>
-        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
       </div>
       <div class="nav-section">
         <div class="nav-section-title">Reliability &amp; Access</div>
@@ -73,13 +74,15 @@
       <div class="nav-section">
         <div class="nav-section-title">Account</div>
         <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
         <a href="/docs/alerts" class="nav-link">Alerts</a>
+        <a href="/docs/wallet" class="nav-link active">Wallet</a>
       </div>
       <div class="nav-section">
-        <div class="nav-section-title">Extend the Platform</div>
-        <a href="/docs/plugins" class="nav-link">Plugin System</a>
+        <div class="nav-section-title">Advanced</div>
+        <a href="/docs/agents" class="nav-link">Agents</a>
+        <a href="/docs/phone-recovery" class="nav-link">Phone Recovery Key</a>
       </div>
-
       <div class="nav-section">
         <div class="nav-section-title">Tutorials</div>
         <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
@@ -96,25 +99,101 @@
     </aside>
 
     <main class="docs-content">
-      <h1>Wallet Management</h1>
-      <p class="lead">Your wallet is created automatically when you set up your control center. Your deposit address is shown in the Finance tab.</p>
+      <h1>Wallet</h1>
+      <p class="lead">Your control center includes a built-in wallet. It is created automatically during setup — no sign-up, no exchange account needed. You hold your own keys.</p>
 
-      <p>For full details on funding, withdrawing, and wallet security, see <a href="/docs/funding">Funding &amp; Withdrawing</a>.</p>
+      <h2 id="your-wallet">What your wallet is</h2>
+      <p>The wallet is a standard blockchain address generated on your machine during first setup. The private key never leaves your control center. Sertone has no access to it.</p>
+      <p>The wallet holds USDC and USDT. All API payments — whether you are buying or selling — flow through it automatically. There is nothing to configure.</p>
+
+      <div class="info-box">
+        Your deposit address is visible in the <strong>Finance</strong> tab of your control center web console.
+      </div>
+
+      <h2 id="adding-funds">Adding funds</h2>
+      <p>There are two ways to fund your wallet.</p>
+
+      <h3 id="card">Option 1: Buy with Visa or Mastercard</h3>
+      <p>The easiest way. Click <strong>Buy USDC</strong> in the Finance tab. This opens a secure Coinbase-powered checkout where you enter your card details and the amount you want. USDC arrives in your wallet within a few minutes. No crypto experience needed.</p>
+
+      <ul>
+        <li>Accepts Visa and Mastercard</li>
+        <li>Minimum purchase: $1</li>
+        <li>Your card details go directly to Coinbase — Sertone never sees them</li>
+        <li>USDC arrives in your wallet, ready to use immediately</li>
+      </ul>
+
+      <h3 id="transfer">Option 2: Transfer USDC or USDT from another wallet</h3>
+      <p>If you already hold USDC or USDT on the blockchain, transfer it directly to your deposit address shown in the Finance tab.</p>
+
+      <div class="warn-box">
+        <strong>Important:</strong> Only send USDC or USDT on the correct blockchain network. Sending tokens on the wrong network will result in permanent loss. Your deposit address and the correct network are both shown in the Finance tab.
+      </div>
+
+      <h2 id="spending">How spending works</h2>
+      <p>When you call a paid API through the Sertone network, the cost is deducted from your wallet balance automatically. There is no separate billing account, no invoices, and no monthly fees.</p>
+      <p>You control your spending. If your balance runs out, API calls stop — your wallet can never go negative.</p>
+
+      <h2 id="earning">How earnings work</h2>
+      <p>When a consumer calls one of your registered APIs, the payment goes into your wallet immediately after the call settles. Settlement is automatic — you do not need to approve or trigger it.</p>
+      <p>The settlement is 95% of the API price you set. 5% is the platform fee, deducted automatically. Your 95% lands in your wallet.</p>
+      <p>To move earnings to an external wallet or exchange, use the <strong>Withdraw</strong> button in the Finance tab. See <a href="/docs/funding">Funding &amp; Withdrawing</a> for full details.</p>
+
+      <h2 id="usdt">USDC and USDT</h2>
+      <p>Your wallet supports both USDC and USDT. Both are accepted for payments and both accumulate when you earn from API sales. You can hold both currencies in the same wallet simultaneously.</p>
+      <p>When buying with a credit card (Option 1 above), the purchase arrives as USDC.</p>
+
+      <h2 id="security">Security</h2>
+
+      <h3>Your keys, your funds</h3>
+      <p>The private key is generated on your machine and encrypted with your password. It is never transmitted anywhere. If Sertone ceased to exist tomorrow, your funds would still be accessible using standard blockchain tools and your exported key.</p>
+
+      <h3>Backup</h3>
+      <p>Your wallet is included in the control center's automatic encrypted backup. If you lose your machine, you can restore from backup and recover your wallet and balance. Set up backups in <strong>Settings &rsaquo; Backup</strong>.</p>
+
+      <p>You can also export your wallet key manually at any time from the Finance tab. Store the export offline in a safe location.</p>
+
+      <h3>Phone recovery key</h3>
+      <p>For an additional layer of protection, you can register a phone recovery key. This allows account recovery via an SMS code if you lose your password. See <a href="/docs/phone-recovery">Phone Recovery Key</a> for setup instructions.</p>
+
+      <h2 id="faq">Frequently asked questions</h2>
+
+      <h3>Do I need a crypto wallet app?</h3>
+      <p>No. Everything is built into the control center. You never need to install MetaMask, a hardware wallet, or any other tool to use Sertone. If you want to use an external wallet for withdrawals, you can — but it is not required.</p>
+
+      <h3>Is there a minimum balance?</h3>
+      <p>No minimum balance to hold. API calls require enough balance to cover the call cost. The Finance tab always shows your current balance.</p>
+
+      <h3>Can I see my transaction history?</h3>
+      <p>Yes. The Finance tab shows a full log of all payments, earnings, and withdrawals with timestamps and amounts.</p>
+
+      <h3>What if I forget my password?</h3>
+      <p>If you set up a phone recovery key, you can use it to reset your password and regain access. Without a recovery key, access requires your backup file and password. This is a feature, not a bug: only you can access your funds.</p>
 
       <nav class="docs-page-nav">
-        <a href="/docs/pricing-apis" class="page-nav-link">
+        <a href="/docs/alerts" class="page-nav-link">
           <span class="label">Previous</span>
-          <span class="title">Pricing</span>
+          <span class="title">Alerts</span>
         </a>
         <a href="/docs/funding" class="page-nav-link next">
           <span class="label">Next</span>
           <span class="title">Funding &amp; Withdrawing</span>
         </a>
       </nav>
+
     </main>
 
     <aside class="docs-toc">
       <div class="toc-title">On this page</div>
+      <a href="#your-wallet" class="toc-link">What your wallet is</a>
+      <a href="#adding-funds" class="toc-link">Adding funds</a>
+      <a href="#card" class="toc-link sub">Buy with Visa/Mastercard</a>
+      <a href="#transfer" class="toc-link sub">Transfer USDC/USDT</a>
+      <a href="#spending" class="toc-link">How spending works</a>
+      <a href="#earning" class="toc-link">How earnings work</a>
+      <a href="#usdt" class="toc-link">USDC and USDT</a>
+      <a href="#security" class="toc-link">Security</a>
+      <a href="#faq" class="toc-link">FAQ</a>
     </aside>
 
   </div>

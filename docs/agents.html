@@ -192,33 +192,34 @@
         </tbody>
       </table>
 
-      <h2 id="install">Installing the Agent</h2>
+      <h2 id="install">Setting Up an Agent</h2>
 
       <h3>Requirements</h3>
       <ul>
-        <li>Docker 20.10+ on the machine where your service runs</li>
+        <li>Your Sertone control center already installed and running</li>
+        <li>Docker 20.10+ on the machine where your private service runs</li>
         <li>Outbound HTTPS access from that machine (port 443)</li>
-        <li>Your Sertone control center's address and a pairing token</li>
       </ul>
 
       <h3>Step 1: Generate a pairing token</h3>
-      <p>In your control center's web console, navigate to <strong>Agents &rsaquo; Add Agent</strong>. Enter a name for the agent (e.g. "Minecraft Server") and click <strong>Generate Token</strong>. Copy the token — it is shown only once.</p>
+      <p>In your control center's web console, open <strong>My Services</strong> and select <strong>Add Agent Connection</strong>. Give it a name (e.g. "Minecraft Server") and generate a pairing token. Copy the token — it is shown only once.</p>
 
       <h3>Step 2: Run the agent</h3>
+      <p>On the machine where your private service runs, start the agent process using the pairing token from step 1 and the address of your control center:</p>
       <pre><code>docker run -d \
   --name sertone-agent \
   --network host \
   -e PAIRING_TOKEN=your_token_here \
-  -e CONTROL_CENTER=https://your-control-center:3002 \
-  sertone/agent:latest</code></pre>
+  -e CONTROL_CENTER=https://your-control-center-address \
+  sertonenet/gateway:latest --mode agent</code></pre>
 
-      <p>The agent starts, connects to your control center, and appears as "Connected" in the Agents panel within a few seconds.</p>
+      <p>The agent connects to your control center and appears as "Connected" within a few seconds.</p>
 
       <h3>Step 3: Register APIs pointing to your local service</h3>
-      <p>In the control center, go to <strong>Agents &rsaquo; your agent &rsaquo; Add API</strong>. Configure:</p>
+      <p>Back in the control center, configure the endpoints you want to expose:</p>
       <ul>
         <li><strong>API path</strong> — the path consumers will call (e.g., <code>/status</code>)</li>
-        <li><strong>Target URL</strong> — where the agent should forward requests (e.g., <code>http://localhost:8080/api/status</code>)</li>
+        <li><strong>Target URL</strong> — where the agent should forward requests on the local machine (e.g., <code>http://localhost:8080/api/status</code>)</li>
         <li><strong>Method</strong> — GET, POST, etc.</li>
         <li><strong>Price</strong> — per-call price in USDC</li>
       </ul>
@@ -276,7 +277,7 @@
       <p>Consumers call the APIs at normal Sertone API prices (e.g., $0.001/call). The plugin author earns 95% of every call, settled automatically in USDC.</p>
 
       <div class="info-box">
-        See the <a href="/demos/agents">Agents demo</a> for a live interactive example showing this flow.
+        See the <a href="/demos/a2a">A2A Agent demo</a> for a live interactive example of how agents discover and call each other through the network.
       </div>
 
       <h2 id="faq">Frequently asked questions</h2>
@@ -298,9 +299,9 @@
 
       <div class="next-steps">
         <h2>Next steps</h2>
-        <a href="/demos/agents" class="next-link">Live demo →</a>
         <a href="/docs/registering-apis" class="next-link">Registering APIs →</a>
         <a href="/docs/quick-start" class="next-link">Quick Start →</a>
+        <a href="/demos/a2a" class="next-link">A2A Agent demo →</a>
       </div>
 
     </main>
