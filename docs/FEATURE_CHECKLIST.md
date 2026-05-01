@@ -231,6 +231,25 @@ This file is read at the start of every session. The gate is the source of truth
 
 ---
 
+## The Genesis Block Principle
+
+> Like Satoshi who mined the first block himself, we will run a handful of wrapper nodes in k3s
+> for a few weeks after launch to seed the network with peers and catalog content.
+> Then those nodes go dark — permanently.
+>
+> After that, Sertone has no servers, no infrastructure, no presence on the network.
+> Nothing to subpoena. Nothing to shut down. Nothing to acquire.
+> The network lives on whatever machines strangers choose to run.
+>
+> **This means the following must work perfectly before k3s goes dark:**
+> - Bootstrap via GitHub manifest — the only way new wrappers find the network once seeds disappear
+> - Peer gossip and self-healing mesh — the network must hold itself together without seeded nodes
+> - L2 catalog (FQDNRegistry + CatalogRegistry) — the permanent record that outlives all k3s nodes
+> - Settlement contracts — run forever, immutable, no operator needed
+> - The wrapper itself — must be complete, correct, and permanent from day one
+
+---
+
 ## Pre-Launch Sequence
 
 > **Founding principle:** We build things to last from day one. No interim patches, no "fix it later."
