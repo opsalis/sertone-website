@@ -1,6 +1,6 @@
 # Sertone Feature → Docs → Demo Checklist
 
-> Last updated: 2026-05-01
+> Last updated: 2026-05-02
 > Source: wrapper source code audit (panel.js, panel/server.ts, index.ts, panel/db.ts, panel/public/index.html)
 > Purpose: decide what to document publicly / hide / build demo / add E2E test
 
@@ -27,7 +27,7 @@
 > This is not another service type. UltraNet equals ALL other features combined in strategic importance.
 >
 > UltraNet is a private internet running inside the internet. Any TCP/IP service — web, email, database,
-> game server, anything — can be hosted behind a control center, registered under a .gtw mesh domain,
+> game server, anything — can be hosted behind a control center, registered under a .btw mesh domain,
 > and reached anonymously by any other control center worldwide. Zero IP exposure at every hop.
 > Consumer's IP never reaches any server, ever. Not the provider, not CDNs, not image hosts — nobody.
 >
@@ -35,12 +35,12 @@
 
 | Component | Code | Docs | Demo | Notes |
 |-----------|------|------|------|-------|
-| .gtw domain registration (FQDNRegistry.sol) | 🚧 | — | — | Contract not yet deployed |
+| .btw domain registration (FQDNRegistry.sol) | 🚧 | — | — | Contract not yet deployed |
 | FQDN resolution (RAM cache + L2 query) | 🚧 | — | — | fqdn-resolver.ts — not yet created |
 | Mesh TCP exit proxy (provider side) | 🚧 | — | — | mesh-exit-proxy.ts — not yet created |
 | UltraNet tab in panel (subscription mgmt) | 🚧 | — | — | Lists subscriptions, add/cancel — NOT a browser |
 | Browser applet (port 3333, encrypted) | 🚧 | — | — | Phase 4 — after core backend |
-| DNS interceptor (.gtw → virtual IP) | 🚧 | — | — | dns-interceptor.ts — PRIMARY access path |
+| DNS interceptor (.btw → virtual IP) | 🚧 | — | — | dns-interceptor.ts — PRIMARY access path |
 | Captive portal (subscribe if not subscribed) | 🚧 | — | — | Served by wrapper when no valid subscription |
 | Exit node (route external internet traffic) | 🚧 | — | — | External anonymity — mesh participant as exit |
 | Subscription tiers (FQDNRegistry blob) | 🚧 | — | — | free/1h/1d/1w/1mo/1yr — provider defines subset |
@@ -78,7 +78,7 @@ Consumer app (browser, game, database tool, anything)
 WireGuard interface (10.13.13.0/24)
   ↓
 dns-interceptor.ts at 10.13.13.1:53
-  .gtw query → FQDNRegistry L2 resolve → assign virtual IP 10.13.14.x
+  .btw query → FQDNRegistry L2 resolve → assign virtual IP 10.13.14.x
   external query → forwarded to 1.1.1.1
   ↓
 Wrapper intercepts TCP to 10.13.14.x
@@ -92,6 +92,42 @@ Provider receives          Consumer picks tier, pays
 TCP stream                 On success: access granted
 App gets response          On failure: error shown,
                            screen stays until new FQDN typed
+```
+
+#### TLD namespace — locked 2026-05-02
+
+**Root TLD: `.btw` only.** Single root, one namespace, one DNS interceptor rule.
+
+`.btw` does not exist in the ICANN registry. Any sub-structure under it (`co.btw`, `org.btw`, etc.)
+also cannot exist on the internet. Collision with real DNS is structurally impossible.
+
+**Approved TLDs (initial set):**
+
+| TLD | Intended use | Example |
+|-----|-------------|---------|
+| `btw` | generic | `myservice.btw` |
+| `co.btw` | commercial | `myshop.co.btw` |
+| `org.btw` | organization / non-profit | `myfoundation.org.btw` |
+| `dev.btw` | developer tools / APIs | `myapi.dev.btw` |
+| `net.btw` | network services | `myrelay.net.btw` |
+
+**How new TLDs are added:**
+
+The `FQDNRegistry.sol` contract has an owner-only function:
+```solidity
+function approveTld(string calldata tld) external onlyOwner;
+function revokeTld(string calldata tld) external onlyOwner;
+```
+Adding a new TLD (`gov.btw`, `edu.btw`, etc.) requires a single on-chain transaction
+from the contract owner wallet. No wrapper update needed — wrappers query
+`approvedTlds[tld]` on registration. The DNS interceptor never changes: it only
+checks the root (`.btw`). Second-level TLD validation happens at registration time
+in the contract, not at DNS resolution time.
+
+**DNS interceptor rule — never changes regardless of how many TLDs are added:**
+```typescript
+const isUltraNet = hostname.endsWith('.btw');
+// Works for: myservice.btw, myshop.co.btw, myapi.dev.btw — all caught by one rule
 ```
 
 #### Payment model — subscription only, no per-use
@@ -169,7 +205,7 @@ Free tier: zero settlement. No USDC moves. Platform takes nothing.
 | Cancel / renew subscription | A way to access any service |
 | View subscription history | |
 
-The captive portal (served by wrapper when consumer hits an unsubscribed .gtw address
+The captive portal (served by wrapper when consumer hits an unsubscribed .btw address
 through VPN) is an alternative entry point for first-time subscription.
 Both paths lead to the same SQLite record and the same mesh access.
 
@@ -179,16 +215,16 @@ Both paths lead to the same SQLite record and the same mesh access.
 
 ### 🚦 UltraNet Ship Gate — ALL must be ✅ before any public page, tweet, or mention
 
-- [ ] `FQDNRegistry.sol` deployed on ops chain — blob includes tiers array, address hardcoded in wrapper
+- [ ] `FQDNRegistry.sol` deployed on ops chain — blob includes tiers array, `approveTld()`/`revokeTld()` owner functions, initial TLD set registered (`btw`, `co.btw`, `org.btw`, `dev.btw`, `net.btw`)
 - [ ] `fqdn-resolver.ts` built, unit tested (resolve / cache / eviction / re-query on failure)
 - [ ] `mesh-exit-proxy.ts` built, unit tested (TCP stream → backend piping, subscription check)
-- [ ] `dns-interceptor.ts` built (`.gtw` → virtual IP 10.13.14.x, external DNS → 1.1.1.1)
+- [ ] `dns-interceptor.ts` built (`.btw` → virtual IP 10.13.14.x, external DNS → 1.1.1.1)
 - [ ] Captive portal built and served by wrapper (tier picker HTML, payment, success/error flow)
 - [ ] UltraNet tab in panel: subscription list + add/cancel (no browsing UI)
 - [ ] `mesh_subscriptions` SQLite table implemented with free tier one-time tracking
-- [ ] End-to-end test PASSES: CX43 registers `test.gtw` with tiers, Finland connects via VPN, captive portal appears, free tier claimed, TCP stream flows, zero IPs in logs
+- [ ] End-to-end test PASSES: CX43 registers `test.btw` with tiers, Finland connects via VPN, captive portal appears, free tier claimed, TCP stream flows, zero IPs in logs
 - [ ] CI build ships updated wrapper image (Watchtower auto-deploys to both dev nodes)
-- [ ] Manual test: wrapper on same machine as browser — local WireGuard, `.gtw` resolves, service loads
+- [ ] Manual test: wrapper on same machine as browser — local WireGuard, `.btw` resolves, service loads
 
 **Until every box above is checked: no landing page, no teaser, no blog post, no tweet, nothing.**
 
