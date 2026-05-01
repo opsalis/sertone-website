@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High Availability — Sertone Docs</title>
+  <meta name="description" content="Run multiple Sertone gateways for zero-downtime service delivery. Automatic failover, live updates, and load distribution — no orchestration complexity.">
+  <meta name="keywords" content="Sertone high availability, gateway redundancy, automatic failover, zero downtime, Sertone HA, service uptime">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/high-availability">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/high-availability">
+  <meta property="og:title" content="High Availability — Sertone Docs">
+  <meta property="og:description" content="Run multiple Sertone gateways for zero-downtime service delivery. Automatic failover and live updates.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="High Availability — Sertone Docs">
+  <meta name="twitter:description" content="Run multiple Sertone gateways for zero-downtime service delivery.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "High Availability — Sertone",
+    "description": "Run multiple Sertone gateways for zero-downtime service delivery. Automatic failover, live updates, and load distribution.",
+    "url": "https://sertone.net/docs/high-availability",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Mesh Network</div>
+        <a href="/docs/ultranet" class="nav-link">Mesh Browsing</a>
+        <a href="/docs/high-availability" class="nav-link active">High Availability</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>High Availability</h1>
+      <p class="lead">Run multiple Sertone gateways to eliminate single points of failure. When one gateway goes offline — for maintenance, updates, or an unexpected outage — the others keep your services running without interruption.</p>
+
+      <h2 id="overview">Overview</h2>
+      <p>A single Sertone gateway is already highly reliable — it runs as a self-contained Docker container with automatic recovery. But for operators who need guaranteed uptime or need to apply updates without any service interruption, running multiple gateways in a cluster is the recommended setup.</p>
+      <p>Gateways in an HA cluster:</p>
+      <ul>
+        <li><strong>Share load</strong> — consumers can connect to any gateway in the cluster and receive the same services.</li>
+        <li><strong>Detect each other</strong> — gateways communicate over the Sertone Global Network itself. No additional infrastructure is needed.</li>
+        <li><strong>Update live</strong> — you can roll out a new version to one gateway while others continue serving. Once the updated gateway is healthy, the next one updates.</li>
+        <li><strong>Survive individual failures</strong> — if one gateway loses power, crashes, or loses its internet connection, consumers reroute to another within seconds.</li>
+      </ul>
+
+      <h2 id="how-it-works">How It Works</h2>
+      <p>Each gateway in an HA cluster has its own identity on the network — a unique address that consumers and peers can reach it by. All gateways in a cluster register the same services and share the same catalog. When a consumer calls a service, any gateway in the cluster can handle the request.</p>
+      <p>Gateways automatically discover each other through the mesh network and maintain connections between themselves. This connection is used to:</p>
+      <ul>
+        <li>Synchronize service registration and catalog metadata</li>
+        <li>Forward incoming requests when a specific service is available on a peer but not locally</li>
+        <li>Signal availability — peers mark each other as healthy or unreachable based on live connection state</li>
+      </ul>
+
+      <div class="callout callout-info">
+        <strong>No shared database required.</strong> Each gateway maintains its own local state. There is no distributed database, no consensus cluster, no Zookeeper. Coordination happens over the mesh using the same encrypted protocol used for API calls.
+      </div>
+
+      <h2 id="deployment">Deployment Setup</h2>
+      <p>To run an HA cluster, deploy two or more Sertone gateways on different machines (or cloud regions). Each gateway is a standard Docker container configured with the same service catalog settings.</p>
+
+      <h3>Minimum setup: 2 gateways</h3>
+      <p>Two gateways give you basic redundancy — if one goes down, the other takes over within seconds. This is sufficient for most use cases.</p>
+
+      <h3>Recommended setup: 3 or more gateways</h3>
+      <p>Three gateways allow one to be taken offline for maintenance while the other two continue serving. This is the recommended setup for production workloads with SLA requirements.</p>
+
+      <h3>Geographic distribution</h3>
+      <p>For global services, distributing gateways across regions reduces latency for consumers in different parts of the world. The Sertone routing layer automatically selects the nearest available gateway.</p>
+
+      <h2 id="live-updates">Zero-Downtime Updates</h2>
+      <p>Sertone gateways use automated container updates — when a new version is available, each gateway updates itself automatically. In an HA cluster, gateways stagger their updates so at least one is always available during the update window.</p>
+      <p>The update process for a single gateway in an HA cluster:</p>
+      <ol>
+        <li>Gateway detects a new version is available.</li>
+        <li>It signals to its peers that it is entering maintenance mode.</li>
+        <li>Peers stop routing new requests to it; in-flight requests complete normally.</li>
+        <li>Gateway updates and restarts — typically takes under 60 seconds.</li>
+        <li>Gateway re-joins the cluster and resumes serving requests.</li>
+        <li>Peers restore it to the active rotation.</li>
+      </ol>
+
+      <h2 id="monitoring">Monitoring an HA Cluster</h2>
+      <p>Your gateway's dashboard shows the cluster status, including how many peers are currently active and their relative health. The <strong>Mesh</strong> section of the dashboard displays:</p>
+      <ul>
+        <li>Active peers — the number of other gateways currently connected</li>
+        <li>Inbound connections — other network participants connected to this gateway</li>
+        <li>Network health — gossip round-trip success rate and latency per peer</li>
+      </ul>
+      <p>If a peer goes offline, the dashboard reflects this within the gossip cycle (typically under 2 minutes). Email alerts can be configured in Settings &rarr; Alerts to notify you when a peer becomes unreachable.</p>
+
+      <h2 id="failover">Failover Behavior for Consumers</h2>
+      <p>Consumers connecting to your service do not need to configure anything for failover to work. The Sertone Global Network handles routing automatically. When a consumer calls a service:</p>
+      <ol>
+        <li>The network identifies all gateways hosting that service.</li>
+        <li>The request is routed to the nearest reachable gateway.</li>
+        <li>If that gateway becomes unreachable mid-request, the consumer's gateway retries via a different peer.</li>
+      </ol>
+      <p>From the consumer's perspective, a failover event is transparent — the API call succeeds, possibly with slightly higher latency during the switchover.</p>
+
+      <h2 id="faq">Frequently Asked Questions</h2>
+
+      <h3>Do all gateways in an HA cluster need to be in the same region?</h3>
+      <p>No. Gateways communicate over the global Sertone network regardless of physical location. In fact, distributing across regions is recommended for better global latency and resilience against regional outages.</p>
+
+      <h3>Can I add or remove gateways from a running cluster?</h3>
+      <p>Yes. Adding a new gateway is as simple as deploying it — it discovers existing cluster members automatically through the mesh. Removing a gateway: shut it down, and remaining peers detect the absence within minutes and adjust routing accordingly.</p>
+
+      <h3>What happens to in-flight API calls during a failover?</h3>
+      <p>Calls that are in progress when a gateway goes down will return an error to the consumer. The consumer SDK retries automatically (configurable — see the SDK documentation). If a request fails, the consumer is not charged.</p>
+
+      <h3>Is there a limit to how many gateways I can run in a cluster?</h3>
+      <p>There is no hard limit. The Sertone mesh protocol is designed to scale to thousands of participants globally. Most operators run between 2 and 10 gateways in a cluster.</p>
+
+      <h3>Can different gateways in a cluster offer different services?</h3>
+      <p>Yes. Each gateway manages its own service catalog independently. You can have some gateways offer the full catalog and others offer a subset, or specialize different gateways for different service types. The network routes consumers to a gateway that offers the service they requested.</p>
+
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <nav>
+        <a href="#overview">Overview</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#deployment">Deployment Setup</a>
+        <a href="#live-updates">Zero-Downtime Updates</a>
+        <a href="#monitoring">Monitoring</a>
+        <a href="#failover">Failover Behavior</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>
