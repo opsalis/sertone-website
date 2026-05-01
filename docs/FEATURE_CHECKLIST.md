@@ -101,34 +101,74 @@ App gets response          On failure: error shown,
 `.btw` does not exist in the ICANN registry. Any sub-structure under it (`co.btw`, `org.btw`, etc.)
 also cannot exist on the internet. Collision with real DNS is structurally impossible.
 
-**Approved TLDs (initial set):**
+**We are the registry for `.btw` — same model as Nominet for `.uk`.**
 
-| TLD | Intended use | Example |
-|-----|-------------|---------|
-| `btw` | generic | `myservice.btw` |
-| `co.btw` | commercial | `myshop.co.btw` |
-| `org.btw` | organization / non-profit | `myfoundation.org.btw` |
-| `dev.btw` | developer tools / APIs | `myapi.dev.btw` |
-| `net.btw` | network services | `myrelay.net.btw` |
+Nominet owns `.uk` and permanently controls `co.uk`, `org.uk`, `gov.uk` — nobody can register
+those as domain names. We own `.btw` and permanently control every second-level TLD under it.
 
-**How new TLDs are added:**
-
-The `FQDNRegistry.sol` contract has an owner-only function:
-```solidity
-function approveTld(string calldata tld) external onlyOwner;
-function revokeTld(string calldata tld) external onlyOwner;
+**Ownership hierarchy:**
 ```
-Adding a new TLD (`gov.btw`, `edu.btw`, etc.) requires a single on-chain transaction
-from the contract owner wallet. No wrapper update needed — wrappers query
-`approvedTlds[tld]` on registration. The DNS interceptor never changes: it only
-checks the root (`.btw`). Second-level TLD validation happens at registration time
-in the contract, not at DNS resolution time.
+.btw                        ← we own (root — hardcoded in wrapper and DNS interceptor)
+  co.btw                    ← we own (reserved forever — cannot be registered by anyone)
+  org.btw                   ← we own
+  dev.btw                   ← we own
+  net.btw                   ← we own
+  gov.btw / edu.btw / ...   ← we add when needed
+    ↓
+    mydomain.co.btw         ← provider registers (pays, owner-signed)
+    myapp.dev.btw           ← provider registers
+      ↓
+      server1.mydomain.co.btw   ← provider controls (free, off-chain in fqdn_port_routes)
+      server2.mydomain.co.btw   ← provider controls (free, off-chain)
+```
+
+**Contract protection — two mappings:**
+```solidity
+mapping(string => bool) public approvedTlds;   // "btw", "co.btw", "org.btw", "dev.btw", "net.btw"
+mapping(string => bool) public reservedLabels; // "co", "org", "dev", "net" — cannot be used as
+                                               // labels when registering directly under .btw
+
+function register(string label, string tld, bytes encryptedData, ...) {
+    require(approvedTlds[tld], "TLD not approved");
+
+    // Prevent theft of second-level namespace:
+    // blocks label="co", tld="btw" → would create co.btw
+    // allows label="mydomain", tld="btw" → creates mydomain.btw
+    if (keccak256(bytes(tld)) == keccak256(bytes("btw"))) {
+        require(!reservedLabels[label], "Reserved second-level label");
+    }
+}
+```
+
+**Adding a new second-level TLD — two owner transactions:**
+```
+registry.approveTld("gov.btw");   // providers can now register under gov.btw
+registry.reserveLabel("gov");     // nobody can steal gov.btw via label=gov under btw
+```
+No wrapper update. No DNS interceptor change. Existing wrappers worldwide pick it up instantly.
 
 **DNS interceptor rule — never changes regardless of how many TLDs are added:**
 ```typescript
 const isUltraNet = hostname.endsWith('.btw');
-// Works for: myservice.btw, myshop.co.btw, myapi.dev.btw — all caught by one rule
+// Catches: myservice.btw, myshop.co.btw, myapi.dev.btw, server1.myapp.co.btw — all in one rule
 ```
+
+**Subdomain resolution — FQDN resolver fallback:**
+
+Providers register their base domain (`mydomain.co.btw`) once. Subdomains (`server1.mydomain.co.btw`)
+are routing rules in the provider's local `fqdn_port_routes` table — zero contract interaction.
+
+```
+Consumer resolves: server1.mydomain.co.btw
+  Step 1: Look up server1.mydomain.co.btw in FQDNRegistry → not found
+  Step 2: Strip leftmost label → look up mydomain.co.btw → FOUND → relayId
+  Circuit opens to provider's wrapper.
+  Exit proxy looks up server1.mydomain.co.btw:port in fqdn_port_routes → backend.
+```
+
+**Subscription covers all subdomains:**
+Subscribing to `mydomain.co.btw` grants access to every subdomain under it.
+Subscription table keyed to the registered base name — one payment, full access.
 
 #### Payment model — subscription only, no per-use
 
