@@ -22,11 +22,14 @@
 
 ## ★ ULTRANET — Strategic Crown Jewel
 
-> **This is not another service type. UltraNet equals ALL other features combined in strategic importance.**
+> **"UltraNet — It's what the internet should have been."**
 >
-> UltraNet is an anonymous TCP/IP internet inside the mesh — any TCP/IP service (web, email, DB, game server,
-> anything) can be hosted behind a control center, registered under a .gtw mesh domain, and reached
-> anonymously by any consumer running a control center. Zero IP exposure. Like Tor but for every protocol.
+> This is not another service type. UltraNet equals ALL other features combined in strategic importance.
+>
+> UltraNet is a private internet running inside the internet. Any TCP/IP service — web, email, database,
+> game server, anything — can be hosted behind a control center, registered under a .gtw mesh domain,
+> and reached anonymously by any other control center worldwide. Zero IP exposure at every hop.
+> Consumer's IP never reaches any server, ever. Not the provider, not CDNs, not image hosts — nobody.
 >
 > **Status: Planned — not yet implemented. Dedicated build session required.**
 
@@ -41,9 +44,10 @@
 | Exit node (route external internet traffic) | 🚧 | — | — | External anonymity — mesh participant as exit |
 | Domain pricing + billing model | 🚧 | — | — | Per-connection or subscription |
 
-**Public framing when ready:** "Anonymous internet access" / "host anything privately" — never mention Tor, onion, hops, or mesh internals.
-
-**Decision needed:** What is the public name for this? "UltraNet"? "Private Web"? Something else?
+**Official name:** UltraNet
+**Official tagline:** *"UltraNet — It's what the internet should have been."*
+**Public framing when ready:** "A private internet inside the internet." — never mention Tor, onion, hops, or mesh internals.
+**Website rule:** No "coming soon" pages until code is shipped.
 
 ---
 
