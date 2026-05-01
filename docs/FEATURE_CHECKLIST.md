@@ -38,11 +38,140 @@
 | .gtw domain registration (FQDNRegistry.sol) | 🚧 | — | — | Contract not yet deployed |
 | FQDN resolution (RAM cache + L2 query) | 🚧 | — | — | fqdn-resolver.ts — not yet created |
 | Mesh TCP exit proxy (provider side) | 🚧 | — | — | mesh-exit-proxy.ts — not yet created |
-| UltraNet browser tab in panel | 🚧 | — | — | URL bar: type service.gtw → fetch → render |
+| UltraNet tab in panel (subscription mgmt) | 🚧 | — | — | Lists subscriptions, add/cancel — NOT a browser |
 | Browser applet (port 3333, encrypted) | 🚧 | — | — | Phase 4 — after core backend |
-| DNS interceptor (.gtw → virtual IP) | 🚧 | — | — | dns-interceptor.ts — for VPN mode |
+| DNS interceptor (.gtw → virtual IP) | 🚧 | — | — | dns-interceptor.ts — PRIMARY access path |
+| Captive portal (subscribe if not subscribed) | 🚧 | — | — | Served by wrapper when no valid subscription |
 | Exit node (route external internet traffic) | 🚧 | — | — | External anonymity — mesh participant as exit |
-| Domain pricing + billing model | 🚧 | — | — | Per-connection or subscription |
+| Subscription tiers (FQDNRegistry blob) | 🚧 | — | — | free/1h/1d/1w/1mo/1yr — provider defines subset |
+
+---
+
+### Architecture — Locked 2026-05-02
+
+#### Access model — VPN is the ONLY universal solution
+
+The UltraNet tab in the panel is for **subscription management only** — not browsing.
+Even for HTTP websites, the consumer must use VPN to access the actual service.
+
+**Why VPN is required:** The panel tab can only do HTTP fetch+render. Any non-HTTP service —
+a game server, a database, an email server, a custom binary protocol — has no other path.
+VPN mode works for every TCP protocol, every application, without exception.
+
+**Three deployment scenarios — all identical from the consumer's perspective:**
+
+| Wrapper location | VPN type | Notes |
+|---|---|---|
+| Remote VPS | Remote WireGuard | Standard VPN client setup |
+| Home server / Raspberry Pi | LAN WireGuard | Local network, low latency |
+| Same PC/Mac as user | Local loopback WireGuard | Same pattern as Cloudflare 1.1.1.1 app — traffic loops through local wrapper |
+
+When wrapper runs on the same PC/Mac, WireGuard creates a local interface (10.13.13.0/24).
+The user's apps connect to it. The wrapper intercepts, routes through the mesh, and returns responses.
+The application cannot distinguish local from remote wrapper.
+
+#### VPN traffic flow
+
+```
+Consumer app (browser, game, database tool, anything)
+  ↓  normal TCP/DNS
+WireGuard interface (10.13.13.0/24)
+  ↓
+dns-interceptor.ts at 10.13.13.1:53
+  .gtw query → FQDNRegistry L2 resolve → assign virtual IP 10.13.14.x
+  external query → forwarded to 1.1.1.1
+  ↓
+Wrapper intercepts TCP to 10.13.14.x
+  Check SQLite: valid subscription for this FQDN?
+  ↓                          ↓
+ YES                          NO
+  ↓                          ↓
+Open mesh circuit        Serve captive portal HTML
+Pipe bytes                 (subscription screen)
+Provider receives          Consumer picks tier, pays
+TCP stream                 On success: access granted
+App gets response          On failure: error shown,
+                           screen stays until new FQDN typed
+```
+
+#### Payment model — subscription only, no per-use
+
+Per-use is not viable for UltraNet. Nobody pays per page load or per song chunk.
+Subscription is the only model that delivers a usable internet experience.
+
+**FQDNRegistry encrypted blob** (AES-256-GCM, CATALOG_BROADCAST_KEY):
+
+```json
+{
+  "label":    "myservice",
+  "tld":      "gtw",
+  "relayId":  "abc123...",
+  "expiresAt": 1234567890,
+  "tiers": [
+    { "id": "free", "duration_hours": 2,    "price_usdc": "0.00" },
+    { "id": "1h",   "duration_hours": 1,    "price_usdc": "0.10" },
+    { "id": "1d",   "duration_hours": 24,   "price_usdc": "0.50" },
+    { "id": "1w",   "duration_hours": 168,  "price_usdc": "2.00" },
+    { "id": "1mo",  "duration_hours": 720,  "price_usdc": "5.00" },
+    { "id": "1yr",  "duration_hours": 8760, "price_usdc": "40.00" }
+  ]
+}
+```
+
+Provider publishes only the tiers they choose. `free` tier is optional.
+`free` tier duration is provider-defined (30 min, 2 hours, 1 day — anything).
+Price data travels inside the FQDN blob — no separate catalog entry, no pre-loading.
+
+#### Price discovery — on demand, never pre-loaded
+
+- No UltraNet entries in the browseable catalog (no Yahoo-style index)
+- Price is fetched on first FQDN resolution only (L2 query → decrypt blob → relayId + tiers)
+- RAM cache holds recently accessed FQDNs with grace-period eviction (5 min after last use)
+- Only what the consumer has actually touched lives in RAM — never the full set
+
+#### Subscription tracking — consumer side only
+
+```sql
+CREATE TABLE mesh_subscriptions (
+  id             INTEGER PRIMARY KEY,
+  fqdn           TEXT NOT NULL,
+  tier_id        TEXT NOT NULL,       -- 'free' | '1h' | '1d' | '1w' | '1mo' | '1yr'
+  subscribed_at  INTEGER NOT NULL,
+  subscribed_until INTEGER NOT NULL,  -- unix timestamp
+  price_paid     TEXT NOT NULL        -- '0.00' for free tier
+);
+```
+
+**Provider never knows the consumer identity.** The provider sees only the last
+intermediate hop's relayId — which belongs to a mesh relay node, not the consumer.
+Multiple consumers routing through the same exit hop look identical.
+Consumer-side SQLite is the sole enforcement authority for subscriptions and free tier.
+
+**Free tier anti-abuse:** Consumer wrapper records `(fqdn, tier_id='free')` after first claim
+and never shows the free tier again for that FQDN. No provider-side tracking —
+doing so would require identifying the consumer, which breaks anonymity. Providers
+set the free tier duration knowing some abuse is possible, as with any free trial.
+
+#### Settlement
+
+Paid tiers: settlement runs **once at subscription purchase** using the existing
+settlement smart contract. 95% to provider, 5% platform. Identical to all other
+Sertone API billing. No new contracts, no new infrastructure.
+
+Free tier: zero settlement. No USDC moves. Platform takes nothing.
+
+#### UltraNet tab — what it IS and IS NOT
+
+| IS | IS NOT |
+|---|---|
+| List active subscriptions with expiry | A browser |
+| Add new subscription (type FQDN → tier picker → pay) | An HTTP fetch tool |
+| Cancel / renew subscription | A way to access any service |
+| View subscription history | |
+
+The captive portal (served by wrapper when consumer hits an unsubscribed .gtw address
+through VPN) is an alternative entry point for first-time subscription.
+Both paths lead to the same SQLite record and the same mesh access.
 
 **Official name:** UltraNet
 **Official tagline:** *"UltraNet — It's what the internet should have been."*
@@ -50,14 +179,16 @@
 
 ### 🚦 UltraNet Ship Gate — ALL must be ✅ before any public page, tweet, or mention
 
-- [ ] `FQDNRegistry.sol` deployed on ops chain and address hardcoded in wrapper
+- [ ] `FQDNRegistry.sol` deployed on ops chain — blob includes tiers array, address hardcoded in wrapper
 - [ ] `fqdn-resolver.ts` built, unit tested (resolve / cache / eviction / re-query on failure)
-- [ ] `mesh-exit-proxy.ts` built, unit tested (TCP stream → backend piping)
-- [ ] `dns-interceptor.ts` built (`.gtw` → virtual IP, external DNS forwarded)
-- [ ] UltraNet tab live in panel UI (URL bar → fetch → render response)
-- [ ] End-to-end test PASSES: CX43 registers `test.gtw`, Finland fetches it, response arrives, zero IPs in logs
+- [ ] `mesh-exit-proxy.ts` built, unit tested (TCP stream → backend piping, subscription check)
+- [ ] `dns-interceptor.ts` built (`.gtw` → virtual IP 10.13.14.x, external DNS → 1.1.1.1)
+- [ ] Captive portal built and served by wrapper (tier picker HTML, payment, success/error flow)
+- [ ] UltraNet tab in panel: subscription list + add/cancel (no browsing UI)
+- [ ] `mesh_subscriptions` SQLite table implemented with free tier one-time tracking
+- [ ] End-to-end test PASSES: CX43 registers `test.gtw` with tiers, Finland connects via VPN, captive portal appears, free tier claimed, TCP stream flows, zero IPs in logs
 - [ ] CI build ships updated wrapper image (Watchtower auto-deploys to both dev nodes)
-- [ ] Manual test in browser confirms the experience matches the tagline
+- [ ] Manual test: wrapper on same machine as browser — local WireGuard, `.gtw` resolves, service loads
 
 **Until every box above is checked: no landing page, no teaser, no blog post, no tweet, nothing.**
 
