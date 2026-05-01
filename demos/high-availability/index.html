@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High Availability Demo — Zero Downtime — Sertone</title>
+  <meta name="description" content="Run multiple Sertone gateways for zero-downtime service delivery. See live failover and a rolling update that never interrupts consumers.">
+  <meta name="keywords" content="high availability demo, zero downtime, automatic failover, gateway cluster, Sertone HA, service uptime">
+  <link rel="canonical" href="https://sertone.net/demos/high-availability/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/high-availability/">
+  <meta property="og:title" content="High Availability Demo — Zero Downtime — Sertone">
+  <meta property="og:description" content="Multiple gateways. Automatic failover. Zero-downtime updates. See it happen live.">
+  <meta property="og:site_name" content="Sertone">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="High Availability Demo — Sertone">
+  <meta name="twitter:description" content="Multiple gateways, automatic failover, zero-downtime updates — live demo.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Sertone High Availability",
+    "applicationCategory": "DeveloperApplication",
+    "description": "Run multiple Sertone gateways for zero-downtime service delivery. Automatic failover and live updates with no orchestration complexity.",
+    "url": "https://sertone.net/demos/high-availability/",
+    "operatingSystem": "Docker (Linux, macOS, Windows)",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+  <style>
+    .ha-cluster {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .ha-consumers {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .ha-consumer-box {
+      background: #fff;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .ha-arrow-down {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.75rem;
+      padding: 0.2rem 0;
+    }
+    .ha-network-bar {
+      background: linear-gradient(135deg, #00b894, #00a381 55%, #007d65);
+      border-radius: 12px;
+      padding: 0.9rem 1.5rem;
+      text-align: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      margin: 0.5rem 0;
+      box-shadow: 0 4px 20px rgba(0,184,148,0.2);
+    }
+    .ha-gateways {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .ha-gw {
+      flex: 1;
+      border: 1.5px solid #1e293b;
+      border-radius: 10px;
+      padding: 0.9rem 0.75rem;
+      text-align: center;
+      transition: border-color 0.4s, opacity 0.4s, background 0.4s;
+    }
+    .ha-gw.active   { border-color: rgba(0,184,148,0.5); background: rgba(0,184,148,0.04); }
+    .ha-gw.updating { border-color: rgba(245,158,11,0.5); background: rgba(245,158,11,0.04); opacity: 0.75; }
+    .ha-gw.offline  { border-color: rgba(248,113,113,0.4); background: rgba(248,113,113,0.03); opacity: 0.4; }
+    .ha-gw-label   { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #64748b; margin-bottom: 0.3rem; }
+    .ha-gw-name    { font-size: 0.9rem; font-weight: 700; color: #e2e8f0; margin-bottom: 0.5rem; }
+    .ha-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.18rem 0.55rem;
+      border-radius: 20px;
+    }
+    .ha-pill.active   { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.25); }
+    .ha-pill.updating { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
+    .ha-pill.offline  { background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.2); }
+    .ha-pill .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .ha-pill.active .dot { animation: pdot 2s ease-in-out infinite; }
+    @keyframes pdot { 0%,100%{opacity:1}50%{opacity:.4} }
+
+    .ha-stat-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .ha-stat {
+      flex: 1;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+    .ha-stat-val  { font-size: 1.6rem; font-weight: 800; font-family: monospace; color: #00b894; line-height: 1; }
+    .ha-stat-lbl  { font-size: 0.67rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.3rem; }
+
+    .ha-log {
+      background: #0a0f1a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-family: monospace;
+      font-size: 0.78rem;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    .ha-log-line { padding: 0.12rem 0; }
+    .ha-log-line .ts  { color: #475569; margin-right: 0.5rem; }
+    .ha-log-line.ok   .msg { color: #10b981; }
+    .ha-log-line.warn .msg { color: #f59e0b; }
+    .ha-log-line.info .msg { color: #94a3b8; }
+
+    .ha-btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .ha-btn {
+      padding: 0.6rem 1.1rem;
+      border-radius: 8px;
+      border: 1.5px solid #334155;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .ha-btn:hover  { border-color: rgba(0,184,148,0.5); color: #00b894; }
+    .ha-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    @media (max-width: 520px) {
+      .ha-gateways { flex-direction: column; }
+      .ha-stat-row { flex-wrap: wrap; }
+      .ha-stat { min-width: calc(50% - 0.375rem); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <nav class="demo-breadcrumb demo-container" aria-label="Breadcrumb">
+    <a href="/">Home</a> <span>&rsaquo;</span>
+    <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+    High Availability
+  </nav>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">High Availability</p>
+      <h1>Run More. Worry Less.</h1>
+      <p class="demo-tagline">Add a second gateway. Your services stay online automatically — even if one machine goes dark. No load balancer, no orchestrator, no configuration between gateways. Start the container and it joins the cluster.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — The cluster below reflects a real Sertone HA deployment. Use the buttons to see what happens when a gateway goes offline or rolls through an update — with zero consumer impact.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- What you get -->
+    <section class="demo-business">
+      <h2>What You Get With Multiple Gateways</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.25rem;">
+        <div style="background:rgba(0,184,148,0.05);border:1px solid rgba(0,184,148,0.15);border-radius:10px;padding:1.1rem 1.25rem;">
+          <div style="font-size:1.3rem;margin-bottom:0.5rem;">⚡</div>
+          <strong style="color:#e2e8f0;">Automatic failover</strong>
+          <p style="font-size:0.85rem;color:#64748b;margin:0.4rem 0 0;line-height:1.55;">One gateway drops? Consumers are rerouted to another in seconds. No action required from you.</p>
+        </div>
+        <div style="background:rgba(0,184,148,0.05);border:1px solid rgba(0,184,148,0.15);border-radius:10px;padding:1.1rem 1.25rem;">
+          <div style="font-size:1.3rem;margin-bottom:0.5rem;">🔄</div>
+          <strong style="color:#e2e8f0;">Zero-downtime updates</strong>
+          <p style="font-size:0.85rem;color:#64748b;margin:0.4rem 0 0;line-height:1.55;">Updates roll out one gateway at a time. Your services never go offline for an update.</p>
+        </div>
+        <div style="background:rgba(0,184,148,0.05);border:1px solid rgba(0,184,148,0.15);border-radius:10px;padding:1.1rem 1.25rem;">
+          <div style="font-size:1.3rem;margin-bottom:0.5rem;">🌍</div>
+          <strong style="color:#e2e8f0;">Geographic distribution</strong>
+          <p style="font-size:0.85rem;color:#64748b;margin:0.4rem 0 0;line-height:1.55;">Place gateways in different regions. Consumers connect to the nearest one automatically.</p>
+        </div>
+        <div style="background:rgba(0,184,148,0.05);border:1px solid rgba(0,184,148,0.15);border-radius:10px;padding:1.1rem 1.25rem;">
+          <div style="font-size:1.3rem;margin-bottom:0.5rem;">📦</div>
+          <strong style="color:#e2e8f0;">Just another container</strong>
+          <p style="font-size:0.85rem;color:#64748b;margin:0.4rem 0 0;line-height:1.55;">No external load balancer. No shared database. No pairing step. Start the container — done.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live cluster visualization -->
+    <section class="demo-interactive" style="margin-top:2rem;">
+      <h2>Live Cluster</h2>
+
+      <div class="ha-stat-row" id="ha-stats">
+        <div class="ha-stat"><div class="ha-stat-val" id="stat-active">—</div><div class="ha-stat-lbl">Active Gateways</div></div>
+        <div class="ha-stat"><div class="ha-stat-val" id="stat-serving">100%</div><div class="ha-stat-lbl">Requests Served</div></div>
+        <div class="ha-stat"><div class="ha-stat-val" id="stat-drops">0</div><div class="ha-stat-lbl">Dropped Requests</div></div>
+        <div class="ha-stat"><div class="ha-stat-val">99.9%</div><div class="ha-stat-lbl">Uptime</div></div>
+      </div>
+
+      <div class="ha-cluster">
+        <div class="ha-consumers">
+          <div class="ha-consumer-box">Consumer A</div>
+          <div class="ha-consumer-box">Consumer B</div>
+          <div class="ha-consumer-box">Consumer C</div>
+        </div>
+        <div class="ha-arrow-down">↓ routed to nearest available gateway ↓</div>
+        <div class="ha-network-bar">SERTONE GLOBAL NETWORK</div>
+        <div class="ha-arrow-down">↓ ↓ ↓</div>
+        <div class="ha-gateways">
+          <div class="ha-gw active" id="gw1">
+            <div class="ha-gw-label">Gateway 1</div>
+            <div class="ha-gw-name">New York</div>
+            <div class="ha-pill active" id="pill1"><span class="dot"></span>Serving</div>
+          </div>
+          <div class="ha-gw active" id="gw2">
+            <div class="ha-gw-label">Gateway 2</div>
+            <div class="ha-gw-name">London</div>
+            <div class="ha-pill active" id="pill2"><span class="dot"></span>Serving</div>
+          </div>
+          <div class="ha-gw active" id="gw3">
+            <div class="ha-gw-label">Gateway 3</div>
+            <div class="ha-gw-name">Singapore</div>
+            <div class="ha-pill active" id="pill3"><span class="dot"></span>Serving</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.25rem;">
+        <h3 style="font-size:0.9rem;margin-bottom:0.6rem;color:#94a3b8;">Event log</h3>
+        <div class="ha-log" id="ha-log">
+          <div class="ha-log-line info"><span class="ts" id="init-ts"></span><span class="msg">All 3 gateways online — cluster healthy</span></div>
+        </div>
+        <div class="ha-btn-row">
+          <button class="ha-btn" onclick="doFailover()" id="btn-failover">⚡ Simulate Failover</button>
+          <button class="ha-btn" onclick="doUpdate()" id="btn-update">🔄 Simulate Rolling Update</button>
+        </div>
+        <p style="font-size:0.73rem;color:#475569;margin-top:0.6rem;">Simulations are visual only — they do not affect the live cluster.</p>
+      </div>
+    </section>
+
+    <!-- How to enable -->
+    <section class="demo-selfhost" style="margin-top:2rem;">
+      <h2>Enable HA in Three Steps</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Your first gateway is already HA-ready</h4>
+          <p>Every Sertone gateway supports clustering out of the box. Nothing to configure on the first one.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Start a second gateway anywhere</h4>
+          <p>Deploy the same container on a second machine — different server, different cloud provider, different country. Give it its own data volume.</p>
+          <pre class="code-block"><code>docker run -d --name sertone \
+  -p 80:80 -p 3002:3002 \
+  -v sertone-data:/app/data \
+  --restart unless-stopped \
+  sertonenet/gateway:latest</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Done</h4>
+          <p>The two gateways find each other automatically. Open your dashboard and you will see the second gateway appear in the <strong>Cluster</strong> section. Add a third for production-grade resilience — take one offline for maintenance while the other two keep serving.</p>
+        </div>
+
+      </div>
+
+      <div style="margin-top:1.5rem;text-align:center;">
+        <a href="/docs/high-availability" class="btn">Full HA Documentation</a>
+        <a href="/docs/installation" class="btn btn-secondary" style="margin-left:0.75rem;">Installation Guide</a>
+      </div>
+    </section>
+
+    <div style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+      <a href="/demos/" style="color:#64748b;font-size:0.85rem;">&#8592; All Demos</a>
+      <a href="/demos/rest-api/" style="color:#64748b;font-size:0.85rem;">REST API Demo &#8594;</a>
+    </div>
+
+  </article>
+
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;gap:1.5rem;">
+        <a href="/docs/" style="color:#64748b;font-size:0.85rem;">Docs</a>
+        <a href="/pricing" style="color:#64748b;font-size:0.85rem;">Pricing</a>
+        <a href="/trust" style="color:#64748b;font-size:0.85rem;">Trust</a>
+        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy</a>
+        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms</a>
+      </div>
+      <span class="footer-copy">&copy; 2026 Sertone</span>
+    </div>
+  </footer>
+
+  <script src="/modal.js"></script>
+  <script>
+    // Set initial timestamp
+    document.getElementById('init-ts').textContent = new Date().toLocaleTimeString();
+
+    function logLine(cls, msg) {
+      const log = document.getElementById('ha-log');
+      const ts = new Date().toLocaleTimeString();
+      const line = document.createElement('div');
+      line.className = 'ha-log-line ' + cls;
+      line.innerHTML = `<span class="ts">${ts}</span><span class="msg">${msg}</span>`;
+      log.insertBefore(line, log.firstChild);
+    }
+
+    function setGw(n, state) {
+      const gw   = document.getElementById('gw' + n);
+      const pill = document.getElementById('pill' + n);
+      const stateMap = {
+        active:   { gwCls: 'ha-gw active',   pillCls: 'ha-pill active',   label: 'Serving'  },
+        updating: { gwCls: 'ha-gw updating', pillCls: 'ha-pill updating', label: 'Updating' },
+        offline:  { gwCls: 'ha-gw offline',  pillCls: 'ha-pill offline',  label: 'Offline'  },
+      };
+      const s = stateMap[state];
+      gw.className   = s.gwCls;
+      pill.className = s.pillCls;
+      pill.innerHTML = `<span class="dot"></span>${s.label}`;
+    }
+
+    function updateStats(active) {
+      document.getElementById('stat-active').textContent = active;
+    }
+
+    let busy = false;
+
+    function doFailover() {
+      if (busy) return;
+      busy = true;
+      document.getElementById('btn-failover').disabled = true;
+      document.getElementById('btn-update').disabled = true;
+
+      logLine('warn', 'Gateway 2 (London) — connection lost');
+      setGw(2, 'offline');
+      updateStats(2);
+
+      setTimeout(() => {
+        logLine('info', 'Rerouting consumers — New York and Singapore taking over');
+      }, 800);
+
+      setTimeout(() => {
+        logLine('ok', 'All consumers rerouted — 0 requests dropped');
+        document.getElementById('stat-serving').textContent = '100%';
+        document.getElementById('stat-drops').textContent = '0';
+      }, 1800);
+
+      setTimeout(() => {
+        logLine('ok', 'Gateway 2 (London) back online — restored to cluster');
+        setGw(2, 'active');
+        updateStats(3);
+        busy = false;
+        document.getElementById('btn-failover').disabled = false;
+        document.getElementById('btn-update').disabled = false;
+      }, 6000);
+    }
+
+    function doUpdate() {
+      if (busy) return;
+      busy = true;
+      document.getElementById('btn-failover').disabled = true;
+      document.getElementById('btn-update').disabled = true;
+
+      const seq = [
+        { delay: 0,    fn: () => { setGw(1,'updating'); logLine('warn', 'Gateway 1 (New York): updating — taking offline briefly'); }},
+        { delay: 3500, fn: () => { setGw(1,'active');   logLine('ok',   'Gateway 1 (New York): update complete — back online'); }},
+        { delay: 4500, fn: () => { setGw(2,'updating'); logLine('warn', 'Gateway 2 (London): updating — taking offline briefly'); }},
+        { delay: 8000, fn: () => { setGw(2,'active');   logLine('ok',   'Gateway 2 (London): update complete — back online'); }},
+        { delay: 9000, fn: () => { setGw(3,'updating'); logLine('warn', 'Gateway 3 (Singapore): updating — taking offline briefly'); }},
+        { delay: 12500,fn: () => { setGw(3,'active');   logLine('ok',   'Gateway 3 (Singapore): update complete — all gateways on new version'); }},
+        { delay: 13000,fn: () => {
+          logLine('ok', 'Rolling update complete — 0 requests dropped during update');
+          busy = false;
+          document.getElementById('btn-failover').disabled = false;
+          document.getElementById('btn-update').disabled = false;
+        }},
+      ];
+
+      seq.forEach(({ delay, fn }) => setTimeout(fn, delay));
+    }
+  </script>
+</body>
+</html>

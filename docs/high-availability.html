@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High Availability — Sertone Docs</title>
+  <meta name="description" content="Run multiple Sertone gateways for zero-downtime service delivery. Automatic failover, live updates, and load distribution — no orchestration complexity.">
+  <meta name="keywords" content="Sertone high availability, gateway redundancy, automatic failover, zero downtime, Sertone HA, service uptime">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/high-availability">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/high-availability">
+  <meta property="og:title" content="High Availability — Sertone Docs">
+  <meta property="og:description" content="Run multiple Sertone gateways for zero-downtime service delivery. Automatic failover and live updates.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="High Availability — Sertone Docs">
+  <meta name="twitter:description" content="Run multiple Sertone gateways for zero-downtime service delivery.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "High Availability — Sertone",
+    "description": "Run multiple Sertone gateways for zero-downtime service delivery. Automatic failover, live updates, and load distribution.",
+    "url": "https://sertone.net/docs/high-availability",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Reliability</div>
+        <a href="/docs/high-availability" class="nav-link active">High Availability</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>High Availability</h1>
+      <p class="lead">Run more than one Sertone gateway and your services stay online automatically — even if one gateway goes down for maintenance, a power cut, or an unexpected failure. No load balancer required. No configuration beyond the second container.</p>
+
+      <h2 id="what-you-get">What You Get</h2>
+      <p>With a single gateway, if the machine goes offline your services are unreachable until it comes back. With two or more gateways:</p>
+      <ul>
+        <li><strong>Automatic failover</strong> — if one gateway becomes unreachable, consumers are rerouted to another within seconds. No manual intervention required.</li>
+        <li><strong>Zero-downtime updates</strong> — when a new version of Sertone is released, each gateway updates itself one at a time. At least one gateway is always serving while the others update.</li>
+        <li><strong>Load distribution</strong> — consumers connect to the gateway nearest to them. Traffic is spread naturally across your cluster.</li>
+        <li><strong>Geographic resilience</strong> — place gateways in different regions or data centers. A regional outage does not take down your service.</li>
+      </ul>
+
+      <h2 id="how-to-enable">How to Enable It</h2>
+      <p>Start a second Sertone gateway. That is all. The gateways find each other automatically and begin sharing the load.</p>
+      <p>Each gateway is an identical Docker container. There is nothing to configure between them — no pairing step, no shared secrets, no configuration file to sync. If both gateways are running and connected to the Sertone network, they work as a cluster.</p>
+
+      <pre><code>docker run -d --name sertone-2 \
+  -p 80:80 -p 3002:3002 \
+  -v sertone-data-2:/app/data \
+  --restart unless-stopped \
+  sertonenet/gateway:latest</code></pre>
+
+      <div class="callout callout-info">
+        <strong>Each gateway needs its own data volume.</strong> The <code>-v sertone-data-2:/app/data</code> flag ensures the second gateway has its own identity and storage. Never share a data volume between two running gateways.
+      </div>
+
+      <h2 id="minimum-setup">Minimum Setup</h2>
+
+      <h3>2 gateways — basic redundancy</h3>
+      <p>Two gateways give you failover: if one goes down, the other takes over. This is sufficient for most use cases. Both gateways should be on different machines — ideally in different data centers or cloud providers.</p>
+
+      <h3>3 gateways — recommended for production</h3>
+      <p>Three gateways let you take one offline for planned maintenance while the other two continue serving without interruption. This is the recommended setup for any service with uptime requirements.</p>
+
+      <h3>More than 3</h3>
+      <p>There is no limit. Add as many gateways as you need. More gateways means more capacity and more geographic coverage.</p>
+
+      <h2 id="geographic-distribution">Geographic Distribution</h2>
+      <p>For services with global consumers, placing gateways in different regions reduces latency. Consumers automatically connect to the closest available gateway. You do not need to configure this — it is handled automatically based on network proximity.</p>
+      <p>Example setup:</p>
+      <ul>
+        <li>One gateway in North America</li>
+        <li>One gateway in Europe</li>
+        <li>One gateway in Asia-Pacific</li>
+      </ul>
+      <p>Consumers in each region connect to the nearest gateway. If that gateway goes offline, they are automatically rerouted to the next nearest.</p>
+
+      <h2 id="live-updates">Zero-Downtime Updates</h2>
+      <p>Sertone gateways update themselves automatically when a new version is released. In a cluster, updates happen one gateway at a time:</p>
+      <ol>
+        <li>One gateway signals that it is going offline briefly for an update.</li>
+        <li>Consumers are rerouted to the remaining gateways — no requests are dropped.</li>
+        <li>The gateway updates (typically under 60 seconds) and comes back online.</li>
+        <li>The next gateway updates. The process repeats until all are current.</li>
+      </ol>
+      <p>Your consumers see none of this. From their perspective, the service was never interrupted.</p>
+
+      <h2 id="monitoring">Monitoring Your Cluster</h2>
+      <p>Your gateway's dashboard shows how many other gateways are currently active in your cluster. The <strong>Cluster</strong> section of the dashboard displays:</p>
+      <ul>
+        <li>How many gateways are currently active</li>
+        <li>Which gateways are healthy and which are not reachable</li>
+        <li>Inbound connections from consumers to this gateway</li>
+      </ul>
+      <p>You can set up email alerts in <strong>Settings &rarr; Alerts</strong> to be notified when a peer gateway becomes unreachable.</p>
+
+      <h2 id="adding-removing">Adding and Removing Gateways</h2>
+      <p>To <strong>add</strong> a gateway: start a new container. It joins the cluster automatically within a minute or two.</p>
+      <p>To <strong>remove</strong> a gateway: stop or delete the container. The remaining gateways detect its absence and stop routing to it automatically. No cleanup required on the other gateways.</p>
+
+      <h2 id="faq">Frequently Asked Questions</h2>
+
+      <h3>Do my gateways need to be in the same location?</h3>
+      <p>No. They can be anywhere in the world — different cities, different clouds, different providers. The further apart the better for resilience.</p>
+
+      <h3>Can I add a gateway without taking my service offline?</h3>
+      <p>Yes. Adding a gateway is a live operation. Your existing gateway keeps serving consumers while the new one joins.</p>
+
+      <h3>What happens to a consumer request if it hits a gateway that is going down?</h3>
+      <p>If a gateway goes down mid-request, that specific request will fail with an error. The consumer SDK retries automatically. If a request fails, the consumer is not charged. Subsequent requests are automatically routed to a healthy gateway.</p>
+
+      <h3>Do I need a load balancer?</h3>
+      <p>No. Sertone handles routing between gateways automatically. Adding an external load balancer is unnecessary and adds complexity without benefit.</p>
+
+      <h3>Do all my gateways need to offer the same services?</h3>
+      <p>Each gateway manages its own service catalog independently. You can have all gateways offer the same services, or specialize different gateways for different service types. Consumers are automatically routed to a gateway that offers the service they requested.</p>
+
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <nav>
+        <a href="#what-you-get">What You Get</a>
+        <a href="#how-to-enable">How to Enable It</a>
+        <a href="#minimum-setup">Minimum Setup</a>
+        <a href="#geographic-distribution">Geographic Distribution</a>
+        <a href="#live-updates">Zero-Downtime Updates</a>
+        <a href="#monitoring">Monitoring</a>
+        <a href="#adding-removing">Adding and Removing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>
