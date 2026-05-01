@@ -47,7 +47,21 @@
 **Official name:** UltraNet
 **Official tagline:** *"UltraNet — It's what the internet should have been."*
 **Public framing when ready:** "A private internet inside the internet." — never mention Tor, onion, hops, or mesh internals.
-**Website rule:** No "coming soon" pages until code is shipped.
+
+### 🚦 UltraNet Ship Gate — ALL must be ✅ before any public page, tweet, or mention
+
+- [ ] `FQDNRegistry.sol` deployed on ops chain and address hardcoded in wrapper
+- [ ] `fqdn-resolver.ts` built, unit tested (resolve / cache / eviction / re-query on failure)
+- [ ] `mesh-exit-proxy.ts` built, unit tested (TCP stream → backend piping)
+- [ ] `dns-interceptor.ts` built (`.gtw` → virtual IP, external DNS forwarded)
+- [ ] UltraNet tab live in panel UI (URL bar → fetch → render response)
+- [ ] End-to-end test PASSES: CX43 registers `test.gtw`, Finland fetches it, response arrives, zero IPs in logs
+- [ ] CI build ships updated wrapper image (Watchtower auto-deploys to both dev nodes)
+- [ ] Manual test in browser confirms the experience matches the tagline
+
+**Until every box above is checked: no landing page, no teaser, no blog post, no tweet, nothing.**
+
+This file is read at the start of every session. The gate is the source of truth.
 
 ---
 
