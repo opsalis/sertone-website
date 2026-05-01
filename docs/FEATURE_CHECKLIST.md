@@ -231,27 +231,69 @@ This file is read at the start of every session. The gate is the source of truth
 
 ---
 
-## Priority Actions
+## Pre-Launch Sequence
 
-### 🔴 Fix immediately
-1. `docs/agents.html` — remove/fix false capability claims
-2. `docs/wallet.html` — add real content or remove from nav
+> **Founding principle:** We build things to last from day one. No interim patches, no "fix it later."
+> Every item below ships before the first real user. There are no shortcuts.
 
-### 🟠 High priority (next session)
-3. Add MCP docs page + demo
-4. Document Coinbase Onramp (massive consumer UX differentiator — card → USDC with zero friction)
-5. Fix `docs/faq.html` nav to match current sidebar structure
-6. Rewrite or remove `docs/delivery-methods.html`
+### 🔴 Block 1 — Security foundation (correct architecture, not patches)
 
-### 🟡 Medium priority (founder decides)
-7. Document 2FA/TOTP
-8. Document Telegram/WhatsApp alerts
-9. Document multi-user roles (Admin/Owner/Consumer/Finance)
-10. Document Emergency Pause
-11. Document API Auto-Scaler
+**Port 3333 — Encrypted browser applet** *(eliminates BUG-012, 013, 014, 015 entirely)*
+- ECDH WebSocket handshake on port 3333
+- Encrypted applet blob delivery (AES-256-GCM with session key)
+- Port 3002 bound to loopback/VPN only — never reachable from internet
+- No admin/admin window. No nginx. No CSRF. No interim hacks.
+- Applet includes: panel UI + catalog UI + Swagger sandbox + UltraNet tab (when ready)
 
-### ⚪ Decide (founder)
+**Remaining security fixes (server-side — port 3333 does not solve these)**
+- CRIT-1: backend_addr SSRF validation
+- CRIT-2: SQL injection hardening
+- HIGH-1: FQDN input validation
+- HIGH-4: Circuit cap enforcement
+
+### 🔴 Block 2 — Infrastructure
+
+- Bootstrap → systemd service on CX43 (dies on reboot = network dies)
+- old-DE Hetzner console reboot → run prod CI → all 5 k3s nodes on latest code
+- Upgrade ChainRPC plan (25K/day free tier already hitting cap on dev — prod will blow through it in hours)
+- BUG-006: Standardize WRAPPER_VERSION format vs. manifest (customer wrappers hit infinite maintenance mode otherwise)
+
+### 🔴 Block 3 — Catalog must have content on day one
+
+- Register and verify ApiFactory services on prod nodes
+- Consumer who installs and opens the catalog must find real services immediately
+- Empty catalog = no value = churn on day one
+
+### 🟠 Block 4 — Docs must be accurate
+
+- `docs/agents.html` — remove false capability claims from v5 removal
+- `docs/wallet.html` — write real content or remove from nav
+- Coinbase Onramp — document prominently on buy page and docs (biggest consumer UX differentiator)
+- MCP server — docs page + demo
+- `docs/faq.html` — align nav sidebar with current structure
+
+### 🟡 Block 5 — Nice to have before launch (do if time allows)
+
+- BUG-003: Show "Updated to vX.Y.Z" notification after Watchtower restart
+- Document 2FA/TOTP
+- Document Telegram/WhatsApp alerts
+- Rewrite or remove `docs/delivery-methods.html`
+
+---
+
+## Post-Launch (not required for launch, ship when ready)
+
+- UltraNet (see ship gate above)
+- BYO-Queue / BYO-Cloud docs
+- Multi-user roles docs
+- Emergency Pause docs
+- API Auto-Scaler docs
+- gRPC demo, JSON-RPC demo
+
+---
+
+## ⚪ Founder decisions still open
+
 - BYO-Queue / BYO-Cloud — document publicly or keep hidden?
-- Anomaly detection — mention as a feature?
-- UltraNet — public name? Framing? Timeline?
 - "Encrypted cloud backup" — mention without L2 detail?
+- Anomaly detection — surface as a feature?
