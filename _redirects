@@ -1,3 +1,20 @@
+# Docs pages — planned pages redirect to closest existing content until built
+/docs/rest-apis /docs/registering-apis 301
+/docs/graphql /docs/registering-apis 301
+/docs/soap-xmlrpc /docs/registering-apis 301
+/docs/grpc /docs/registering-apis 301
+/docs/json-rpc /docs/registering-apis 301
+/docs/live-streams /docs/registering-apis 301
+/docs/webhooks /docs/registering-apis 301
+/docs/browsing-catalog /docs/browsing-apis 301
+/docs/calling-a-service /docs/calling-apis 301
+/docs/delivery-methods /docs/calling-apis 301
+/docs/oauth-sso /docs/settings 301
+/docs/subscription-plans /docs/pricing-apis 301
+/docs/how-pricing-works /docs/pricing-apis 301
+/docs/tutorial-offer-service /docs/tutorial-sell-api 301
+/docs/tutorial-consume-service /docs/tutorial-consume-api 301
+
 # Legacy redirects
 /try / 301
 /product/ / 301
