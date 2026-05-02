@@ -197,34 +197,25 @@
       <h3>Requirements</h3>
       <ul>
         <li>Your Sertone control center already installed and running</li>
-        <li>Docker 20.10+ on the machine where your private service runs</li>
-        <li>Outbound HTTPS access from that machine (port 443)</li>
+        <li>A service running locally on the same machine as your control center (on any port)</li>
+        <li>No public IP, no firewall changes, no TLS configuration needed</li>
       </ul>
 
-      <h3>Step 1: Generate a pairing token</h3>
-      <p>In your control center's web console, open <strong>My Services</strong> and select <strong>Add Agent Connection</strong>. Give it a name (e.g. "Minecraft Server") and generate a pairing token. Copy the token — it is shown only once.</p>
+      <h3>Step 1: Register your mesh domain</h3>
+      <p>In your control center's web console, open the <strong>Mesh</strong> tab and select <strong>Register Domain</strong>. Choose a name under one of the available domain extensions (e.g. <code>myserver.co.btw</code>). Registration costs a small annual fee paid in USDC and handled automatically by your control center.</p>
 
-      <h3>Step 2: Run the agent</h3>
-      <p>On the machine where your private service runs, start the agent process using the pairing token from step 1 and the address of your control center:</p>
-      <pre><code>docker run -d \
-  --name sertone-agent \
-  --network host \
-  -e PAIRING_TOKEN=your_token_here \
-  -e CONTROL_CENTER=https://your-control-center-address \
-  sertonenet/gateway:latest --mode agent</code></pre>
-
-      <p>The agent connects to your control center and appears as "Connected" within a few seconds.</p>
-
-      <h3>Step 3: Register APIs pointing to your local service</h3>
-      <p>Back in the control center, configure the endpoints you want to expose:</p>
+      <h3>Step 2: Add a port route</h3>
+      <p>Under <strong>Mesh &rarr; Routes</strong>, add a new route that maps your mesh domain and port to your local service:</p>
       <ul>
-        <li><strong>API path</strong> — the path consumers will call (e.g., <code>/status</code>)</li>
-        <li><strong>Target URL</strong> — where the agent should forward requests on the local machine (e.g., <code>http://localhost:8080/api/status</code>)</li>
-        <li><strong>Method</strong> — GET, POST, etc.</li>
-        <li><strong>Price</strong> — per-call price in USDC</li>
+        <li><strong>Domain</strong> — your registered mesh name (e.g. <code>myserver.co.btw</code>)</li>
+        <li><strong>Port</strong> — the port consumers connect on (e.g. <code>80</code>)</li>
+        <li><strong>Backend</strong> — where your service actually runs (e.g. <code>localhost:8080</code>)</li>
+        <li><strong>Billing model</strong> — subscription tiers you offer (free / hourly / daily / monthly)</li>
       </ul>
+      <p>Your control center immediately begins routing encrypted mesh traffic to your local service. No restart needed.</p>
 
-      <p>Your API is now registered in the global catalog. Consumers can discover and call it immediately.</p>
+      <h3>Step 3: Consumers subscribe and connect</h3>
+      <p>Consumers on the Sertone network discover your domain, choose a subscription tier, and connect. All traffic travels through the encrypted mesh — your local service address is never exposed to consumers or to any intermediate node.</p>
 
       <h2 id="security">Security</h2>
 
@@ -276,32 +267,28 @@
 
       <p>Consumers call the APIs at normal Sertone API prices (e.g., $0.001/call). The plugin author earns 95% of every call, settled automatically in USDC.</p>
 
-      <div class="info-box">
-        See the <a href="/demos/a2a">A2A Agent demo</a> for a live interactive example of how agents discover and call each other through the network.
-      </div>
-
       <h2 id="faq">Frequently asked questions</h2>
 
       <h3>Can an agent expose multiple services?</h3>
       <p>Yes. Each registered API can target a different local URL. One agent can proxy requests to a Minecraft server, a local Python API, and a home automation hub — all at the same time.</p>
 
-      <h3>What happens if the agent disconnects?</h3>
-      <p>The agent reconnects automatically with exponential backoff. While disconnected, calls to its APIs return a service unavailable response. The control center shows the agent status as "Disconnected" and sends an alert if configured.</p>
+      <h3>What happens if the control center goes offline?</h3>
+      <p>Consumers cannot reach your service while your control center is offline. When it comes back online, routing resumes automatically — no reconfiguration needed. The mesh routes around outages at the network level, but the exit point (your control center) must be reachable to forward traffic to your local service.</p>
 
-      <h3>Does this work with WebSocket or SSE services?</h3>
-      <p>Yes. The agent relay supports streaming protocols. SSE streams and WebSocket connections are relayed transparently through the persistent connection.</p>
+      <h3>Does this work with any TCP service, not just HTTP?</h3>
+      <p>Yes. The mesh relay operates at the TCP layer. Any TCP-based protocol — HTTP, HTTPS, WebSocket, a game server protocol, a database wire protocol — is relayed transparently. Your local service sees raw TCP connections and does not need to be aware of the mesh.</p>
 
-      <h3>Can I run multiple agent instances for redundancy?</h3>
-      <p>Yes. Register two agents with the same APIs. The control center round-robins requests across available agents automatically. If one goes down, the other takes all traffic.</p>
+      <h3>Can I expose the same service on multiple ports?</h3>
+      <p>Yes. Add one route per port. Each route maps independently. For example: port 80 for HTTP, port 443 for HTTPS, port 25565 for a Minecraft protocol — all backed by the same or different local services.</p>
 
-      <h3>Is there a cost to run the agent?</h3>
-      <p>The agent image is free. It uses minimal resources — roughly the same as a very light web server. On a typical VPS it uses under 50MB of RAM and less than 1% CPU when idle.</p>
+      <h3>Is there a cost to host a service through the mesh?</h3>
+      <p>Domain registration costs a small annual fee in USDC — the same as registering any internet domain. Routing itself is free; you only pay once per year per domain. There are no per-request fees on the provider side. You earn 95% of every subscription payment made by consumers.</p>
 
       <div class="next-steps">
         <h2>Next steps</h2>
-        <a href="/docs/registering-apis" class="next-link">Registering APIs →</a>
         <a href="/docs/quick-start" class="next-link">Quick Start →</a>
-        <a href="/demos/a2a" class="next-link">A2A Agent demo →</a>
+        <a href="/docs/registering-apis" class="next-link">Registering APIs →</a>
+        <a href="/docs/vpn" class="next-link">VPN Server →</a>
       </div>
 
     </main>
