@@ -3,32 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tutorial: Use APIs from the Marketplace — Sertone Docs</title>
-  <meta name="description" content="Step-by-step tutorial: browse the Sertone API catalog, test with demo mode, fund your wallet with USDC, and make your first live API call with auto-generated SDK.">
+  <title>Tutorial: Use Services from the Marketplace — Sertone Docs</title>
+  <meta name="description" content="Step-by-step tutorial: browse the Sertone catalog, test with demo mode, fund your wallet with USDC, and make your first live service call with auto-generated SDK.">
   <meta name="keywords" content="consume API tutorial, API marketplace beginner guide, call API USDC, API consumer walkthrough, Sertone tutorial">
   <meta name="author" content="Sertone">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://sertone.net/docs/tutorial-consume-api">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://sertone.net/docs/tutorial-consume-api">
-  <meta property="og:title" content="Tutorial: Use APIs from the Marketplace — Sertone Docs">
-  <meta property="og:description" content="Step-by-step tutorial: browse the Sertone API catalog, test with demo mode, fund your wallet, and make your first live API call.">
+  <meta property="og:title" content="Tutorial: Use Services from the Marketplace — Sertone Docs">
+  <meta property="og:description" content="Step-by-step tutorial: browse the Sertone catalog, test with demo mode, fund your wallet, and make your first live service call.">
   <meta property="og:site_name" content="Sertone">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Tutorial: Use APIs from the Marketplace — Sertone Docs">
-  <meta name="twitter:description" content="Step-by-step: browse the API catalog, test with demo mode, fund your wallet, and make your first live API call.">
+  <meta name="twitter:title" content="Tutorial: Use Services from the Marketplace — Sertone Docs">
+  <meta name="twitter:description" content="Step-by-step: browse the catalog, test with demo mode, fund your wallet, and make your first live service call.">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    "name": "How to Use APIs from the Sertone Marketplace",
-    "description": "Step-by-step tutorial: browse the Sertone API catalog, test with demo mode, fund your wallet with USDC, and make your first live API call.",
+    "name": "How to Use Services from the Sertone Marketplace",
+    "description": "Step-by-step tutorial: browse the Sertone catalog, test with demo mode, fund your wallet with USDC, and make your first live service call.",
     "url": "https://sertone.net/docs/tutorial-consume-api",
     "step": [
-      {"@type": "HowToStep", "name": "Browse the API catalog", "text": "Open your web console and browse available APIs filtered by protocol or category"},
+      {"@type": "HowToStep", "name": "Browse the catalog", "text": "Open your web console and browse available services filtered by protocol or category"},
       {"@type": "HowToStep", "name": "Test with demo mode", "text": "Try any API for free using real sample data before spending USDC"},
-      {"@type": "HowToStep", "name": "Fund your wallet", "text": "Add USDC to your wallet to pay for live API calls"},
-      {"@type": "HowToStep", "name": "Make your first call", "text": "Call the API directly or use the auto-generated SDK in your preferred language"}
+      {"@type": "HowToStep", "name": "Fund your wallet", "text": "Add USDC to your wallet to pay for live service calls"},
+      {"@type": "HowToStep", "name": "Make your first call", "text": "Call the service directly or use the auto-generated SDK in your preferred language"}
     ],
     "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
   }
@@ -60,16 +60,16 @@
         <a href="/docs/installation" class="nav-link">Installation</a>
       </div>
       <div class="nav-section">
-        <div class="nav-section-title">Selling APIs</div>
-        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <div class="nav-section-title">Publishing Services</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering a Service</a>
         <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
         <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
       </div>
       <div class="nav-section">
-        <div class="nav-section-title">Using APIs</div>
+        <div class="nav-section-title">Using Services</div>
         <a href="/docs/dashboard" class="nav-link">Dashboard</a>
-        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
-        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/browsing-apis" class="nav-link">Discovering Services</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling Services</a>
         <a href="/docs/sdks" class="nav-link">SDKs</a>
       </div>
       <div class="nav-section">
@@ -90,8 +90,8 @@
 
       <div class="nav-section">
         <div class="nav-section-title">Tutorials</div>
-        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
-        <a href="/docs/tutorial-consume-api" class="nav-link active">Use APIs</a>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell a Service</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link active">Use Services</a>
       </div>
       <div class="nav-section">
         <div class="nav-section-title">Protocols</div>
@@ -104,14 +104,14 @@
     </aside>
 
     <main class="docs-content">
-      <h1>Tutorial: Use APIs from the Marketplace</h1>
-      <p class="lead">Find an API, test it for free, wire it into your app, and pay only for what you use.</p>
+      <h1>Tutorial: Use Services from the Marketplace</h1>
+      <p class="lead">Find a service, test it for free, wire it into your app, and pay only for what you use.</p>
 
       <h2 id="what-you-need">What you need</h2>
       <ul>
         <li><strong>Docker</strong> installed and running</li>
         <li><strong>5 minutes</strong> to set up the control center</li>
-        <li><strong>A small amount of USDC</strong> for API calls (and a tiny bit of ETH for fees)</li>
+        <li><strong>A small amount of USDC</strong> for service calls (and a tiny bit of ETH for fees)</li>
       </ul>
       <p>If you just want to browse and try demos, you do not even need USDC. Demo mode is completely free.</p>
 
@@ -121,7 +121,7 @@
       <h3 id="fund-wallet">Fund your wallet</h3>
       <p>Go to the <strong>Finance</strong> tab. Your deposit address is shown on the page. Send funds to it:</p>
       <ul>
-        <li><strong>USDC</strong> &mdash; this is what you pay for API calls. $10 is enough for many calls depending on per-call pricing.</li>
+        <li><strong>USDC</strong> &mdash; this is what you pay for service calls. $10 is enough for many calls depending on per-call pricing.</li>
         <li><strong>ETH</strong> &mdash; a small amount for transaction fees. $2-5 lasts a long time.</li>
       </ul>
       <p>Both can be sent from any exchange (Coinbase, Kraken, etc.) or another wallet.</p>
@@ -148,7 +148,7 @@
       </ol>
       <p>The SDK handles authentication and request formatting. You just call methods. See <a href="/docs/sdks">SDKs</a> for code examples.</p>
 
-      <h2 id="step-4-real-calls">Step 4: Make real API calls</h2>
+      <h2 id="step-4-real-calls">Step 4: Make real service calls</h2>
       <p>When you are ready to use live data, switch the API from demo to production mode in <strong>My APIs</strong> (flip the toggle from "Demo" to "On").</p>
       <p>Now every call returns live data. You are charged the per-call price automatically from your USDC balance.</p>
 
@@ -199,7 +199,7 @@
       <nav class="docs-page-nav">
         <a href="/docs/tutorial-sell-api" class="page-nav-link">
           <span class="label">Previous</span>
-          <span class="title">Sell Your API</span>
+          <span class="title">Sell a Service</span>
         </a>
         <a href="/docs/faq" class="page-nav-link next">
           <span class="label">Next</span>

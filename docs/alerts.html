@@ -54,16 +54,16 @@
         <a href="/docs/installation" class="nav-link">Installation</a>
       </div>
       <div class="nav-section">
-        <div class="nav-section-title">Selling APIs</div>
-        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <div class="nav-section-title">Publishing Services</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering a Service</a>
         <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
         <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
       </div>
       <div class="nav-section">
-        <div class="nav-section-title">Using APIs</div>
+        <div class="nav-section-title">Using Services</div>
         <a href="/docs/dashboard" class="nav-link">Dashboard</a>
-        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
-        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/browsing-apis" class="nav-link">Discovering Services</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling Services</a>
         <a href="/docs/sdks" class="nav-link">SDKs</a>
       </div>
       <div class="nav-section">
@@ -84,8 +84,8 @@
 
       <div class="nav-section">
         <div class="nav-section-title">Tutorials</div>
-        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
-        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell a Service</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use Services</a>
       </div>
       <div class="nav-section">
         <div class="nav-section-title">Protocols</div>
@@ -132,7 +132,7 @@
         <tbody>
           <tr><td><strong>Low USDC Balance</strong></td><td>Triggers when your USDC balance falls below the configured threshold</td></tr>
           <tr><td><strong>Low Gas Balance</strong></td><td>Triggers when your ETH (gas) balance falls below the configured threshold</td></tr>
-          <tr><td><strong>Auto-Pause Active</strong></td><td>Indicates that API serving has been paused due to low balance (managed in the Finance tab)</td></tr>
+          <tr><td><strong>Auto-Pause Active</strong></td><td>Indicates that service serving has been paused due to low balance (managed in the Finance tab)</td></tr>
           <tr><td><strong>Error Spike</strong></td><td>Triggers when more than 5 errors occur within 5 minutes</td></tr>
         </tbody>
       </table>
@@ -149,7 +149,7 @@
       <p>Set these values and click <strong>Save Thresholds</strong>. When your balance drops below either threshold, you receive a notification at the level you configured in the notification rules.</p>
 
       <h2 id="auto-pause">Auto-pause</h2>
-      <p>Also in the Finance tab, enable <strong>auto-pause</strong> to automatically stop serving API calls when your balance drops below the configured thresholds. This prevents failed transactions when funds are too low.</p>
+      <p>Also in the Finance tab, enable <strong>auto-pause</strong> to automatically stop serving service calls when your balance drops below the configured thresholds. This prevents failed transactions when funds are too low.</p>
       <ul>
         <li>Toggle <strong>Enable auto-pause</strong> on or off</li>
         <li><strong>Pause Now</strong> &mdash; manually pause serving immediately</li>
@@ -157,7 +157,7 @@
       </ul>
 
       <div class="info-box">
-        <p><strong>Demo mode still works.</strong> Auto-pause only affects paid API calls. Demo mode calls are always free and always work regardless of your balance.</p>
+        <p><strong>Demo mode still works.</strong> Auto-pause only affects paid service calls. Demo mode calls are always free and always work regardless of your balance.</p>
       </div>
 
       <h2 id="email-setup">Email configuration</h2>
@@ -170,7 +170,7 @@
         </a>
         <a href="/docs/tutorial-sell-api" class="page-nav-link next">
           <span class="label">Next</span>
-          <span class="title">Sell Your API</span>
+          <span class="title">Sell a Service</span>
         </a>
       </nav>
     </main>
