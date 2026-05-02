@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP Server — Sertone Docs | Call APIs from AI Agents</title>
+  <meta name="description" content="Sertone exposes every catalog API as an MCP tool. Claude, GPT, and any MCP-compatible AI agent can discover and call APIs from inside a conversation — with automatic USDC payment.">
+  <meta name="keywords" content="MCP server, model context protocol, AI agent API calls, Claude MCP tools, LLM API gateway, Sertone MCP">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/mcp">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/mcp">
+  <meta property="og:title" content="MCP Server — Sertone Docs | Call APIs from AI Agents">
+  <meta property="og:description" content="Every Sertone catalog API becomes an MCP tool. Connect Claude Desktop or any MCP client and let AI call APIs for you.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="MCP Server — Sertone Docs">
+  <meta name="twitter:description" content="Every Sertone catalog API becomes an MCP tool. Connect Claude Desktop or any MCP client and let AI call APIs for you.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "MCP Server — Sertone",
+    "description": "Sertone exposes every catalog API as a Model Context Protocol tool for AI agents.",
+    "url": "https://sertone.net/docs/mcp",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Selling APIs</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering APIs</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using APIs</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Browsing APIs</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling APIs</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+        <a href="/docs/mcp" class="nav-link active">MCP Server</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Reliability &amp; Access</div>
+        <a href="/docs/high-availability" class="nav-link">High Availability</a>
+        <a href="/docs/vpn" class="nav-link">VPN Server</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+        <a href="/docs/wallet" class="nav-link">Wallet</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Advanced</div>
+        <a href="/docs/agents" class="nav-link">Agents</a>
+        <a href="/docs/phone-recovery" class="nav-link">Phone Recovery Key</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell Your API</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use APIs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>MCP Server</h1>
+      <p class="lead">Every API in your catalog is automatically available as a tool for AI agents. Connect Claude Desktop, Claude Code, or any MCP-compatible client and let AI call paid APIs directly — with automatic USDC payment per call.</p>
+
+      <h2 id="what-is-mcp">What is MCP?</h2>
+      <p>Model Context Protocol (MCP) is an open standard that lets AI assistants call external tools and data sources. When your control center is connected as an MCP server, Claude (and other AI agents) can search your catalog, call APIs, and use the results directly in conversation — without any copy-pasting or manual steps.</p>
+
+      <h2 id="how-it-works">How it works</h2>
+      <p>Your control center runs an MCP server on port <strong>3003</strong>. It starts automatically when your catalog loads. Each API in your catalog becomes a separate MCP tool &mdash; one tool per endpoint (GET, POST, etc.).</p>
+
+      <p>When an AI agent calls a tool:</p>
+      <ol>
+        <li>The agent sends a tool call request to your MCP server (HTTP POST to <code>/mcp</code>)</li>
+        <li>Your control center routes the call to the API provider</li>
+        <li>USDC is deducted from your wallet automatically (same as any API call)</li>
+        <li>The response is returned to the agent in structured JSON</li>
+      </ol>
+
+      <div class="info-box">
+        <p><strong>No code changes needed.</strong> The MCP server reads your existing catalog. Every API you subscribe to is immediately available as a tool. New APIs appear automatically after each catalog sync.</p>
+      </div>
+
+      <h2 id="bearer-token">Authentication</h2>
+      <p>The MCP server uses Bearer token auth &mdash; the same consumer secret that protects all your API calls.</p>
+
+      <p>To find your consumer secret:</p>
+      <ol>
+        <li>Open your control center panel</li>
+        <li>Go to <strong>Settings &rarr; Developer</strong></li>
+        <li>Copy the <strong>Consumer Secret</strong></li>
+      </ol>
+      <p>The secret looks like: <code>ops_cs_<em>64-character-hex-string</em></code></p>
+
+      <p>You can rotate it at any time. After rotating, regenerate all SDKs and update your MCP client config.</p>
+
+      <h2 id="connect-claude">Connecting Claude Desktop</h2>
+      <p>Claude Desktop supports MCP servers over HTTP. Add your control center to Claude Desktop's config file:</p>
+
+      <p><strong>Config file location:</strong></p>
+      <ul>
+        <li>macOS: <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+        <li>Windows: <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
+      </ul>
+
+      <pre><code>{
+  "mcpServers": {
+    "sertone": {
+      "type": "http",
+      "url": "http://localhost:3003/mcp",
+      "headers": {
+        "Authorization": "Bearer ops_cs_YOUR_CONSUMER_SECRET"
+      }
+    }
+  }
+}</code></pre>
+
+      <p>Replace <code>ops_cs_YOUR_CONSUMER_SECRET</code> with your actual consumer secret. If your control center is on a remote machine, replace <code>localhost</code> with its IP address.</p>
+
+      <p>After saving the config, restart Claude Desktop. A <strong>hammer icon</strong> in the chat window confirms tools are loaded.</p>
+
+      <h2 id="connect-claude-code">Connecting Claude Code</h2>
+      <p>Claude Code (the CLI) can also connect to your MCP server. Add it to your project's <code>.claude/settings.json</code>:</p>
+
+      <pre><code>{
+  "mcpServers": {
+    "sertone": {
+      "type": "http",
+      "url": "http://localhost:3003/mcp",
+      "headers": {
+        "Authorization": "Bearer ops_cs_YOUR_CONSUMER_SECRET"
+      }
+    }
+  }
+}</code></pre>
+
+      <p>Or add it globally with:</p>
+      <pre><code>claude mcp add --transport http sertone \
+  http://localhost:3003/mcp \
+  --header "Authorization: Bearer ops_cs_YOUR_CONSUMER_SECRET"</code></pre>
+
+      <h2 id="tools">What tools appear</h2>
+      <p>Each API endpoint in your catalog becomes a separate MCP tool. The tool name is derived from the API name and operation ID:</p>
+
+      <table>
+        <thead>
+          <tr><th>API</th><th>Endpoint</th><th>Tool name</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Weather API</td><td>GET /forecast</td><td><code>Weather_API_getForecast</code></td></tr>
+          <tr><td>Weather API</td><td>POST /alerts</td><td><code>Weather_API_postAlerts</code></td></tr>
+          <tr><td>Crypto Prices</td><td>GET /price/{symbol}</td><td><code>Crypto_Prices_getPrice</code></td></tr>
+        </tbody>
+      </table>
+
+      <p>Each tool's description shows the API name, endpoint description, HTTP method, path, and price per call:</p>
+      <pre><code>[Weather API] Get 5-day forecast by city | GET /forecast | $0.001 USDC/call</code></pre>
+
+      <h2 id="tool-parameters">Tool parameters</h2>
+      <p>Tool parameters are extracted from the API's OpenAPI specification automatically:</p>
+      <ul>
+        <li><strong>Path parameters</strong> (e.g., <code>{symbol}</code> in <code>/price/{symbol}</code>) &mdash; required</li>
+        <li><strong>Query parameters</strong> &mdash; required or optional as defined in the spec</li>
+        <li><strong>Request body</strong> (POST/PUT) &mdash; included as a <code>body</code> parameter with the full JSON Schema</li>
+      </ul>
+
+      <p>The AI agent reads the parameter schema and fills in values from the conversation context, exactly as a developer would.</p>
+
+      <h2 id="example">Example conversation</h2>
+      <p>With the MCP server connected, a conversation like this works automatically:</p>
+
+      <div class="flow-diagram">
+        <div class="flow-step">
+          <div class="flow-icon">1</div>
+          <div class="flow-text">
+            <strong>You ask:</strong> "What's the current price of Bitcoin and the 5-day weather forecast for Tokyo?"
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="flow-icon">2</div>
+          <div class="flow-text">
+            <strong>Claude calls two tools:</strong> <code>Crypto_Prices_getPrice({ symbol: "BTC" })</code> and <code>Weather_API_getForecast({ city: "Tokyo", days: 5 })</code>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="flow-icon">3</div>
+          <div class="flow-text">
+            <strong>Your control center:</strong> routes both calls, deducts USDC from your wallet, returns results
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="flow-icon">4</div>
+          <div class="flow-text">
+            <strong>Claude responds:</strong> with a complete answer using live data — total cost: $0.002 USDC
+          </div>
+        </div>
+      </div>
+
+      <style>
+        .flow-diagram { max-width: 600px; margin: 1.5rem 0 2rem; }
+        .flow-step { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; }
+        .flow-icon { width: 28px; height: 28px; background: #2563eb; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+        .flow-text { font-size: 0.92rem; line-height: 1.6; color: #334155; }
+        .flow-arrow { text-align: center; font-size: 1.4rem; color: #94a3b8; margin: 0.25rem 0; }
+      </style>
+
+      <h2 id="subscription-mcp">Subscription MCP (for API providers)</h2>
+      <p>If you sell APIs, you can offer MCP access to your customers as a monthly subscription. This runs on port <strong>3005</strong> and adds a subscription management layer on top of the standard call-per-use model.</p>
+
+      <p>Customers subscribe once with a token payment, then make unlimited MCP calls within their subscription window:</p>
+
+      <pre><code># Subscribe (one-time, monthly)
+POST http://your-control-center:3005/subscribe
+{ "api_id": "YOUR_API_ID", "duration_days": 30, "token": "USDC_TOKEN" }
+
+# Check subscription status
+GET http://your-control-center:3005/subscription/status?api_id=YOUR_API_ID
+
+# Call any API endpoint
+GET http://your-control-center:3005/api/YOUR_API_ID/your/endpoint?param=value</code></pre>
+
+      <h2 id="auto-discovery">Auto-discovery</h2>
+      <p>Your control center publishes a discovery manifest at:</p>
+      <pre><code>http://your-control-center/.well-known/claude.json</code></pre>
+      <p>AI agents and marketplaces that support auto-discovery can find your MCP endpoint and its capabilities without manual configuration.</p>
+
+      <h2 id="faq">Frequently asked questions</h2>
+
+      <h3>Does the MCP server start automatically?</h3>
+      <p>Yes. It starts when your catalog loads for the first time after boot. If your catalog is empty, the server starts as soon as the first API is registered.</p>
+
+      <h3>Can I disable the MCP server?</h3>
+      <p>Yes. Set <code>MCP_ENABLED=false</code> in your docker-compose environment. The server will not start.</p>
+
+      <h3>Can I change the port?</h3>
+      <p>Yes. Set <code>MCP_PORT=XXXX</code> in your docker-compose environment. Default is 3003.</p>
+
+      <h3>Is the MCP server available on the public internet?</h3>
+      <p>That depends on your network configuration. By default, the control center binds to all interfaces. If you want MCP-only access for local AI agents, restrict port 3003 in your firewall rules.</p>
+
+      <h3>What happens if an API call fails?</h3>
+      <p>The tool returns an error result with the failure reason. No USDC is charged for failed calls. The AI agent sees the error and can choose a different approach.</p>
+
+      <h3>Does streaming work with MCP?</h3>
+      <p>Yes. GET <code>/mcp</code> on the MCP server returns an SSE stream for real-time notifications. Streaming API results (for long-running AI inference APIs) work through the subscription port (3005) via POST <code>/stream/:apiId</code>.</p>
+
+      <div class="next-steps">
+        <h2>Next steps</h2>
+        <a href="/docs/sdks" class="next-link">Download SDKs →</a>
+        <a href="/docs/calling-apis" class="next-link">Calling APIs →</a>
+        <a href="/docs/a2a" class="next-link">A2A Protocol →</a>
+      </div>
+
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#what-is-mcp" class="toc-link">What is MCP?</a>
+      <a href="#how-it-works" class="toc-link">How it works</a>
+      <a href="#bearer-token" class="toc-link">Authentication</a>
+      <a href="#connect-claude" class="toc-link">Claude Desktop</a>
+      <a href="#connect-claude-code" class="toc-link">Claude Code</a>
+      <a href="#tools" class="toc-link">What tools appear</a>
+      <a href="#tool-parameters" class="toc-link">Tool parameters</a>
+      <a href="#example" class="toc-link">Example conversation</a>
+      <a href="#subscription-mcp" class="toc-link">Subscription MCP</a>
+      <a href="#auto-discovery" class="toc-link">Auto-discovery</a>
+      <a href="#faq" class="toc-link">FAQ</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>
