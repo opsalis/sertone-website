@@ -219,8 +219,8 @@
         </div>
         <div style="background:rgba(0,184,148,0.05);border:1px solid rgba(0,184,148,0.15);border-radius:10px;padding:1.1rem 1.25rem;">
           <div style="font-size:1.3rem;margin-bottom:0.5rem;">🌍</div>
-          <strong style="color:#e2e8f0;">Geographic distribution</strong>
-          <p style="font-size:0.85rem;color:#64748b;margin:0.4rem 0 0;line-height:1.55;">Place gateways in different regions. Consumers connect to the nearest one automatically.</p>
+          <strong style="color:#e2e8f0;">Multi-region resilience</strong>
+          <p style="font-size:0.85rem;color:#64748b;margin:0.4rem 0 0;line-height:1.55;">Place gateways in different regions or providers — for resilience, not latency. The mesh routes each request to a live instance at random, never by proximity, so a regional outage can't take your service down.</p>
         </div>
         <div style="background:rgba(0,184,148,0.05);border:1px solid rgba(0,184,148,0.15);border-radius:10px;padding:1.1rem 1.25rem;">
           <div style="font-size:1.3rem;margin-bottom:0.5rem;">📦</div>
@@ -247,7 +247,7 @@
           <div class="ha-consumer-box">Consumer B</div>
           <div class="ha-consumer-box">Consumer C</div>
         </div>
-        <div class="ha-arrow-down">↓ routed to nearest available gateway ↓</div>
+        <div class="ha-arrow-down">↓ routed to a live gateway — chosen at random, not by location ↓</div>
         <div class="ha-network-bar">SERTONE GLOBAL NETWORK</div>
         <div class="ha-arrow-down">↓ ↓ ↓</div>
         <div class="ha-gateways">
@@ -301,7 +301,7 @@
   -p 80:80 -p 3002:3002 \
   -v sertone-data:/app/data \
   --restart unless-stopped \
-  sertonenet/gateway:latest</code></pre>
+  {{INSTALL_IMAGE}}</code></pre>
         </div>
 
         <div class="selfhost-step">

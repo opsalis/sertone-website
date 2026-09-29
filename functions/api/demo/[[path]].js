@@ -255,6 +255,139 @@ async function handleWeather(url) {
   }
 }
 
+// Subscription plans mirror the demo page's plan selector (monthly / annual).
+const SUB_PLANS = {
+  monthly: { price: '9.99', calls: 10000, days: 30 },
+  annual: { price: '99.99', calls: 150000, days: 365 },
+};
+
+// handleSubscribe mocks the marketplace subscribe call: a consumer buys a metered plan for an API,
+// the settlement contract records it, and a subscription token is issued. Shape matches what the
+// subscription demo renders (subscription_token, plan, calls_limit, expires_at, tx_hash).
+async function handleSubscribe(request) {
+  const body = await readBody(request);
+  const reqBody = body.params || body;
+  const plan = SUB_PLANS[reqBody.plan] ? reqBody.plan : 'monthly';
+  const p = SUB_PLANS[plan];
+  const token = 'sub_' + Array.from({ length: 24 }, () => Math.floor(Math.random() * 36).toString(36)).join('');
+  const txHash = '0x' + Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+  return jsonResp(sertoneWrap({
+    status: 'active',
+    subscription_token: token,
+    plan,
+    api_id: reqBody.api_id || 'demo-api',
+    price_usdc: p.price,
+    calls_limit: p.calls,
+    calls_remaining: p.calls,
+    expires_at: new Date(Date.now() + p.days * 86400000).toISOString(),
+    tx_hash: txHash,
+  }));
+}
+
+// handleSubscriptionStatus mocks the status check for an active subscription (no metered usage yet,
+// so calls_used starts at 0). The demo passes plan/api_id via params; unknown plan falls back sanely.
+async function handleSubscriptionStatus(request) {
+  const body = await readBody(request);
+  const reqBody = body.params || body;
+  const plan = SUB_PLANS[reqBody.plan] ? reqBody.plan : 'monthly';
+  const p = SUB_PLANS[plan];
+  const used = reqBody.calls_used || 0;
+  return jsonResp(sertoneWrap({
+    status: 'active',
+    plan,
+    api_id: reqBody.api_id || 'demo-api',
+    calls_used: used,
+    calls_remaining: Math.max(0, p.calls - used),
+    calls_limit: p.calls,
+    expires_at: new Date(Date.now() + p.days * 86400000).toISOString(),
+    days_remaining: p.days,
+  }));
+}
+
+// handleGRPC mocks a gRPC unary call (the multi-protocol demo's UserService.GetUser). The demo
+// sends the request message as params ({ user_id: 42 }); we echo a protobuf-shaped OK response so
+// the "run all 6 protocols in parallel" comparison has a real gRPC row.
+async function handleGRPC(request) {
+  const body = await readBody(request);
+  const reqBody = body.params || body;
+  const userId = reqBody.user_id || reqBody.id || 42;
+  return jsonResp(sertoneWrap({
+    service: 'UserService',
+    method: 'GetUser',
+    status: 'OK',
+    status_code: 0,
+    encoding: 'protobuf',
+    response: {
+      user_id: userId,
+      name: 'Ada Lovelace',
+      email: 'user' + userId + '@example.com',
+      created_at: new Date(Date.now() - 86400000 * 400).toISOString(),
+      active: true,
+    },
+  }));
+}
+
+// handleREST mocks a plain REST resource — a stock quote, matching the rest-api demo's default
+// POST /quote/AAPL. It reads the symbol from the request path so a visitor editing the endpoint
+// (/quote/TSLA) gets that symbol back. Fast + self-contained (no upstream), so the flagship demo
+// never blocks: it previously defaulted to the SSE ticker, whose event-stream body cannot be parsed
+// by callDemo's response.json() and hung to the 25s timeout.
+async function handleREST(request) {
+  const body = await readBody(request);
+  const path = body.path || '/quote/AAPL';
+  const m = path.match(/\/quote\/([A-Za-z.\-]+)/);
+  const symbol = (m ? m[1] : 'AAPL').toUpperCase();
+  const base = { AAPL: 198.5, GOOGL: 175.2, TSLA: 245.8, MSFT: 420.1, AMZN: 185.3 }[symbol] || 100;
+  const price = +(base + (Math.random() - 0.5) * 4).toFixed(2);
+  const change = +((Math.random() - 0.45) * 3).toFixed(2);
+  return jsonResp(sertoneWrap({
+    symbol,
+    price,
+    currency: 'USD',
+    change,
+    change_pct: +((change / price) * 100).toFixed(2),
+    volume: Math.floor(Math.random() * 5000000) + 500000,
+    market: 'NASDAQ',
+    as_of: new Date().toISOString(),
+  }));
+}
+
+// handleMCP mocks an MCP tool call. Each catalog API becomes an MCP tool (one per endpoint), named
+// like Crypto_Prices_getPrice; an AI agent (e.g. Claude) calls the tool, the control center routes
+// it and settles USDC, and returns the result. The demo lets a visitor invoke a tool the way an
+// agent would. Two tools are modeled: Crypto_Prices_getPrice({symbol}) and
+// Weather_API_getForecast({city, days}).
+async function handleMCP(request) {
+  const body = await readBody(request);
+  const reqBody = body.params || body;
+  const tool = reqBody.tool || 'Crypto_Prices_getPrice';
+  const args = reqBody.arguments || reqBody.args || reqBody;
+  let result;
+  if (tool === 'Weather_API_getForecast') {
+    const city = args.city || 'Tokyo';
+    const days = Math.min(Math.max(parseInt(args.days, 10) || 5, 1), 7);
+    const conditions = ['Sunny', 'Partly cloudy', 'Cloudy', 'Light rain', 'Clear'];
+    const forecast = Array.from({ length: days }, (_, i) => {
+      const hi = 18 + Math.floor(Math.random() * 12);
+      return { day: i + 1, high_c: hi, low_c: hi - 6 - Math.floor(Math.random() * 4), condition: conditions[Math.floor(Math.random() * conditions.length)] };
+    });
+    result = { city, unit: 'C', days, forecast };
+  } else {
+    const symbol = String(args.symbol || 'BTC').toUpperCase();
+    const base = { BTC: 64200, ETH: 3120, SOL: 145.6, USDC: 1.0, DOGE: 0.16 }[symbol] || 100 + Math.random() * 500;
+    const price = +(base * (1 + (Math.random() - 0.5) * 0.02)).toFixed(2);
+    result = { symbol, price_usd: price, change_24h_pct: +((Math.random() - 0.45) * 6).toFixed(2), as_of: new Date().toISOString() };
+    tool === 'Crypto_Prices_getPrice' || (result.note = 'unknown tool; defaulted to Crypto_Prices_getPrice');
+  }
+  return jsonResp(sertoneWrap({
+    protocol: 'mcp',
+    tool,
+    arguments: args && typeof args === 'object' && !args.tool ? args : {},
+    is_error: false,
+    result,
+  }));
+}
+
 export async function onRequest(context) {
   if (context.request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: CORS });
@@ -274,8 +407,13 @@ export async function onRequest(context) {
   if (path === 'api/bb-xmlrpc')           return handleXMLRPC(context.request);
   if (path === 'api/bb-webhook-receiver') return handleWebhook(context.request);
   if (path === 'api/bb-jsonrpc')          return handleJSONRPC(context.request);
+  if (path === 'api/bb-grpc')             return handleGRPC(context.request);
+  if (path === 'api/bb-rest')             return handleREST(context.request);
+  if (path === 'api/bb-mcp')              return handleMCP(context.request);
   if (path === 'api/earthquakes')         return handleEarthquakes(url);
   if (path === 'api/weather')             return handleWeather(url);
+  if (path === 'api/subscribe')           return handleSubscribe(context.request);
+  if (path === 'api/subscription/status') return handleSubscriptionStatus(context.request);
 
   return jsonResp({ error: 'Not found', path }, 404);
 }

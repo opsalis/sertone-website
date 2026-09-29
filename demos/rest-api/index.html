@@ -173,7 +173,7 @@
           <strong style="color:#1e293b;">What is the Sertone control center?</strong> A single Docker container you run on your own machine — a laptop, a Raspberry Pi, a cloud server. It connects you to the Sertone Global Network. Through its built-in web console, you browse services, register your own, manage your wallet, and monitor your earnings. Installation takes minutes. It is completely free, forever.
         </p>
         <div style="margin-top:0.75rem;">
-          <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+          <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 {{INSTALL_IMAGE}}</code>
         </div>
       </div>
     </section>
@@ -195,7 +195,7 @@
           <h3>Request Configuration</h3>
           <div class="demo-field">
             <label for="rest-api-name">API Name</label>
-            <input type="text" id="rest-api-name" value="bb-sse-ticker" placeholder="bb-sse-ticker">
+            <input type="text" id="rest-api-name" value="bb-rest" placeholder="bb-rest">
             <label for="rest-endpoint">API Path</label>
             <input type="text" id="rest-endpoint" value="/quote/AAPL" placeholder="/quote/AAPL">
           </div>
@@ -300,7 +300,7 @@ print(response.json()['result'])</code></pre>
           <pre class="code-block"><code><span class="prompt">$</span> docker run -d --name sertone \
   -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
   -v sertone-data:/app/data \
-  sertone/wrapper:latest</code></pre>
+  {{INSTALL_IMAGE}}</code></pre>
         </div>
 
         <div class="selfhost-step">
@@ -388,7 +388,7 @@ print(response.json()['result'])</code></pre>
         <li><a href="/terms">Terms</a></li>
         <li><a href="/privacy">Privacy</a></li>
       </ul>
-      <p class="footer-copy">&copy; 2026 Sertone LLC. All rights reserved.</p>
+      <p class="footer-copy">&copy; 2026 Sertone</p>
     </div>
   </footer>
 

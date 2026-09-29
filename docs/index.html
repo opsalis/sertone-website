@@ -55,6 +55,7 @@
         <a href="/docs/" class="nav-link active">Overview</a>
         <a href="/docs/quick-start" class="nav-link">Quick Start</a>
         <a href="/docs/installation" class="nav-link">Installation</a>
+        <a href="/docs/config-file" class="nav-link">Config File</a>
       </div>
 
       <div class="nav-section">
@@ -139,7 +140,7 @@
 
       <h2 id="what-is-sertone">What is Sertone?</h2>
       <p>Sertone is a global service network. There are no Sertone servers. There is no Sertone database. There is no Sertone employee approving your listing or processing your payment.</p>
-      <p>Every participant runs their own Sertone control center &mdash; a single Docker container on their own hardware. Sellers register services. Buyers discover them. Calls flow directly between participants through the Sertone Global Network, a proprietary fully encrypted protocol. Payment settles automatically in USDC.</p>
+      <p>Every participant runs their own Sertone control center &mdash; a single Docker container on their own hardware. Sellers register services. Buyers discover them. Calls flow directly between participants through the Sertone Global Network, a purpose-built fully encrypted protocol. Payment settles automatically in USDC.</p>
       <p>Nobody controls who can join. Nobody controls what you sell. Nobody can see what you buy. Nobody can freeze your funds.</p>
       <p><strong>Sertone built the protocol &mdash; the roads, not the shops.</strong></p>
 
@@ -183,7 +184,7 @@
           <tr>
             <td><strong>Cost</strong></td>
             <td>20&ndash;40% commission</td>
-            <td>5% IP royalty</td>
+            <td>1% IP royalty</td>
           </tr>
           <tr>
             <td><strong>Your data</strong></td>
@@ -208,14 +209,14 @@
 
       <h2 id="how-it-works">How it works</h2>
       <ol>
-        <li><strong>Install</strong> &mdash; <code>docker run sertone/wrapper:latest</code> on any machine</li>
+        <li><strong>Install</strong> &mdash; <code>docker run -d --name sertone -p 3000:3000 -p 3002:3002 {{INSTALL_IMAGE}}</code> on any machine</li>
         <li><strong>Register</strong> &mdash; add your service via the web console, set your price</li>
         <li><strong>Publish</strong> &mdash; your service appears in the global catalog automatically</li>
-        <li><strong>Earn</strong> &mdash; consumers call your service, USDC settles automatically. You earn 95%.</li>
+        <li><strong>Earn</strong> &mdash; consumers call your service, USDC settles automatically. You earn 99%.</li>
       </ol>
 
       <div class="info-box">
-        <p><strong>You keep 95%.</strong> Sertone deducts a 5% protocol royalty from every settlement &mdash; automatically, with no invoices, no approval process, and no payment terms. There is no other fee.</p>
+        <p><strong>You keep 99%.</strong> Sertone deducts a 1% protocol royalty from every settlement &mdash; automatically, with no invoices, no approval process, and no payment terms. There is no other fee.</p>
       </div>
 
       <h2 id="next-steps">Next steps</h2>

@@ -161,6 +161,20 @@
           </div>
         </a>
 
+        <!-- Config File -->
+        <a href="/demos/config-file" class="demo-card">
+          <div class="demo-card-icon">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/></svg>
+          </div>
+          <h3>Config File</h3>
+          <p>Drop one btw.yaml next to a wrapper and it configures itself on boot — network, identity, and the services it hosts. No console clicking. Deploy one wrapper or a thousand identical ones with Terraform, and watch a headless producer come up live from a single file.</p>
+          <div class="demo-card-tags">
+            <span class="demo-tag">Headless</span>
+            <span class="demo-tag">Fleet Deploy</span>
+            <span class="demo-tag">Self-Configuring</span>
+          </div>
+        </a>
+
         <!-- High Availability -->
         <a href="/demos/high-availability" class="demo-card">
           <div class="demo-card-icon">
@@ -297,7 +311,7 @@
           Once connected, you earn USDC or USDT in real time for every service you provide to users worldwide. And you pay in USDC or USDT for remote services your applications consume. Every transaction settles automatically — no invoices, no payment terms, no intermediary.
         </p>
         <div style="margin-top:1rem;text-align:center;">
-          <code style="background:#0f172a;color:#00b894;padding:0.6rem 1.2rem;border-radius:8px;font-size:0.85rem;display:inline-block;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+          <code style="background:#0f172a;color:#00b894;padding:0.6rem 1.2rem;border-radius:8px;font-size:0.85rem;display:inline-block;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 {{INSTALL_IMAGE}}</code>
           <p style="font-size:0.78rem;color:#94a3b8;margin:0.5rem 0 0;">That is it. You are on the network.</p>
         </div>
       </div>

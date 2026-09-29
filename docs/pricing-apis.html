@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Service Pricing — Sertone Docs | How Billing Works</title>
-  <meta name="description" content="How API pricing works on Sertone. Owners set their price. Consumer pays that price. 5% is deducted from the owner. Per-call or monthly subscription.">
+  <meta name="description" content="How API pricing works on Sertone. Owners set their price. Consumer pays that price. 1% is deducted from the owner. Per-call or monthly subscription.">
   <meta name="keywords" content="API pricing model, per call billing, USDC API price, set API price, API fee structure, API marketplace commission, Sertone pricing">
   <meta name="author" content="Sertone">
   <meta name="robots" content="index, follow">
@@ -12,17 +12,17 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://sertone.net/docs/pricing-apis">
   <meta property="og:title" content="Service Pricing — Sertone Docs | How Billing Works">
-  <meta property="og:description" content="Consumer pays owner's price. 5% deducted from owner. Per-call or subscription.">
+  <meta property="og:description" content="Consumer pays owner's price. 1% deducted from owner. Per-call or subscription.">
   <meta property="og:site_name" content="Sertone">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Service Pricing — Sertone Docs">
-  <meta name="twitter:description" content="Consumer pays owner's price. 5% deducted from owner. Per-call or subscription.">
+  <meta name="twitter:description" content="Consumer pays owner's price. 1% deducted from owner. Per-call or subscription.">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Service Pricing — Sertone",
-    "description": "How service pricing works on Sertone. Consumer pays owner's price. 5% deducted from owner. Per-call or monthly subscription.",
+    "description": "How service pricing works on Sertone. Consumer pays owner's price. 1% deducted from owner. Per-call or monthly subscription.",
     "url": "https://sertone.net/docs/pricing-apis",
     "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
   }
@@ -52,6 +52,7 @@
         <a href="/docs/" class="nav-link">Overview</a>
         <a href="/docs/quick-start" class="nav-link">Quick Start</a>
         <a href="/docs/installation" class="nav-link">Installation</a>
+        <a href="/docs/config-file" class="nav-link">Config File</a>
       </div>
       <div class="nav-section">
         <div class="nav-section-title">Publishing Services</div>
@@ -99,14 +100,14 @@
 
     <main class="docs-content">
       <h1>Pricing</h1>
-      <p class="lead">Consumer pays the owner's price. Owner keeps 95%. Per-call or subscription.</p>
+      <p class="lead">Consumer pays the owner's price. Owner keeps 99%. Per-call or subscription.</p>
 
       <h2 id="pricing-model">Pricing model</h2>
-      <p>The owner sets a price per call. The consumer pays exactly that amount. From that payment, 5% is deducted and goes to the platform. The owner receives the remaining 95%.</p>
+      <p>The owner sets a price per call. The consumer pays exactly that amount. From that payment, 1% is deducted and goes to the platform. The owner receives the remaining 99%.</p>
 
       <pre><code>consumer pays = owner's price
-owner receives = owner's price × 95%
-platform fee   = owner's price × 5%</code></pre>
+owner receives = owner's price × 99%
+platform fee   = owner's price × 1%</code></pre>
 
       <h2 id="example">Example breakdown</h2>
       <table>
@@ -124,10 +125,10 @@ platform fee   = owner's price × 5%</code></pre>
       <p>When you register your API, you set the price per call in USDC. This is visible to consumers in the catalog. You can update your price at any time from the web console.</p>
 
       <h2 id="subscriptions">Subscriptions</h2>
-      <p>Owners can also offer monthly subscription plans for unlimited access. The same 95/5 split applies to subscription payments.</p>
+      <p>Owners can also offer monthly subscription plans for unlimited access. The same 99%/1% split applies to subscription payments.</p>
 
       <div class="info-box">
-        <p><strong>No hidden fees.</strong> The consumer pays the owner's stated price. The 5% platform fee is deducted from the owner's side. Plus a small network transaction fee.</p>
+        <p><strong>No hidden fees.</strong> The consumer pays the owner's stated price. The 1% platform fee is deducted from the owner's side. Plus a small network transaction fee.</p>
       </div>
 
       <nav class="docs-page-nav">

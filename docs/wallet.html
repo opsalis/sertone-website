@@ -52,6 +52,7 @@
         <a href="/docs/" class="nav-link">Overview</a>
         <a href="/docs/quick-start" class="nav-link">Quick Start</a>
         <a href="/docs/installation" class="nav-link">Installation</a>
+        <a href="/docs/config-file" class="nav-link">Config File</a>
       </div>
       <div class="nav-section">
         <div class="nav-section-title">Publishing Services</div>
@@ -110,6 +111,11 @@
         Your deposit address is visible in the <strong>Finance</strong> tab of your control center web console.
       </div>
 
+      <h2 id="personas">Personas</h2>
+      <p>A <strong>persona</strong> is your identity on the network &mdash; a keypair, with its own wallet, that represents you. You can have more than one, and a single persona can be used by more than one wrapper: run the same persona on your laptop, a server, and a phone, and they all act as the same identity and share the same wallet.</p>
+      <p>Your control center creates a persona automatically on first start, so there is nothing to set up. If you run several wrappers and want them to act as one identity, you point each at the same persona &mdash; by its public id, in the <a href="/docs/config-file#identity">config file's identity section</a>. A persona's secret is <strong>never</strong> written to a config file; only its public id is.</p>
+      <p>Each wrapper is owned by one persona, and that owning persona is who can administer it. Your persona's secret (its recovery words) is yours alone &mdash; keep it safe: it is how you restore your identity and your funds.</p>
+
       <h2 id="adding-funds">Adding funds</h2>
       <p>There are two ways to fund your wallet.</p>
 
@@ -136,7 +142,7 @@
 
       <h2 id="earning">How earnings work</h2>
       <p>When a consumer calls one of your registered APIs, the payment goes into your wallet immediately after the call settles. Settlement is automatic — you do not need to approve or trigger it.</p>
-      <p>The settlement is 95% of the API price you set. 5% is the platform fee, deducted automatically. Your 95% lands in your wallet.</p>
+      <p>The settlement is 99% of the API price you set. 1% is the platform fee, deducted automatically. Your 99% lands in your wallet.</p>
       <p>To move earnings to an external wallet or exchange, use the <strong>Withdraw</strong> button in the Finance tab. See <a href="/docs/funding">Funding &amp; Withdrawing</a> for full details.</p>
 
       <h2 id="usdt">USDC and USDT</h2>
@@ -186,6 +192,7 @@
     <aside class="docs-toc">
       <div class="toc-title">On this page</div>
       <a href="#your-wallet" class="toc-link">What your wallet is</a>
+      <a href="#personas" class="toc-link">Personas</a>
       <a href="#adding-funds" class="toc-link">Adding funds</a>
       <a href="#card" class="toc-link sub">Buy with Visa/Mastercard</a>
       <a href="#transfer" class="toc-link sub">Transfer USDC/USDT</a>

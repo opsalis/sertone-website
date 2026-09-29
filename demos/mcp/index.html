@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP Server — Let AI Agents Call Your APIs — Sertone</title>
+  <meta name="description" content="Connect your Sertone control center as an MCP server. Claude and other AI agents call your catalog APIs as tools — routed and settled in USDC automatically.">
+  <meta name="keywords" content="MCP server, Model Context Protocol, AI agent tools, Claude MCP, API marketplace, USDC per-call, Sertone MCP demo">
+  <link rel="canonical" href="https://sertone.net/demos/mcp/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/mcp/">
+  <meta property="og:title" content="MCP Server — Let AI Agents Call Your APIs">
+  <meta property="og:description" content="Connect your Sertone control center as an MCP server. Claude and other AI agents call your catalog APIs as tools — settled in USDC automatically.">
+  <meta property="og:site_name" content="Sertone">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MCP Server — Let AI Agents Call Your APIs">
+  <meta name="twitter:description" content="Claude and other AI agents call your Sertone catalog APIs as tools — settled in USDC automatically.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Sertone MCP Server",
+    "applicationCategory": "DeveloperApplication",
+    "description": "Expose your Sertone API catalog to AI agents over the Model Context Protocol. Each API becomes a tool; calls are routed and settled in USDC.",
+    "url": "https://sertone.net/demos/mcp/",
+    "operatingSystem": "Docker (Linux, macOS, Windows)",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free self-hosted control center"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Let AI Agents Call Your APIs with Sertone MCP",
+    "description": "Connect your Sertone control center as an MCP server so Claude and other agents can call your catalog APIs as tools.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Install the control center",
+        "text": "Pull and run the free Sertone Docker container on your own hardware."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Connect the MCP server",
+        "text": "Point Claude Desktop or Claude Code at your control center's MCP endpoint with your bearer token."
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Ask in plain language",
+        "text": "Each catalog API appears as a tool. The agent calls it, the wrapper routes the call and settles USDC, and the result flows back into the conversation."
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <nav class="demo-breadcrumb demo-container" aria-label="Breadcrumb">
+    <a href="/">Home</a> <span>&rsaquo;</span>
+    <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+    <a href="/demos/">Protocols</a> <span>&rsaquo;</span>
+    MCP
+  </nav>
+
+  <!-- Hero -->
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Protocol Demo</p>
+      <h1>Model Context Protocol on Sertone</h1>
+      <p class="demo-tagline">Connect your control center as an MCP server and every API in your catalog becomes a tool an AI agent can call. Claude routes the call, the wrapper settles USDC, and the result flows straight back into the conversation.</p>
+    </div>
+  </section>
+
+  <div class="demo-container">
+    <div class="demo-testnet-banner">
+      <strong>Live Demo</strong> — This demo runs on a testnet using test USDC. When you install your own Sertone, it connects to the production blockchain with real USDC.
+    </div>
+  </div>
+
+  <article class="demo-container">
+
+    <!-- Architecture Diagram -->
+    <section class="demo-architecture" aria-label="Architecture diagram">
+      <h2>How It Works</h2>
+      <svg viewBox="0 0 960 220" role="img" aria-label="MCP data flow: an AI agent calls a tool on your control center's MCP server, which routes the call to the marketplace API, settles USDC, and returns the result to the agent">
+        <!-- AI Agent -->
+        <rect x="10" y="60" width="130" height="80" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+        <text x="75" y="95" text-anchor="middle" font-size="13" font-weight="600" fill="#1e293b">AI Agent</text>
+        <text x="75" y="115" text-anchor="middle" font-size="11" fill="#64748b">Claude / other</text>
+
+        <!-- Arrow 1 -->
+        <line x1="140" y1="100" x2="200" y2="100" stroke="#00b894" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <text x="170" y="90" text-anchor="middle" font-size="9" fill="#94a3b8">tool call</text>
+
+        <!-- MCP Server -->
+        <rect x="200" y="50" width="140" height="100" rx="10" fill="#f0fdf4" stroke="#00b894" stroke-width="2"/>
+        <text x="270" y="85" text-anchor="middle" font-size="12" font-weight="600" fill="#1e293b">Your Sertone</text>
+        <text x="270" y="104" text-anchor="middle" font-size="10" fill="#64748b">MCP server :3003</text>
+        <text x="270" y="121" text-anchor="middle" font-size="10" fill="#64748b">tool ↔ API</text>
+
+        <!-- Arrow 2 -->
+        <line x1="340" y1="100" x2="410" y2="100" stroke="#00b894" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <text x="375" y="90" text-anchor="middle" font-size="9" fill="#94a3b8">routed</text>
+
+        <!-- Owner Sertone -->
+        <rect x="410" y="60" width="130" height="80" rx="10" fill="#f0fdf4" stroke="#00b894" stroke-width="2"/>
+        <text x="475" y="95" text-anchor="middle" font-size="12" font-weight="600" fill="#1e293b">Owner's Sertone</text>
+        <text x="475" y="115" text-anchor="middle" font-size="11" fill="#64748b">API Owner</text>
+
+        <!-- Arrow 3 -->
+        <line x1="540" y1="100" x2="610" y2="100" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead-amber)"/>
+        <text x="575" y="90" text-anchor="middle" font-size="9" fill="#f59e0b">USDC</text>
+
+        <!-- Settlement -->
+        <rect x="610" y="50" width="140" height="100" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+        <text x="680" y="85" text-anchor="middle" font-size="12" font-weight="600" fill="#1e293b">Settlement</text>
+        <text x="680" y="104" text-anchor="middle" font-size="10" fill="#92400e">per-call USDC</text>
+        <text x="680" y="121" text-anchor="middle" font-size="10" fill="#92400e">1% platform</text>
+
+        <!-- API -->
+        <rect x="800" y="60" width="130" height="80" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+        <text x="865" y="95" text-anchor="middle" font-size="13" font-weight="600" fill="#1e293b">Catalog API</text>
+        <text x="865" y="115" text-anchor="middle" font-size="11" fill="#64748b">the tool</text>
+
+        <!-- Return arrow -->
+        <path d="M865,140 L865,190 L75,190 L75,140" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arrowhead-gray)"/>
+        <text x="470" y="207" text-anchor="middle" font-size="10" fill="#94a3b8">Tool result returns to the agent's conversation + latency</text>
+
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#00b894"/>
+          </marker>
+          <marker id="arrowhead-gray" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8"/>
+          </marker>
+          <marker id="arrowhead-amber" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+          </marker>
+        </defs>
+      </svg>
+      <p class="arch-caption">Your control center runs an MCP server (port 3003) that exposes each catalog API as a tool. An AI agent calls a tool by name; the wrapper routes the call, settles the per-call fee in USDC, and returns the result to the agent's conversation. The agent never handles keys, billing, or protocol details.</p>
+    </section>
+
+    <!-- Business Case -->
+    <section class="demo-business">
+      <h2>Why MCP on Sertone?</h2>
+      <p>Model Context Protocol (MCP) is an open standard that lets AI assistants call external tools and data sources. When your control center is connected as an MCP server, Claude and other agents can search your catalog, call APIs, and use the results directly in conversation &mdash; no copy-pasting, no manual steps.</p>
+      <p>Each API in your catalog becomes a separate MCP tool &mdash; one tool per endpoint, named after the API and operation (for example <code>Crypto_Prices_getPrice</code> or <code>Weather_API_getForecast</code>). The agent picks the right tool, supplies the parameters, and the wrapper does the rest: authentication, routing, and USDC settlement.</p>
+      <p>Real-world example: you ask Claude &ldquo;What&rsquo;s the current price of Bitcoin and the 5-day forecast for Tokyo?&rdquo; Claude calls two Sertone tools, your wallet is debited per call, and both answers land in the same reply. Any API you can buy on the marketplace becomes something your agent can use.</p>
+    </section>
+
+    <!-- Live Demo -->
+    <section class="demo-interactive">
+      <h2>Try It Live</h2>
+      <div class="demo-interactive-layout">
+
+        <div class="demo-form-panel">
+          <h3>MCP Tool Call</h3>
+          <div class="demo-field">
+            <label for="mcp-tool">Tool</label>
+            <select id="mcp-tool" onchange="mcpToolChanged()">
+              <option value="Crypto_Prices_getPrice" selected>Crypto_Prices_getPrice</option>
+              <option value="Weather_API_getForecast">Weather_API_getForecast</option>
+            </select>
+          </div>
+          <div class="demo-field" id="mcp-arg-crypto">
+            <label for="mcp-symbol">symbol</label>
+            <input type="text" id="mcp-symbol" value="BTC" placeholder="BTC">
+          </div>
+          <div class="demo-field" id="mcp-arg-weather" style="display:none;">
+            <label for="mcp-city">city</label>
+            <input type="text" id="mcp-city" value="Tokyo" placeholder="Tokyo">
+            <label for="mcp-days" style="margin-top:0.5rem;">days</label>
+            <input type="text" id="mcp-days" value="5" placeholder="5">
+          </div>
+          <div class="demo-field">
+            <label for="mcp-token">Bearer Token</label>
+            <input type="text" id="mcp-token" value="demo-public-key-2026" readonly>
+          </div>
+          <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.75rem;">This is the tool call an AI agent would make. The wrapper routes it, settles USDC, and returns the result.</p>
+          <button class="demo-run-btn" id="mcp-run-btn" onclick="runMcpDemo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Run Tool Call</span>
+          </button>
+        </div>
+
+        <div class="result-panel" id="mcp-result">
+          <div class="result-placeholder">Pick a tool and click "Run Tool Call" to see how an AI agent invokes a Sertone catalog API over MCP.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Code Samples -->
+    <section class="demo-code">
+      <h2>Connect Your Agent</h2>
+      <div class="code-tabs">
+        <button class="code-tab active" data-tab="curl">Claude Desktop</button>
+        <button class="code-tab" data-tab="javascript">Claude Code</button>
+        <button class="code-tab" data-tab="python">Raw tool call</button>
+      </div>
+
+      <div class="code-panel active" data-panel="curl">
+        <pre class="code-block"><code><span class="comment"># Add your control center as an MCP server in claude_desktop_config.json</span>
+{
+  <span class="prompt">"mcpServers"</span>: {
+    <span class="prompt">"sertone"</span>: {
+      <span class="prompt">"url"</span>: "https://localhost:3003/mcp",
+      <span class="prompt">"headers"</span>: { "Authorization": "Bearer YOUR_MCP_TOKEN" }
+    }
+  }
+}
+<span class="comment"># Restart Claude Desktop — your catalog APIs now appear as tools.</span></code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="javascript">
+        <pre class="code-block"><code><span class="comment"># Register the MCP server with Claude Code</span>
+<span class="prompt">$</span> claude mcp add --transport http sertone \
+    https://localhost:3003/mcp \
+    --header "Authorization: Bearer YOUR_MCP_TOKEN"
+
+<span class="comment"># Then just ask — each catalog API is a callable tool.</span></code></pre>
+      </div>
+
+      <div class="code-panel" data-panel="python">
+        <pre class="code-block"><code><span class="comment"># What an agent sends under the hood (JSON-RPC over MCP)</span>
+POST https://localhost:3003/mcp
+Authorization: Bearer YOUR_MCP_TOKEN
+
+{
+  "method": "tools/call",
+  "params": {
+    "name": "Crypto_Prices_getPrice",
+    "arguments": { "symbol": "BTC" }
+  }
+}
+<span class="comment"># The wrapper routes the call, deducts USDC, and returns the result.</span></code></pre>
+      </div>
+    </section>
+
+    <!-- Self-Host Instructions -->
+    <section class="demo-selfhost">
+      <h2>Self-Host in Minutes</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Install the Control Center</h4>
+          <p>Run the free Sertone Docker container. The MCP server starts automatically on port 3003 when your catalog loads.</p>
+          <pre class="code-block"><code><span class="prompt">$</span> docker run -d --name sertone \
+  -p 3000-3003:3000-3003 -p 3005-3006:3005-3006 \
+  -v sertone-data:/app/data \
+  {{INSTALL_IMAGE}}</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Add APIs to Your Catalog</h4>
+          <p>Open the web console, browse the marketplace, and add the APIs you want. Each endpoint becomes an MCP tool automatically &mdash; no configuration.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Connect Your Agent</h4>
+          <p>Copy your MCP token from <strong>Settings &gt; Security</strong> and point Claude Desktop or Claude Code at <code>https://localhost:3003/mcp</code> using the samples above.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>Ask in Plain Language</h4>
+          <p>Your agent picks the right tool, the wrapper settles USDC per call, and results flow back into the conversation. You pay only for what the agent uses.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SEO Footer -->
+    <section class="demo-footer-cta">
+      <h2>Ready to Give Your Agent Real Tools?</h2>
+      <p>Free Docker container, automatic tool generation from your catalog, USDC settlement per call. Read the full MCP guide for connection details.</p>
+      <a href="/docs/mcp" class="btn">Read the MCP Docs</a>
+      <a href="/try" class="btn btn-secondary" style="margin-left: 0.75rem;">Get Started</a>
+
+      <div class="related-demos" aria-label="Related demos">
+        <a href="/demos/a2a" class="related-demo-link">A2A Protocol Demo</a>
+        <a href="/demos/agents/" class="related-demo-link">Agents Demo</a>
+        <a href="/demos/rest-api/" class="related-demo-link">REST API Demo</a>
+        <a href="/demos/multi-protocol/" class="related-demo-link">Multi-Protocol</a>
+        <a href="/demos/pay-per-use/" class="related-demo-link">Pay-Per-Use Billing</a>
+        <a href="/demos/subscription/" class="related-demo-link">Subscriptions</a>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is MCP and how does Sertone use it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Model Context Protocol is an open standard for letting AI assistants call external tools. Your Sertone control center runs an MCP server that exposes each catalog API as a tool, so agents like Claude can call your APIs directly in conversation."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I have to configure each tool?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Every API in your catalog becomes an MCP tool automatically — one tool per endpoint. Add an API to your catalog and it appears to your agent with no extra setup."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How are MCP tool calls paid for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each tool call is a normal marketplace API call: the wrapper deducts the per-call price in USDC from your wallet and the API owner receives 99%, with 1% to the platform. You pay only for the calls your agent actually makes."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone</p>
+    </div>
+  </footer>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    function mcpToolChanged() {
+      var tool = document.getElementById('mcp-tool').value;
+      var isWeather = tool === 'Weather_API_getForecast';
+      document.getElementById('mcp-arg-crypto').style.display = isWeather ? 'none' : '';
+      document.getElementById('mcp-arg-weather').style.display = isWeather ? '' : 'none';
+    }
+
+    async function runMcpDemo() {
+      var btn = document.getElementById('mcp-run-btn');
+      var tool = document.getElementById('mcp-tool').value;
+      var args;
+      if (tool === 'Weather_API_getForecast') {
+        args = {
+          city: document.getElementById('mcp-city').value.trim() || 'Tokyo',
+          days: parseInt(document.getElementById('mcp-days').value, 10) || 5
+        };
+      } else {
+        args = { symbol: (document.getElementById('mcp-symbol').value.trim() || 'BTC').toUpperCase() };
+      }
+
+      setLoading(btn, true);
+      document.getElementById('mcp-result').innerHTML = '<div class="result-placeholder">Agent calling ' + tool + '() over MCP...</div>';
+
+      try {
+        var result = await callDemo('bb-mcp', { tool: tool, arguments: args }, { method: 'POST', path: '/mcp' });
+        renderResult('mcp-result', result);
+      } catch (err) {
+        showError('mcp-result', err);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+  </script>
+
+</body>
+</html>

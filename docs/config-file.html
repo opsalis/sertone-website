@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Config File — Sertone Docs | One-File Wrapper Setup</title>
+  <meta name="description" content="Configure a Sertone wrapper with one file. Drop a btw.yaml next to the binary and the wrapper sets itself up on boot — network, settings, identity, and the services it hosts. Built for headless and fleet deployments.">
+  <meta name="keywords" content="Sertone config file, btw.yaml, headless wrapper, fleet deployment, declarative configuration, self-configuring node">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/config-file">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/config-file">
+  <meta property="og:title" content="Config File — Sertone Docs | One-File Wrapper Setup">
+  <meta property="og:description" content="One btw.yaml configures a wrapper on boot — network, settings, identity, and hosted services. Built for headless and fleet deployments.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Config File — Sertone Docs">
+  <meta name="twitter:description" content="One btw.yaml configures a wrapper on boot: network, settings, identity, and hosted services.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Config File — Sertone",
+    "description": "Configure a Sertone wrapper with one btw.yaml file: network, settings, identity, and the services it hosts. Built for headless and fleet deployments.",
+    "url": "https://sertone.net/docs/config-file",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+        <a href="/docs/config-file" class="nav-link active">Config File</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Publishing Services</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering a Service</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using Services</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Discovering Services</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling Services</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Reliability &amp; Access</div>
+        <a href="/docs/high-availability" class="nav-link">High Availability</a>
+        <a href="/docs/vpn" class="nav-link">VPN Server</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Extend the Platform</div>
+        <a href="/docs/plugins" class="nav-link">Plugin System</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell a Service</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use Services</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Config File</h1>
+      <p class="lead">Set up a wrapper with a single file. Drop a <code>btw.yaml</code> next to the wrapper and it configures itself on start &mdash; no clicking through the console. This is how you deploy one wrapper, or a thousand identical ones, with a tool like Terraform or Ansible.</p>
+
+      <h2 id="overview">Overview</h2>
+      <p>Everything you can set in the control center, you can also declare in one file. On boot the wrapper reads <code>btw.yaml</code> and applies it: how it reaches the network, its settings, which identity it uses, and the services it hosts. The file is the source of truth &mdash; restart the wrapper and it comes back exactly as declared.</p>
+      <p>The file has five parts, all optional:</p>
+      <table>
+        <thead><tr><th>Section</th><th>What it sets</th></tr></thead>
+        <tbody>
+          <tr><td><code>wrapper</code></td><td>Network &amp; storage (where data lives, which addresses to listen on)</td></tr>
+          <tr><td><code>settings</code></td><td>The same preferences you find under Settings</td></tr>
+          <tr><td><code>identity</code></td><td>Which persona this wrapper uses, and who owns it</td></tr>
+          <tr><td><code>services</code></td><td>The services this wrapper hosts (APIs, sites, files)</td></tr>
+          <tr><td><code>schema_version</code></td><td>The file format version (use <code>1</code>)</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="location">Where the file lives</h2>
+      <p>The wrapper looks for <code>btw.yaml</code> in this order: the path in <code>BTW_CONFIG</code> if you set it; then <code>btw.yaml</code> in the wrapper&rsquo;s data directory (<code>BTW_DATA_DIR</code>, e.g. <code>/data</code>) &mdash; the natural spot for a container that mounts a data volume; then next to the wrapper binary. So on a headless deploy you can simply drop <code>btw.yaml</code> into the mounted data directory, with no environment variable to set.</p>
+      <p>If you name a file explicitly and it is missing or invalid, the wrapper refuses to start rather than guessing &mdash; see <a href="#safety">Safety</a>. If there is no file at all, the wrapper simply boots on its defaults, exactly as before.</p>
+
+      <h2 id="wrapper">wrapper &mdash; network &amp; storage</h2>
+      <p>Boot settings for the wrapper itself. These take effect on the next start.</p>
+      <ul>
+        <li><code>data_dir</code> &mdash; where the wrapper keeps its data (keys, encrypted stores)</li>
+        <li><code>web_listen</code> &mdash; the address for the control center (default <code>:3000</code>)</li>
+        <li><code>mesh_listen</code> &mdash; the address the wrapper listens on for the mesh</li>
+        <li><code>mesh_advertise_addr</code> &mdash; the address other nodes should reach it at</li>
+        <li><code>bootstrap_peers</code> &mdash; a starting list of mesh addresses to connect to</li>
+        <li><code>share_dir</code> &mdash; a directory to serve (see <a href="#services">services</a>)</li>
+      </ul>
+      <p>Anything you set here overrides the matching environment variable; anything you leave out keeps its normal default.</p>
+
+      <h2 id="settings">settings &mdash; your preferences</h2>
+      <p>The same preferences available under Settings, set ahead of time. Only known, safe keys are accepted (for example spending limits, auto top-up mode, a nickname, your preferred region). An unknown key is rejected so a typo can never silently do the wrong thing.</p>
+
+      <h2 id="identity">identity &mdash; persona &amp; owner</h2>
+      <p>Two <strong>public</strong> ids &mdash; never secrets. Secrets are never written in this file.</p>
+      <ul>
+        <li><code>persona_uid</code> &mdash; the persona this wrapper uses. Leave it out and the wrapper creates a fresh persona on first boot (and keeps it across restarts). Set it to use a persona that is already present on this wrapper.</li>
+        <li><code>owner_persona</code> &mdash; the public fingerprint of the persona that owns this wrapper. It lets the owner administer this wrapper remotely from any device. Leave it out and remote administration is off.</li>
+      </ul>
+      <p>See <a href="/docs/wallet">Wallet &amp; Personas</a> for what a persona is. A persona&rsquo;s secret key is provisioned out of band, never in the file.</p>
+
+      <h2 id="services">services &mdash; what this wrapper hosts</h2>
+      <p>A list of the services this wrapper runs. The wrapper starts each one on boot and keeps it running. Each entry has a <code>type</code>:</p>
+
+      <h3 id="svc-appserver">appserver &mdash; host or front an API</h3>
+      <p>Serve an API to the mesh. Set exactly one of:</p>
+      <ul>
+        <li><code>path</code> &mdash; a backend this wrapper hosts (for example <code>http://127.0.0.1:8080</code>)</li>
+        <li><code>fqdn_port</code> &mdash; an existing server this wrapper puts in front of, at <code>host:port</code></li>
+      </ul>
+      <p>Optional <code>pay_per_use</code> (a price in USDC per call) and <code>subscription</code> set the terms. Payment is always settled on-chain in USDC or USDT; the file only declares the price.</p>
+
+      <h3 id="svc-web">website / ftp &mdash; serve a directory</h3>
+      <p>Serve a folder as a mesh-native website (<code>type: website</code>) or file share (<code>type: ftp</code>) with <code>share_dir</code>. Visitors reach it over the mesh under your wrapper&rsquo;s name &mdash; no public IP is ever exposed.</p>
+
+      <h3 id="svc-app">appstore-app &mdash; run a packaged app 24/7</h3>
+      <p>Run a published app continuously (<code>app</code> is the app&rsquo;s id, with optional <code>tracks_dir</code> and <code>label</code>). <em>Declaring an app in the config file is coming next; today, install it from the App Store and it stays running.</em></p>
+
+      <h2 id="safety">Safety</h2>
+      <ul>
+        <li><strong>No secrets, ever.</strong> The file holds only public ids and settings. The wrapper refuses to load a file that contains anything secret-shaped.</li>
+        <li><strong>Fail-closed.</strong> A file you named that is missing or invalid stops the boot &mdash; the wrapper never starts half-configured. A configured persona that is not present is refused rather than replaced with the wrong one.</li>
+        <li><strong>The file wins.</strong> On restart the wrapper re-reads the file and comes back exactly as declared, so a fleet stays consistent and self-heals after a reboot with no manual step.</li>
+      </ul>
+
+      <h2 id="example">A full example</h2>
+      <p>A headless wrapper that serves one API and one website:</p>
+      <pre><code>schema_version: 1
+
+wrapper:
+  data_dir: /var/lib/sertone
+  mesh_listen: ":3991"
+
+identity: {}          # no persona_uid → create one on first boot, keep it across restarts
+
+settings:
+  nickname: "edge-node-01"
+
+services:
+  - type: appserver
+    name: quotes
+    fqdn_port: 127.0.0.1:8080     # this wrapper fronts a server already running here
+    pay_per_use: "0.001"          # 0.001 USDC per call
+
+  - type: website
+    name: docs-site
+    share_dir: /var/www/site      # served over the mesh under this wrapper's name
+</code></pre>
+      <p>Deploy that file to a fresh machine, start the wrapper, and it comes up serving both &mdash; nothing else to do.</p>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/installation" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Installation</span>
+        </a>
+        <a href="/docs/registering-apis" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Registering a Service</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#overview" class="toc-link">Overview</a>
+      <a href="#location" class="toc-link">Where the file lives</a>
+      <a href="#wrapper" class="toc-link">wrapper</a>
+      <a href="#settings" class="toc-link">settings</a>
+      <a href="#identity" class="toc-link">identity</a>
+      <a href="#services" class="toc-link">services</a>
+      <a href="#safety" class="toc-link">Safety</a>
+      <a href="#example" class="toc-link">A full example</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>

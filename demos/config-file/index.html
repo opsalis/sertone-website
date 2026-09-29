@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Config File — One File, a Wrapper Configures Itself — Sertone</title>
+  <meta name="description" content="Drop a btw.yaml next to a Sertone wrapper and it configures itself on boot — network, identity, and the services it hosts. Watch a headless wrapper come up from one file. Built for fleet deploys.">
+  <meta name="keywords" content="Sertone config file, btw.yaml, headless deploy, fleet provisioning, self-configuring wrapper, declarative node config, Terraform">
+  <link rel="canonical" href="https://sertone.net/demos/config-file/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sertone.net/demos/config-file/">
+  <meta property="og:title" content="Config File — One File, a Wrapper Configures Itself">
+  <meta property="og:description" content="Drop a btw.yaml and a Sertone wrapper sets itself up on boot — network, identity, hosted services. Built for headless fleet deploys.">
+  <meta property="og:site_name" content="Sertone">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Config File — One File, a Wrapper Configures Itself">
+  <meta name="twitter:description" content="Drop a btw.yaml and a Sertone wrapper configures itself on boot — network, identity, hosted services.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Sertone Config File (btw.yaml)",
+    "applicationCategory": "DeveloperApplication",
+    "description": "Configure a Sertone wrapper with one file. On boot it applies network, identity, and hosted services — no console clicking. Built for headless and fleet deployments.",
+    "url": "https://sertone.net/demos/config-file/",
+    "operatingSystem": "Docker (Linux, macOS, Windows)",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free self-hosted wrapper" }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/demos/style.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container">
+      <a href="/" class="nav-logo">Sertone<span>.</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/" class="active">Demos</a></li>
+        <li><a href="/learn/consumer">Consumer</a></li>
+        <li><a href="/learn/owner">Owner</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <nav class="demo-breadcrumb demo-container" aria-label="Breadcrumb">
+    <a href="/">Home</a> <span>&rsaquo;</span>
+    <a href="/demos/">Demos</a> <span>&rsaquo;</span>
+    <a href="/demos/">Deployment</a> <span>&rsaquo;</span>
+    Config File
+  </nav>
+
+  <section class="demo-hero">
+    <div class="demo-container">
+      <p class="section-label">Deployment Demo</p>
+      <h1>One File. A Wrapper Configures Itself.</h1>
+      <p class="demo-tagline">Drop a <code>btw.yaml</code> next to a Sertone wrapper and it sets itself up on boot &mdash; how it reaches the network, which identity it uses, and the services it hosts. No console clicking. Deploy one wrapper, or a thousand identical ones with Terraform, from the same file.</p>
+    </div>
+  </section>
+
+  <article class="demo-container">
+
+    <section class="demo-architecture" aria-label="Architecture diagram">
+      <h2>How It Works</h2>
+      <svg viewBox="0 0 960 200" role="img" aria-label="btw.yaml is read on boot and applied to the wrapper as network settings, identity, and hosted services, which then come up live on the mesh">
+        <rect x="10" y="55" width="150" height="90" rx="10" fill="#f0fdf4" stroke="#00b894" stroke-width="2"/>
+        <text x="85" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#1e293b">btw.yaml</text>
+        <text x="85" y="110" text-anchor="middle" font-size="11" fill="#64748b">one file</text>
+        <text x="85" y="126" text-anchor="middle" font-size="11" fill="#64748b">on disk</text>
+
+        <line x1="160" y1="100" x2="225" y2="100" stroke="#00b894" stroke-width="2" marker-end="url(#ah)"/>
+        <text x="192" y="90" text-anchor="middle" font-size="9" fill="#94a3b8">read on boot</text>
+
+        <rect x="225" y="45" width="160" height="110" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+        <text x="305" y="78" text-anchor="middle" font-size="12" font-weight="600" fill="#1e293b">Wrapper boot</text>
+        <text x="305" y="98" text-anchor="middle" font-size="10" fill="#64748b">applies each section</text>
+        <text x="305" y="114" text-anchor="middle" font-size="10" fill="#64748b">fail-closed, no secrets</text>
+        <text x="305" y="130" text-anchor="middle" font-size="10" fill="#64748b">file is the truth</text>
+
+        <line x1="385" y1="100" x2="450" y2="100" stroke="#00b894" stroke-width="2" marker-end="url(#ah)"/>
+
+        <rect x="450" y="30" width="180" height="46" rx="8" fill="#f0fdf4" stroke="#00b894" stroke-width="1.5"/>
+        <text x="540" y="58" text-anchor="middle" font-size="11" fill="#1e293b">Network + storage</text>
+        <rect x="450" y="86" width="180" height="46" rx="8" fill="#f0fdf4" stroke="#00b894" stroke-width="1.5"/>
+        <text x="540" y="114" text-anchor="middle" font-size="11" fill="#1e293b">Identity (persona)</text>
+        <rect x="450" y="142" width="180" height="46" rx="8" fill="#f0fdf4" stroke="#00b894" stroke-width="1.5"/>
+        <text x="540" y="170" text-anchor="middle" font-size="11" fill="#1e293b">Hosted services</text>
+
+        <line x1="630" y1="100" x2="695" y2="100" stroke="#00b894" stroke-width="2" marker-end="url(#ah)"/>
+
+        <rect x="695" y="55" width="255" height="90" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+        <text x="822" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#1e293b">Live on the mesh</text>
+        <text x="822" y="110" text-anchor="middle" font-size="10" fill="#92400e">serving + earning in USDC/USDT</text>
+        <text x="822" y="126" text-anchor="middle" font-size="10" fill="#92400e">self-heals on restart</text>
+
+        <defs>
+          <marker id="ah" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#00b894"/>
+          </marker>
+        </defs>
+      </svg>
+      <p class="arch-caption">The wrapper reads <code>btw.yaml</code> on boot and applies each section: network &amp; storage, the identity it runs as, and the services it hosts. Then it comes up live on the mesh. Restart it and it reads the file again and comes back exactly as declared &mdash; so a fleet stays consistent and heals itself with no manual step.</p>
+    </section>
+
+    <section class="demo-business">
+      <h2>Why a Config File?</h2>
+      <p>The old way to set up a node was clicking through a web console &mdash; fine for one machine, painful for many. The config file makes a wrapper <strong>self-configuring</strong>: everything it needs is declared in one <code>btw.yaml</code>, so provisioning a wrapper is just placing a file and starting the process.</p>
+      <p>That is what makes fleets practical. Bake the file into a machine image or push it with Terraform or Ansible, and every box comes up the same way &mdash; each one an independent producer that serves its APIs and earns in USDC/USDT, with no per-machine clicking. And because the file is the source of truth, a wrapper that restarts re-reads it and comes back exactly as declared.</p>
+    </section>
+
+    <section class="demo-interactive">
+      <h2>Boot a Wrapper From This File</h2>
+      <div class="demo-interactive-layout">
+
+        <div class="demo-form-panel">
+          <h3>btw.yaml (headless producer)</h3>
+          <pre class="code-block" style="margin:0 0 0.75rem;"><code>schema_version: 1
+
+wrapper:
+  data_dir: /var/lib/sertone
+  mesh_listen: ":3991"
+
+identity: {}            <span class="comment"># create a persona on
+                        # first boot, keep it</span>
+
+services:
+  - type: appserver
+    name: quotes
+    fqdn_port: 127.0.0.1:8080
+    pay_per_use: "0.001"  <span class="comment"># USDC/call</span>
+
+  - type: website
+    name: docs-site
+    share_dir: /var/www/site</code></pre>
+          <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.75rem;">This is the whole configuration. Click below to watch the wrapper apply it on boot &mdash; no console, no manual steps.</p>
+          <button class="demo-run-btn" id="cf-run-btn" onclick="runConfigFileDemo()">
+            <span class="spinner"></span>
+            <span class="btn-text">Boot This Wrapper</span>
+          </button>
+        </div>
+
+        <div class="result-panel" id="cf-result">
+          <div class="result-placeholder">Click &ldquo;Boot This Wrapper&rdquo; to watch a headless wrapper configure itself from the file &mdash; network, identity, and both services coming up live.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="demo-selfhost">
+      <h2>Self-Host in Minutes</h2>
+      <div class="selfhost-steps">
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">1</div>
+          <h4>Write the File</h4>
+          <p>Put a <code>btw.yaml</code> next to the wrapper (or point <code>BTW_CONFIG</code> at it). Declare the network, identity, and the services this wrapper should host.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">2</div>
+          <h4>Start the Wrapper</h4>
+          <p>Run the free Sertone container. On boot it reads the file and applies every section &mdash; no console step. A missing or invalid file stops the boot rather than starting half-configured.</p>
+          <pre class="code-block"><code><span class="prompt">$</span> docker run -d --name sertone \
+  -v /path/to/btw.yaml:/app/btw.yaml \
+  -v sertone-data:/app/data \
+  {{INSTALL_IMAGE}}</code></pre>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">3</div>
+          <h4>Deploy the Fleet</h4>
+          <p>Push the same file to as many machines as you want with Terraform, Ansible, or a machine image. Every wrapper comes up the same &mdash; independent producers, each earning in USDC/USDT.</p>
+        </div>
+
+        <div class="selfhost-step">
+          <div class="selfhost-step-num">4</div>
+          <h4>It Self-Heals</h4>
+          <p>Restart or replace a machine and the wrapper re-reads the file and comes back exactly as declared, with its identity preserved. No manual recovery.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="demo-footer-cta">
+      <h2>Ready to Configure by File?</h2>
+      <p>One <code>btw.yaml</code>, self-configuring wrappers, fleet-ready. Read the full reference for every section and field.</p>
+      <a href="/docs/config-file" class="btn">Read the Config File Docs</a>
+      <a href="/try" class="btn btn-secondary" style="margin-left: 0.75rem;">Get Started</a>
+
+      <div class="related-demos" aria-label="Related demos">
+        <a href="/demos/high-availability/" class="related-demo-link">High Availability</a>
+        <a href="/demos/rest-api/" class="related-demo-link">REST API Demo</a>
+        <a href="/demos/pay-per-use/" class="related-demo-link">Pay-Per-Use Billing</a>
+        <a href="/demos/mcp/" class="related-demo-link">MCP Server</a>
+      </div>
+    </section>
+
+  </article>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the Sertone config file?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It is a single btw.yaml that fully configures a wrapper: its network and storage, the identity it runs as, the settings you prefer, and the services it hosts. On boot the wrapper reads the file and applies it, so no web-console setup is needed." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does the config file contain any secrets?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. The file holds only public ids and settings — never a private key or seed. The wrapper refuses to load a file that contains anything secret-shaped, so the file is safe to commit and copy across a fleet." }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens when a wrapper restarts?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It re-reads btw.yaml and comes back exactly as declared, with its identity preserved. A fleet stays consistent and self-heals after a reboot with no manual step." }
+      }
+    ]
+  }
+  </script>
+
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Sertone</p>
+    </div>
+  </footer>
+
+  <script src="/demos/common.js"></script>
+  <script>
+    // Client-side boot walkthrough — no backend. Reveals what the wrapper does with the file, step by step.
+    var CF_STEPS = [
+      { t: "Reading btw.yaml", d: "found beside the binary — parsing + safety-scanning (no secrets present)" },
+      { t: "Network + storage", d: "data_dir /var/lib/sertone · mesh_listen :3991" },
+      { t: "Identity", d: "no persona_uid set → generated a fresh persona (kept on disk for next boot)" },
+      { t: "Service: quotes (appserver)", d: "fronting 127.0.0.1:8080 · 0.001 USDC/call · registered + serving" },
+      { t: "Service: docs-site (website)", d: "serving /var/www/site over the mesh under this wrapper's name" },
+      { t: "Joined the mesh", d: "reachable + discoverable — both services live" }
+    ];
+
+    function cfRow(step, ok) {
+      return '<div class="cf-step" style="display:flex;gap:0.6rem;align-items:flex-start;padding:0.5rem 0;border-bottom:1px solid #eef2f7;">' +
+        '<span style="color:' + (ok ? '#00b894' : '#cbd5e1') + ';font-weight:700;">' + (ok ? '✓' : '•') + '</span>' +
+        '<span><strong style="color:#1e293b;">' + step.t + '</strong>' +
+        (ok ? '<br><span style="font-size:0.85rem;color:#64748b;">' + step.d + '</span>' : '') + '</span></div>';
+    }
+
+    async function runConfigFileDemo() {
+      var btn = document.getElementById('cf-run-btn');
+      var panel = document.getElementById('cf-result');
+      if (typeof setLoading === 'function') setLoading(btn, true);
+      panel.innerHTML = '<div class="result-placeholder">Booting…</div>';
+      var html = '<div style="font-weight:600;color:#1e293b;margin-bottom:0.5rem;">Wrapper boot</div>';
+      panel.innerHTML = html;
+      for (var i = 0; i < CF_STEPS.length; i++) {
+        await new Promise(function (r) { setTimeout(r, 550); });
+        html += cfRow(CF_STEPS[i], true);
+        panel.innerHTML = html;
+      }
+      await new Promise(function (r) { setTimeout(r, 400); });
+      html += '<div style="margin-top:0.8rem;padding:0.6rem 0.8rem;background:#f0fdf4;border:1px solid #00b894;border-radius:8px;color:#065f46;font-weight:600;">Wrapper live — configured entirely from btw.yaml, zero manual steps.</div>';
+      panel.innerHTML = html;
+      if (typeof setLoading === 'function') setLoading(btn, false);
+    }
+  </script>
+
+</body>
+</html>

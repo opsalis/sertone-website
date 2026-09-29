@@ -52,6 +52,7 @@
         <a href="/docs/" class="nav-link">Overview</a>
         <a href="/docs/quick-start" class="nav-link active">Quick Start</a>
         <a href="/docs/installation" class="nav-link">Installation</a>
+        <a href="/docs/config-file" class="nav-link">Config File</a>
       </div>
       <div class="nav-section">
         <div class="nav-section-title">Publishing Services</div>
@@ -103,7 +104,7 @@
 
       <h2 id="step-1">1. Install the control center</h2>
       <p>Make sure Docker is installed and running, then pull and start the Sertone control center:</p>
-      <pre><code>docker run -d --name sertone sertone/dag:latest</code></pre>
+      <pre><code>docker run -d --name sertone -p 3000:3000 -p 3002:3002 {{INSTALL_IMAGE}}</code></pre>
       <p>That is it. One command. See <a href="/docs/installation">Installation</a> for detailed options.</p>
       <p><strong>HTTPS:</strong> Your control center runs on HTTPS automatically. If you have a domain name pointing to this server, a free Let's Encrypt certificate is obtained within 24 hours &mdash; no configuration needed.</p>
 

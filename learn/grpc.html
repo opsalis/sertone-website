@@ -119,28 +119,27 @@
 
         <ol class="steps">
           <li>
-            <strong>Owner provides a .proto file.</strong> Upload your Protocol Buffer service
-            definition via the control center dashboard. The control center parses all service definitions,
-            RPC methods, and message types.
+            <strong>Register your gRPC service.</strong> Point Sertone at your gRPC server and
+            publish it to the catalog like any other service, priced per call.
           </li>
           <li>
-            <strong>Control center loads the proto, creates a gRPC client, and invokes methods.</strong>
-            When a consumer request arrives as JSON, the control center maps it to the appropriate
-            gRPC method, serializes the request to protobuf, sends it over HTTP/2 to your
-            gRPC server, and deserializes the protobuf response back to JSON.
+            <strong>Consumers speak gRPC directly, over the mesh.</strong> Sertone relays the gRPC
+            connection <em>pass-through</em> to your server &mdash; it does not transcode protobuf to or
+            from JSON. The consumer uses your service's <code>.proto</code> and calls it as native
+            gRPC; Sertone handles routing, billing and encryption between the two ends.
           </li>
           <li>
-            <strong>Supports unary and server-streaming RPCs.</strong> For unary calls, the
-            control center returns a single JSON response. For server-streaming calls, the control center
-            collects the stream and returns the results as a JSON array.
+            <strong>Unary and server-streaming RPCs are carried end to end.</strong> The mesh
+            transports the gRPC frames; your server and the consumer negotiate the RPC as they
+            normally would.
           </li>
         </ol>
 
         <div class="info-box">
           <p>
-            <strong>Your gRPC server stays untouched.</strong> No REST gateway needed, no
-            transcoding proxy. The control center speaks native gRPC to your server and translates
-            to JSON/OpenAPI for consumers.
+            <strong>Your gRPC server stays untouched.</strong> No REST gateway, no transcoding
+            proxy. Sertone carries native gRPC pass-through between the consumer and your server &mdash;
+            the consumer speaks gRPC (using your <code>.proto</code>), not JSON.
           </p>
         </div>
       </section>
