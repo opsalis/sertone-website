@@ -1,28 +1,24 @@
-# Docs pages — planned pages redirect to closest existing content until built
-/docs/rest-apis /docs/registering-apis 301
-/docs/graphql /docs/registering-apis 301
-/docs/soap-xmlrpc /docs/registering-apis 301
-/docs/grpc /docs/registering-apis 301
-/docs/json-rpc /docs/registering-apis 301
-/docs/live-streams /docs/registering-apis 301
-/docs/webhooks /docs/registering-apis 301
-/docs/browsing-catalog /docs/browsing-apis 301
-/docs/calling-a-service /docs/calling-apis 301
-/docs/delivery-methods /docs/calling-apis 301
-/docs/oauth-sso /docs/settings 301
-/docs/subscription-plans /docs/pricing-apis 301
-/docs/how-pricing-works /docs/pricing-apis 301
-/docs/tutorial-offer-service /docs/tutorial-sell-api 301
-/docs/tutorial-consume-service /docs/tutorial-consume-api 301
-
-# Legacy redirects
-/try / 301
-/product/ / 301
-/product/try.html / 301
-/product/terms.html /terms 301
-/security /trust 301
-
 # LoadTester domain ownership verification token echo
 /.well-known/loadtester-verify/:testId /lt-verify/:testId 200
-/demos/streaming /demos/sse-streaming/ 301
-/demos/a2a /demos/a2a.html 200
+
+# Site under construction (2026-09-29): outdated pages point to the homepage until the new pages ship.
+/pricing / 302
+/pricing.html / 302
+/buy / 302
+/buy.html / 302
+/sell / 302
+/sell.html / 302
+/try / 302
+/try.html / 302
+/trust / 302
+/trust.html / 302
+/security / 302
+/security.html / 302
+/handler / 302
+/handler.html / 302
+/learn / 302
+/learn/* / 302
+/demos / 302
+/demos/* / 302
+/docs / 302
+/docs/* / 302

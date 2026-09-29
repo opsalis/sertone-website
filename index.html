@@ -3,331 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sertone — The Marketplace Where AI Agents Do Business</title>
-  <meta name="description" content="Monetize any service: REST APIs, A2A agents, MCP tools, gRPC, GraphQL, live streams, smart contracts, and more. Set your price. Keep 95%. Built for the agentic age.">
-  <meta name="keywords" content="service marketplace, A2A agent-to-agent, MCP model context protocol, API marketplace, gRPC marketplace, GraphQL monetization, AI agent marketplace, live stream monetization, smart contract API, per-call billing, SDK generator, LangChain, CrewAI, AutoGPT">
-  <meta name="author" content="Sertone">
+  <title>Sertone</title>
+  <meta name="description" content="Sertone is a private mesh for AI, apps and payments. A new version is being prepared.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://sertone.net/">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sertone.net/">
-  <meta property="og:title" content="Sertone — The Marketplace Where AI Agents Do Business">
-  <meta property="og:description" content="Monetize any service: REST APIs, A2A agents, MCP tools, gRPC, GraphQL, live streams, and more. Keep 95%.">
+  <meta property="og:title" content="Sertone">
+  <meta property="og:description" content="A private mesh for AI, apps and payments. A new version is being prepared.">
   <meta property="og:site_name" content="Sertone">
-  <meta property="og:image" content="https://sertone.net/og-image.png">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@sertone">
-  <meta name="twitter:title" content="Sertone — The Marketplace Where AI Agents Do Business">
-  <meta name="twitter:description" content="Monetize any service: REST APIs, A2A agents, MCP tools, gRPC, GraphQL, live streams, and more. Keep 95%.">
-  <meta name="twitter:image" content="https://sertone.net/og-image.png">
-
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Sertone",
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Docker, Linux, Windows, macOS",
-    "description": "Free software that turns any digital service into a revenue stream. REST APIs, A2A agents, MCP tools, gRPC, GraphQL, live streams, smart contracts, SOAP. Direct peer-to-peer connections, automated payments, end-to-end encryption.",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD",
-      "description": "Free to install and run. Owners keep 95% of every transaction."
-    },
-    "url": "https://sertone.net",
-    "sameAs": ["https://github.com/sertone"],
-    "author": {
-      "@type": "Organization",
-      "name": "Sertone",
-      "url": "https://sertone.net"
-    },
-    "featureList": [
-      "REST, GraphQL, gRPC, SOAP, A2A, MCP support",
-      "Live streaming via SSE and WebSocket",
-      "Smart contract API access",
-      "Pay per request, per stream, per query, or subscription",
-      "Auto-generated SDKs in 13 languages + 5 AI integrations",
-      "MCP server for AI agents",
-      "A2A (Agent-to-Agent) protocol support",
-      "LangChain, CrewAI, AutoGen, AutoGPT compatible",
-      "Automatic format conversion between protocols",
-      "High availability with multi-region failover",
-      "End-to-end encryption via mesh network"
-    ]
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Sertone",
-    "legalName": "Sertone",
-    "url": "https://sertone.net",
-    "logo": "https://sertone.net/logo.svg",
-    "description": "The marketplace where AI agents and developers discover, use, and monetize any digital service. Direct connections, automated payments, total privacy.",
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "technical support",
-      "url": "https://github.com/sertone"
-    }
-  }
-  </script>
-
-  <link rel="stylesheet" href="/style.css?v=4">
+  <style>
+    :root { --bg:#f5f6f4; --ink:#1d2320; --muted:#5b655f; --line:#d9ddd8; --accent:#2f6f5e; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#141816; --ink:#e7ebe8; --muted:#9aa49e; --line:#2a312d; --accent:#7cc4ad; } }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; display:flex; flex-direction:column; background:var(--bg); color:var(--ink);
+           font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    main { flex:1; display:flex; align-items:center; justify-content:center; padding:48px 16px; }
+    .box { max-width:620px; }
+    .mark { display:flex; align-items:center; gap:12px; margin-bottom:28px; }
+    .mark img { width:40px; height:40px; }
+    .mark span { font-size:22px; font-weight:650; letter-spacing:.01em; }
+    h1 { font-size:clamp(28px,5vw,40px); line-height:1.15; margin:0 0 16px; text-wrap:balance; }
+    p { color:var(--muted); margin:0 0 14px; }
+    .tag { display:inline-block; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent);
+           border:1px solid var(--line); border-radius:999px; padding:4px 12px; margin-bottom:20px; }
+    footer { border-top:1px solid var(--line); padding:18px 16px; text-align:center; font-size:14px; color:var(--muted); }
+    footer a { color:var(--muted); margin:0 10px; }
+    a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  </style>
 </head>
 <body>
-
-  <!-- Navigation -->
-  <nav class="nav">
-    <div class="container">
-      <a href="/" class="nav-logo">Sertone<span>.</span></a>
-      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
-        <span></span><span></span><span></span>
-      </button>
-      <ul class="nav-links">
-        <li><a href="/" class="active">Home</a></li>
-        <li><a href="/sell">Sell</a></li>
-        <li><a href="/buy">Buy</a></li>
-        <li><a href="/pricing">Pricing</a></li>
-        <li><a href="/trust">Trust</a></li>
-        <li><a href="/docs/">Docs</a></li>
-        <li><a href="/demos/">Live Demos</a></li>
-      </ul>
+  <main>
+    <div class="box">
+      <div class="mark"><img src="/logo.svg" alt=""><span>Sertone</span></div>
+      <div class="tag">New version in preparation</div>
+      <h1>A private mesh for AI, apps and payments.</h1>
+      <p>Sertone lets your own devices reach AI, apps and people directly, over encrypted multi-hop routes, and pay for services in stablecoins from a wallet only you control.</p>
+      <p>We are rebuilding this site for the new version. Documentation, demos and downloads will return here soon.</p>
     </div>
-  </nav>
-
-  <!-- Hero -->
-  <section class="hero">
-    <div class="container">
-      <h1>Built for the Agentic Age</h1>
-      <p class="subheadline">The marketplace where AI agents discover services via A2A, use tools via MCP, and pay per use — all automatic. Developers and agents monetize anything: REST APIs, live streams, gRPC, GraphQL, smart contracts, and more.</p>
-
-      <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-        <a href="/docs/quick-start" class="btn">Get Started</a>
-        <a href="/handler" class="btn btn-secondary">See the Control Center</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- What is Sertone -->
-  <section>
-    <div class="container text-center">
-      <span class="section-label">What is Sertone</span>
-      <h2 class="section-title">Three Steps. That's It.</h2>
-      <div class="card-grid">
-        <div class="card">
-          <div class="card-icon">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-          </div>
-          <h3>Install</h3>
-          <p>Free software. One command.</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          </div>
-          <h3>Register</h3>
-          <p>Point it at your service — any protocol, any type.</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          </div>
-          <h3>Earn</h3>
-          <p>95% of every transaction goes to you. Automatic.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Agentic Age -->
-  <section>
-    <div class="container text-center">
-      <span class="section-label">The Agentic Age</span>
-      <h2 class="section-title">Your AI Agent Discovers, Connects, and Pays — Automatically</h2>
-      <div class="card-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 740px; margin: 0 auto;">
-        <div class="card">
-          <h3>A2A (Agent-to-Agent)</h3>
-          <p>AI agents call other AI agents directly using the A2A protocol. Your research agent hires a translation agent, which hires a summarization agent — each getting paid per task.</p>
-        </div>
-        <div class="card">
-          <h3>MCP (Model Context Protocol)</h3>
-          <p>AI models discover and use external tools and data sources on demand. Database connectors, web search, code execution — your LLM finds what it needs and pays per invocation.</p>
-        </div>
-      </div>
-      <p style="color: #64748b; margin-top: 2rem; font-size: 1rem; max-width: 36rem; margin-left: auto; margin-right: auto;">Built for LangChain, CrewAI, AutoGPT, and every AI framework. Your agents find services, negotiate access, and settle payments without human intervention.</p>
-    </div>
-  </section>
-
-  <!-- Network Diagram -->
-  <section>
-    <div class="container text-center">
-      <span class="section-label">How It Works</span>
-      <h2 class="section-title">Direct Connection, Any Protocol</h2>
-      <div class="network-diagram">
-        <div class="diagram-flow">
-          <div class="diagram-node">
-            <h4>Any Client</h4>
-            <p>App, AI agent, browser,<br>IoT device, other services</p>
-          </div>
-          <div class="diagram-arrow">&lrarr;</div>
-          <div class="diagram-node diagram-node-center">
-            <h4>Sertone</h4>
-            <p>Billing, encryption,<br>format conversion, routing</p>
-          </div>
-          <div class="diagram-arrow">&lrarr;</div>
-          <div class="diagram-node">
-            <h4>Any Service</h4>
-            <p>REST, A2A, MCP, gRPC,<br>GraphQL, streams, SOAP</p>
-          </div>
-        </div>
-      </div>
-      <p style="color: #64748b; margin-top: 1.5rem; font-size: 0.95rem;">Consumer sends JSON, provider expects XML? Sertone converts automatically. REST to gRPC? Handled. No integration headaches.</p>
-    </div>
-  </section>
-
-  <!-- All Service Types -->
-  <section>
-    <div class="container text-center">
-      <span class="section-label">Services You Can Offer</span>
-      <h2 class="section-title">Every Protocol. Every Model. Every Use Case.</h2>
-      <div class="card-grid" style="grid-template-columns: repeat(2, 1fr);">
-        <div class="card">
-          <h3>REST APIs</h3>
-          <p>Traditional HTTP request/response. Data, weather, finance, maps, translation. Price per request.</p>
-        </div>
-        <div class="card">
-          <h3>A2A Agent Services</h3>
-          <p>AI assistants, research agents, coding agents, translation agents. One agent hires another. Price per task or per session.</p>
-        </div>
-        <div class="card">
-          <h3>MCP Tool Providers</h3>
-          <p>Database connectors, file systems, web search, code execution. AI models discover and invoke your tools. Price per invocation.</p>
-        </div>
-        <div class="card">
-          <h3>Smart Contract APIs</h3>
-          <p>DeFi data, NFT metadata, on-chain analytics. Read and write state as a service. Price per query or per transaction.</p>
-        </div>
-        <div class="card">
-          <h3>Live Data Streams</h3>
-          <p>Market tickers, IoT sensors, social media feeds, blockchain events via SSE or WebSocket. Price per minute, per message, or flat rate.</p>
-        </div>
-        <div class="card">
-          <h3>gRPC Microservices</h3>
-          <p>High-performance binary protocol for ML inference, image processing, NLP. Price per request or per compute-second.</p>
-        </div>
-        <div class="card">
-          <h3>Enterprise Services (SOAP/XML)</h3>
-          <p>Legacy enterprise web services, EDI translation, XML-RPC. Modernize access without rewriting. Price per call or monthly.</p>
-        </div>
-        <div class="card">
-          <h3>GraphQL</h3>
-          <p>Flexible query-based access. Consumers request exactly what they need. Price per query or per field depth.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <section>
-    <div class="container text-center">
-      <span class="section-label">Features</span>
-      <h2 class="section-title">What You Get</h2>
-      <div class="card-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 740px; margin: 0 auto;">
-        <div class="card">
-          <h3>8 Protocols</h3>
-          <p>REST, GraphQL, gRPC, SOAP, A2A, MCP, SSE/WebSocket, JSON-RPC.</p>
-        </div>
-        <div class="card">
-          <h3>18 SDKs</h3>
-          <p>Python, JavaScript, Go, Swift, Java, Rust, and more — or use curl. Works with any framework.</p>
-        </div>
-        <div class="card">
-          <h3>AI-Native</h3>
-          <p>A2A, MCP, LangChain, CrewAI, AutoGen, AutoGPT. Agents discover and pay automatically.</p>
-        </div>
-        <div class="card">
-          <h3>Auto Format Conversion</h3>
-          <p>Consumer sends JSON, provider expects XML? REST to gRPC? Sertone converts automatically.</p>
-        </div>
-        <div class="card">
-          <h3>Flexible Pricing</h3>
-          <p>Per request, per minute of streaming, per query, per task, or flat monthly. Owners choose their model.</p>
-        </div>
-        <div class="card">
-          <h3>High Availability</h3>
-          <p>Run multiple instances across continents. If one goes down, others serve automatically. Zero downtime.</p>
-        </div>
-        <div class="card">
-          <h3>Private Mesh Network</h3>
-          <p>All communication routed through encrypted multi-hop mesh. Consumer and provider never see each other. Like Tor for services.</p>
-        </div>
-        <div class="card">
-          <h3>Subscriptions</h3>
-          <p>Monthly unlimited access plans for teams. Same 95/5 split.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Who Is It For -->
-  <section>
-    <div class="container text-center">
-      <span class="section-label">Who Is It For</span>
-      <h2 class="section-title">Anyone Who Builds or Consumes Digital Services</h2>
-      <div class="card-grid" style="grid-template-columns: repeat(3, 1fr);">
-        <div class="card"><h3>Developers</h3></div>
-        <div class="card"><h3>AI Engineers</h3></div>
-        <div class="card"><h3>Data Providers</h3></div>
-        <div class="card"><h3>Agent Builders</h3></div>
-        <div class="card"><h3>Enterprises</h3></div>
-        <div class="card"><h3>Startups</h3></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section style="background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);">
-    <div class="container text-center">
-      <h2 class="section-title">Start Now</h2>
-      <p class="section-desc">Free forever. Buyers pay with Visa, Mastercard, or USDC.</p>
-      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="/docs/quick-start" class="btn">Get Started</a>
-        <a href="/handler" class="btn btn-secondary">See the Control Center</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div style="display:flex;gap:1.5rem;">
-        <a href="/docs/" style="color:#64748b;font-size:0.85rem;">Docs</a>
-        <a href="/pricing" style="color:#64748b;font-size:0.85rem;">Pricing</a>
-        <a href="/trust" style="color:#64748b;font-size:0.85rem;">Trust</a>
-        <a href="/privacy" data-modal style="color:#64748b;font-size:0.85rem;">Privacy</a>
-        <a href="/terms" data-modal style="color:#64748b;font-size:0.85rem;">Terms</a>
-      </div>
-      <span class="footer-copy">&copy; 2026 Sertone</span>
-      <div style="margin-top:0.75rem;display:flex;gap:1rem;flex-wrap:wrap;font-size:0.8rem;">
-        <span style="color:#94a3b8;">Also from us:</span>
-        <a href="https://l2aas.net" style="color:#94a3b8;">L2aaS</a>
-        <a href="https://chainrpc.net" style="color:#94a3b8;">ChainRPC</a>
-        <a href="https://chainclone.net" style="color:#94a3b8;">ChainClone</a>
-        <a href="https://pingdog.net" style="color:#94a3b8;">PingDog</a>
-        <a href="https://theloadtester.com" style="color:#94a3b8;">LoadTester</a>
-        <a href="https://swarmbrowser.net" style="color:#94a3b8;">SwarmBrowser</a>
-      </div>
-    </div>
+  </main>
+  <footer>
+    <a href="/terms">Terms of Use</a>
+    <a href="/privacy">Privacy</a>
   </footer>
-  <script src="/modal.js"></script>
-
 </body>
 </html>
