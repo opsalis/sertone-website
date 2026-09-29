@@ -4,25 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>High Availability — Sertone Docs</title>
-  <meta name="description" content="Run multiple Sertone gateways for zero-downtime service delivery. Automatic failover, live updates, and load distribution — no orchestration complexity.">
-  <meta name="keywords" content="Sertone high availability, gateway redundancy, automatic failover, zero downtime, Sertone HA, service uptime">
+  <meta name="description" content="Run multiple Sertone gateways for resilient, always-reachable service delivery — automatic failover to a surviving instance, no load balancer, no orchestration complexity.">
+  <meta name="keywords" content="Sertone high availability, gateway redundancy, automatic failover, resilience, Sertone HA, service uptime">
   <meta name="author" content="Sertone">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://sertone.net/docs/high-availability">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://sertone.net/docs/high-availability">
   <meta property="og:title" content="High Availability — Sertone Docs">
-  <meta property="og:description" content="Run multiple Sertone gateways for zero-downtime service delivery. Automatic failover and live updates.">
+  <meta property="og:description" content="Run multiple Sertone gateways for resilient, always-reachable service delivery. Automatic failover to a surviving instance.">
   <meta property="og:site_name" content="Sertone">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="High Availability — Sertone Docs">
-  <meta name="twitter:description" content="Run multiple Sertone gateways for zero-downtime service delivery.">
+  <meta name="twitter:description" content="Run multiple Sertone gateways for resilient, always-reachable service delivery.">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "High Availability — Sertone",
-    "description": "Run multiple Sertone gateways for zero-downtime service delivery. Automatic failover, live updates, and load distribution.",
+    "description": "Run multiple Sertone gateways for resilient, always-reachable service delivery. Automatic failover to a surviving instance.",
     "url": "https://sertone.net/docs/high-availability",
     "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
   }
@@ -99,20 +99,20 @@
       <p>With a single gateway, if the machine goes offline your services are unreachable until it comes back. With two or more gateways:</p>
       <ul>
         <li><strong>Automatic failover</strong> — if one gateway becomes unreachable, consumers are rerouted to another within seconds. No manual intervention required.</li>
-        <li><strong>Zero-downtime updates</strong> — when a new version of Sertone is released, each gateway updates itself one at a time. At least one gateway is always serving while the others update.</li>
-        <li><strong>Load distribution</strong> — consumers connect to the gateway nearest to them. Traffic is spread naturally across your cluster.</li>
+        <li><strong>Updates without a maintenance window</strong> — each gateway self-updates independently; with more than one running, the service stays reachable while an instance restarts to update.</li>
+        <li><strong>No single chokepoint</strong> — the mesh routes each consumer request to a live instance. For privacy, that instance is chosen at random — never by location or latency, because routing by proximity would leak a network-position fingerprint — so no gateway is a bottleneck.</li>
         <li><strong>Geographic resilience</strong> — place gateways in different regions or data centers. A regional outage does not take down your service.</li>
       </ul>
 
       <h2 id="how-to-enable">How to Enable It</h2>
-      <p>Start a second Sertone gateway. That is all. The gateways find each other automatically and begin sharing the load.</p>
+      <p>Start a second Sertone gateway. That is all. Both publish the same services to the mesh, and each consumer request reaches whichever instance is live — so if one goes down the other keeps serving.</p>
       <p>Each gateway is an identical Docker container. There is nothing to configure between them — no pairing step, no shared secrets, no configuration file to sync. If both gateways are running and connected to the Sertone network, they work as a cluster.</p>
 
       <pre><code>docker run -d --name sertone-2 \
   -p 80:80 -p 3002:3002 \
   -v sertone-data-2:/app/data \
   --restart unless-stopped \
-  sertonenet/gateway:latest</code></pre>
+  {{INSTALL_IMAGE}}</code></pre>
 
       <div class="callout callout-info">
         <strong>Each gateway needs its own data volume.</strong> The <code>-v sertone-data-2:/app/data</code> flag ensures the second gateway has its own identity and storage. Never share a data volume between two running gateways.
@@ -127,27 +127,27 @@
       <p>Three gateways let you take one offline for planned maintenance while the other two continue serving without interruption. This is the recommended setup for any service with uptime requirements.</p>
 
       <h3>More than 3</h3>
-      <p>There is no limit. Add as many gateways as you need. More gateways means more capacity and more geographic coverage.</p>
+      <p>There is no limit. Add as many gateways as you need. More gateways means more redundancy — more instances that can keep serving if others go down.</p>
 
-      <h2 id="geographic-distribution">Geographic Distribution</h2>
-      <p>For services with global consumers, placing gateways in different regions reduces latency. Consumers automatically connect to the closest available gateway. You do not need to configure this — it is handled automatically based on network proximity.</p>
+      <h2 id="geographic-distribution">Multi-Region Resilience</h2>
+      <p>For services that must survive a regional outage, place gateways in different regions or providers. This is about <em>resilience</em>, not latency: the mesh routes each request to a live instance at random — deliberately not by geographic proximity, because location-based routing would leak a network-position fingerprint and break the network's privacy guarantee. What spreading gateways across regions buys you is that a data-center, provider, or regional network failure cannot take your service down.</p>
       <p>Example setup:</p>
       <ul>
         <li>One gateway in North America</li>
         <li>One gateway in Europe</li>
         <li>One gateway in Asia-Pacific</li>
       </ul>
-      <p>Consumers in each region connect to the nearest gateway. If that gateway goes offline, they are automatically rerouted to the next nearest.</p>
+      <p>If any one region goes offline, requests keep reaching the instances that are still live.</p>
 
-      <h2 id="live-updates">Zero-Downtime Updates</h2>
-      <p>Sertone gateways update themselves automatically when a new version is released. In a cluster, updates happen one gateway at a time:</p>
+      <h2 id="live-updates">Updates Without a Maintenance Window</h2>
+      <p>Each Sertone gateway self-updates independently when a new version is released. If you run more than one gateway, an instance briefly restarting to apply an update does not take the service down — requests keep reaching the instances that are still live:</p>
       <ol>
-        <li>One gateway signals that it is going offline briefly for an update.</li>
-        <li>Consumers are rerouted to the remaining gateways — no requests are dropped.</li>
-        <li>The gateway updates (typically under 60 seconds) and comes back online.</li>
-        <li>The next gateway updates. The process repeats until all are current.</li>
+        <li>A gateway restarts briefly to apply an update (typically under 60 seconds).</li>
+        <li>While it does, the mesh routes requests to the other live instances.</li>
+        <li>It comes back online and rejoins.</li>
+        <li>Each gateway updates on its own — the instances do not coordinate a lock-step rollout, so run enough that at least one stays live during your update window.</li>
       </ol>
-      <p>Your consumers see none of this. From their perspective, the service was never interrupted.</p>
+      <p>With redundancy in place a consumer normally sees no interruption; a request that does hit a restarting instance fails cleanly and the SDK retries against a live one (and a failed request is not charged).</p>
 
       <h2 id="monitoring">Monitoring Your Cluster</h2>
       <p>Your gateway's dashboard shows how many other gateways are currently active in your cluster. The <strong>Cluster</strong> section of the dashboard displays:</p>
@@ -187,8 +187,8 @@
         <a href="#what-you-get">What You Get</a>
         <a href="#how-to-enable">How to Enable It</a>
         <a href="#minimum-setup">Minimum Setup</a>
-        <a href="#geographic-distribution">Geographic Distribution</a>
-        <a href="#live-updates">Zero-Downtime Updates</a>
+        <a href="#geographic-distribution">Multi-Region Resilience</a>
+        <a href="#live-updates">Updates Without a Maintenance Window</a>
         <a href="#monitoring">Monitoring</a>
         <a href="#adding-removing">Adding and Removing</a>
         <a href="#faq">FAQ</a>

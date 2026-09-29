@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SDKs — Sertone Docs | 13 Languages + 5 AI Integrations</title>
-  <meta name="description" content="18 auto-generated SDKs: 13 languages (TypeScript, Python, Go, Java, C#, PHP, Ruby, Rust, Kotlin, Swift, Dart, cURL) + 5 AI integrations (MCP, LangChain, CrewAI, AutoGen, A2A). Single file, zero dependencies.">
+  <meta name="description" content="SDKs auto-generated from the OpenAPI contract for Python, TypeScript, Java, and Kotlin, plus a Go client library and A2A/MCP integrations.">
   <meta name="keywords" content="API SDK generator, TypeScript SDK, Python SDK, Go SDK, LangChain SDK, CrewAI SDK, auto-generated API client, Sertone SDK, MCP tools">
   <meta name="author" content="Sertone">
   <meta name="robots" content="index, follow">
@@ -12,17 +12,17 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://sertone.net/docs/sdks">
   <meta property="og:title" content="SDKs — Sertone Docs | 13 Languages + 5 AI Integrations">
-  <meta property="og:description" content="18 auto-generated SDKs: 13 languages + 5 AI integrations. Single file, zero dependencies.">
+  <meta property="og:description" content="OpenAPI-generated SDKs for Python, TypeScript, Java, and Kotlin, plus a Go client.">
   <meta property="og:site_name" content="Sertone">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="SDKs — Sertone Docs">
-  <meta name="twitter:description" content="18 auto-generated SDKs: 13 languages + 5 AI integrations. Single file, zero dependencies.">
+  <meta name="twitter:description" content="OpenAPI-generated SDKs for Python, TypeScript, Java, and Kotlin, plus a Go client.">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "SDKs — Sertone",
-    "description": "18 auto-generated SDKs: 13 languages + 5 AI integrations (MCP, LangChain, CrewAI, AutoGen, A2A). Single file, zero dependencies.",
+    "description": "OpenAPI-generated SDKs for Python, TypeScript, Java, Kotlin, plus a Go client and A2A/MCP integrations.",
     "url": "https://sertone.net/docs/sdks",
     "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
   }
@@ -99,7 +99,7 @@
 
     <main class="docs-content">
       <h1>SDKs</h1>
-      <p class="lead">18 SDKs: 13 languages + 5 AI integrations. Auto-generated. Single file. Zero dependencies.</p>
+      <p class="lead">OpenAPI-generated SDKs: Python, TypeScript, Java, Kotlin + a Go client. Auto-generated from the API contract.</p>
 
       <h2 id="overview">Overview</h2>
       <p>Your control center generates a typed SDK for every API you select. Each SDK is a single file with zero external dependencies &mdash; just drop it into your project.</p>
@@ -112,19 +112,11 @@
         <tbody>
           <tr><td colspan="3" style="font-weight:600;color:var(--text-secondary);background:var(--bg-code);">Web &amp; Node</td></tr>
           <tr><td>TypeScript (Axios)</td><td><code>weather-api.ts</code></td><td>TS 4.7+</td></tr>
-          <tr><td>JavaScript (fetch)</td><td><code>weather-api.js</code></td><td>ES2020+</td></tr>
           <tr><td colspan="3" style="font-weight:600;color:var(--text-secondary);background:var(--bg-code);">Backend</td></tr>
           <tr><td>Python</td><td><code>weather_api.py</code></td><td>Python 3.8+</td></tr>
           <tr><td>Go</td><td><code>weather_api.go</code></td><td>Go 1.18+</td></tr>
           <tr><td>Java</td><td><code>WeatherApi.java</code></td><td>Java 11+</td></tr>
-          <tr><td>C# / .NET</td><td><code>WeatherApi.cs</code></td><td>.NET 6+</td></tr>
-          <tr><td>PHP</td><td><code>WeatherApi.php</code></td><td>PHP 8.0+</td></tr>
-          <tr><td>Ruby</td><td><code>weather_api.rb</code></td><td>Ruby 3.0+</td></tr>
-          <tr><td>Rust</td><td><code>weather_api.rs</code></td><td>Rust 1.56+</td></tr>
           <tr><td>Kotlin</td><td><code>WeatherApi.kt</code></td><td>Kotlin 1.6+</td></tr>
-          <tr><td colspan="3" style="font-weight:600;color:var(--text-secondary);background:var(--bg-code);">Mobile</td></tr>
-          <tr><td>Swift (iOS/macOS)</td><td><code>WeatherApi.swift</code></td><td>Swift 5.5+</td></tr>
-          <tr><td>Dart (Flutter)</td><td><code>weather_api.dart</code></td><td>Dart 2.17+</td></tr>
           <tr><td colspan="3" style="font-weight:600;color:var(--text-secondary);background:var(--bg-code);">CLI</td></tr>
           <tr><td>cURL (Shell)</td><td><code>weather-api.sh</code></td><td>cURL 7.0+</td></tr>
         </tbody>
@@ -140,13 +132,6 @@
 
       <h2 id="typescript">TypeScript</h2>
       <pre><code>import { WeatherApi } from './weather-api';
-
-const api = new WeatherApi({ token: 'YOUR_SECRET' });
-const forecast = await api.getForecast({ city: 'Paris', days: 5 });
-console.log(forecast.data);</code></pre>
-
-      <h2 id="javascript">JavaScript</h2>
-      <pre><code>import { WeatherApi } from './weather-api.js';
 
 const api = new WeatherApi({ token: 'YOUR_SECRET' });
 const forecast = await api.getForecast({ city: 'Paris', days: 5 });
@@ -172,40 +157,10 @@ fmt.Println(forecast.Data)</code></pre>
 ForecastResponse forecast = api.getForecast("Paris", 5);
 System.out.println(forecast.getData());</code></pre>
 
-      <h2 id="csharp">C# / .NET</h2>
-      <pre><code>var api = new WeatherApi("YOUR_SECRET");
-var forecast = await api.GetForecastAsync("Paris", 5);
-Console.WriteLine(forecast.Data);</code></pre>
-
-      <h2 id="php">PHP</h2>
-      <pre><code>$api = new WeatherApi('YOUR_SECRET');
-$forecast = $api->getForecast('Paris', 5);
-echo $forecast->data;</code></pre>
-
-      <h2 id="ruby">Ruby</h2>
-      <pre><code>api = WeatherApi.new(token: 'YOUR_SECRET')
-forecast = api.get_forecast(city: 'Paris', days: 5)
-puts forecast.data</code></pre>
-
-      <h2 id="rust">Rust</h2>
-      <pre><code>let client = WeatherApi::new("YOUR_SECRET");
-let forecast = client.get_forecast("Paris", 5).await?;
-println!("{:?}", forecast.data);</code></pre>
-
       <h2 id="kotlin">Kotlin</h2>
       <pre><code>val api = WeatherApi(token = "YOUR_SECRET")
 val forecast = api.getForecast(city = "Paris", days = 5)
 println(forecast.data)</code></pre>
-
-      <h2 id="swift">Swift</h2>
-      <pre><code>let api = WeatherApi(token: "YOUR_SECRET")
-let forecast = try await api.getForecast(city: "Paris", days: 5)
-print(forecast.data)</code></pre>
-
-      <h2 id="dart">Dart (Flutter)</h2>
-      <pre><code>final api = WeatherApi(token: 'YOUR_SECRET');
-final forecast = await api.getForecast(city: 'Paris', days: 5);
-print(forecast.data);</code></pre>
 
       <div class="info-box">
         <p><strong>Fully typed.</strong> Every SDK includes type definitions for all request/response objects, generated from the API's OpenAPI specification.</p>
@@ -229,17 +184,10 @@ print(forecast.data);</code></pre>
       <a href="#languages" class="toc-link">Supported languages</a>
       <a href="#download" class="toc-link">Downloading SDKs</a>
       <a href="#typescript" class="toc-link">TypeScript</a>
-      <a href="#javascript" class="toc-link">JavaScript</a>
       <a href="#python" class="toc-link">Python</a>
       <a href="#go" class="toc-link">Go</a>
       <a href="#java" class="toc-link">Java</a>
-      <a href="#csharp" class="toc-link">C# / .NET</a>
-      <a href="#php" class="toc-link">PHP</a>
-      <a href="#ruby" class="toc-link">Ruby</a>
-      <a href="#rust" class="toc-link">Rust</a>
       <a href="#kotlin" class="toc-link">Kotlin</a>
-      <a href="#swift" class="toc-link">Swift</a>
-      <a href="#dart" class="toc-link">Dart</a>
     </aside>
 
   </div>

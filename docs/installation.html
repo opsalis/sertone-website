@@ -112,7 +112,7 @@
 
       <h2 id="install">Install and start</h2>
       <p>Pull and run the control center:</p>
-      <pre><code>docker run -d --name sertone sertone/dag:latest</code></pre>
+      <pre><code>docker run -d --name sertone -p 3000:3000 -p 3002:3002 {{INSTALL_IMAGE}}</code></pre>
       <p>The container starts and the web console becomes available. The console address is shown in the container logs.</p>
 
       <h2 id="first-login">First login</h2>
@@ -137,7 +137,7 @@
 
       <h2 id="updating">Updating</h2>
       <p>Pull the latest image and restart. Your data persists across updates.</p>
-      <pre><code>docker pull sertone/dag:latest
+      <pre><code>docker pull {{INSTALL_IMAGE}}
 docker stop sertone &amp;&amp; docker rm sertone
 # Re-run the docker run command above</code></pre>
 

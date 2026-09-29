@@ -27,7 +27,7 @@
     "step": [
       {"@type": "HowToStep", "name": "Install Docker container", "text": "Run one command to install the Sertone control center on your server"},
       {"@type": "HowToStep", "name": "Register your service", "text": "Add your API, AI model, IoT endpoint, or any service to the marketplace"},
-      {"@type": "HowToStep", "name": "Set your price", "text": "Choose a per-call price in USDC. API owners receive 95% of every call."},
+      {"@type": "HowToStep", "name": "Set your price", "text": "Choose a per-call price in USDC. API owners receive 99% of every call."},
       {"@type": "HowToStep", "name": "Earn USDC", "text": "Consumers find and pay you automatically"}
     ],
     "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
@@ -133,7 +133,7 @@ docker run -d --gpus all -p 11434:11434 ollama/ollama
 docker exec -it ollama ollama pull llama3.1
 
 # 2. Start Sertone control center
-docker run -d -p 3000:3000 -p 3002:3002 sertone/dag
+docker run -d --name sertone -p 3000:3000 -p 3002:3002 {{INSTALL_IMAGE}}
 
 # 3. Open the web console at https://localhost:3002
 #    Go to My APIs → Register
@@ -175,7 +175,7 @@ wscat -c "ws://your-node:3006/ws/llama-chat?token=your-key"
       <pre><code># docker-compose.yml
 services:
   wrapper:
-    image: sertone/dag
+    image: {{INSTALL_IMAGE}}
     ports: [3000:3000, 3002:3002, 3005:3005, 3006:3006]
 
   jitsi:
@@ -189,7 +189,7 @@ services:
       <pre><code># docker-compose.yml
 services:
   wrapper:
-    image: sertone/dag
+    image: {{INSTALL_IMAGE}}
     ports: [3000:3000, 3002:3002]
 
   mediamtx:
@@ -260,7 +260,7 @@ docker run -d -p 5001:3000 \
       <pre><code># docker-compose.yml
 services:
   wrapper:
-    image: sertone/dag
+    image: {{INSTALL_IMAGE}}
     ports: [3000:3000, 3002:3002]
 
   minio:
@@ -382,14 +382,14 @@ app.post('/v1/send', (req, res) => {
 
       <h3>Pricing examples</h3>
       <table>
-        <thead><tr><th>Tribe size</th><th>Monthly fee/member</th><th>Your revenue</th><th>Sertone royalty (5%)</th></tr></thead>
+        <thead><tr><th>Tribe size</th><th>Monthly fee/member</th><th>Your revenue</th><th>Sertone royalty (1%)</th></tr></thead>
         <tbody>
           <tr><td>Startup (10 members)</td><td>$20</td><td>$190/mo</td><td>$10/mo</td></tr>
           <tr><td>Mid-size (100 members)</td><td>$30</td><td>$2,850/mo</td><td>$150/mo</td></tr>
           <tr><td>Enterprise (1,000 members)</td><td>$50</td><td>$47,500/mo</td><td>$2,500/mo</td></tr>
         </tbody>
       </table>
-      <p>Set any price you want. You keep 95%, Sertone takes 5% &mdash; automatically, no invoices.</p>
+      <p>Set any price you want. You keep 99%, Sertone takes 1% &mdash; automatically, no invoices.</p>
 
       <h3>Use cases for Tribe Gateway</h3>
       <ul>

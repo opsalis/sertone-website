@@ -418,7 +418,7 @@
             <strong style="color:#1e293b;">What is the Sertone control center?</strong> A single Docker container you run on your own machine — a laptop, a Raspberry Pi, a cloud server. It connects you to the Sertone Global Network. Through its built-in web console, you browse services, register your own, manage your wallet, and monitor your earnings. Installation takes minutes. It is completely free, forever.
           </p>
           <div style="margin-top:0.75rem;">
-            <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</code>
+            <code style="background:#0f172a;color:#00b894;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;">docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 {{INSTALL_IMAGE}}</code>
           </div>
         </div>
 
@@ -730,7 +730,7 @@ curl -sk -X POST "https://localhost:3000/a2a/message" \
             <div class="step-content">
               <h4>Install your Sertone control center</h4>
               <p>One Docker command on any machine — your laptop, a Raspberry Pi, a cloud VM.</p>
-              <div class="code-block"><span class="prompt">$</span> docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 sertone/wrapper:latest</div>
+              <div class="code-block"><span class="prompt">$</span> docker run -d --name my-sertone -p 3000:3000 -p 3002:3002 {{INSTALL_IMAGE}}</div>
             </div>
           </div>
 

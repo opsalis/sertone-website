@@ -226,7 +226,7 @@
       <p>Register any read-only or write function from any supported blockchain as a standard REST endpoint in the Sertone catalog. Callers use plain HTTP &mdash; no Solidity, ABI encoding, or wallet required.</p>
 
       <h3 id="supported-chains">Supported Chains</h3>
-      <p>Base, Ethereum, Arbitrum, Polygon, BNB Chain, Avalanche (mainnets and testnets).</p>
+      <p>Base, Polygon, BSC, Arbitrum, and Optimism.</p>
 
       <h3 id="how-sc-server-works">How It Works</h3>
       <div class="flow-diagram">HTTP client
@@ -315,7 +315,7 @@ Sertone DAG node
   |
   |  1. Approve USDC to SertoneOracleRouter
   |  2. Call requestData(wrapperUid, apiUid, params, ...)
-  |     -> USDC split atomically: 95% to API owner, 5% royalty
+  |     -> USDC split atomically: 99% to API owner, 1% royalty
   |     -> Emits DataRequested event
   v
 SertoneOracleRouter (Base)
@@ -424,8 +424,8 @@ cast send $CONTRACT \
       <table class="earnings-table">
         <thead><tr><th>Party</th><th>Role</th><th>Earns</th></tr></thead>
         <tbody>
-          <tr><td>API owner</td><td>Registered the USGS earthquake API</td><td>95% of each oracle call fee</td></tr>
-          <tr><td>Sertone</td><td>Protocol royalty (immutable, on-chain)</td><td>5% of each oracle call fee</td></tr>
+          <tr><td>API owner</td><td>Registered the USGS earthquake API</td><td>99% of each oracle call fee</td></tr>
+          <tr><td>Sertone</td><td>Protocol royalty (immutable, on-chain)</td><td>1% of each oracle call fee</td></tr>
           <tr><td>Node operator</td><td>Runs the node, fulfills the request</td><td>Reimbursed via the API owner's pricing</td></tr>
         </tbody>
       </table>
@@ -441,7 +441,7 @@ cast send $CONTRACT \
 
       <div class="flow-diagram">DeFi contract (Base)
   |  requestData(wrapperUid, chainlinkApiUid, ...)
-  |  USDC: 95% -> Chainlink API registrant, 5% -> royalty
+  |  USDC: 99% -> Chainlink API registrant, 1% -> royalty
   v
 SertoneOracleRouter (Base)
   |  emits DataRequested
@@ -799,13 +799,13 @@ contract EarthquakeInsurance {
     function registerWrapper(bytes32 wrapperUid) external;
 
     /// @notice Request data from any API in the Sertone catalog.
-    ///         Payment (USDC) is split atomically: 95% to API owner, 5% royalty.
+    ///         Payment (USDC) is split atomically: 99% to API owner, 1% royalty.
     /// @param wrapperUid       Target node's UID (keccak256 of its ID)
     /// @param apiUid           Target API's UID (keccak256 of its public ID)
     /// @param params           ABI-encoded JSON string with path, method, and arguments
     /// @param callbackAddress  Contract that receives the result
     /// @param callbackSelector Function selector for the callback (e.g. this.onData.selector)
-    /// @param apiOwnerWallet   Wallet that owns the API (receives 95%)
+    /// @param apiOwnerWallet   Wallet that owns the API (receives 99%)
     /// @param fee              USDC fee in raw units (6 decimals). 0 = use defaultFee.
     /// @return requestId       Unique ID for this request
     function requestData(
@@ -829,7 +829,7 @@ contract EarthquakeInsurance {
     /// @notice Check if a request has been fulfilled.
     function isFulfilled(bytes32 requestId) external view returns (bool);
 
-    /// @notice Preview the 95/5 USDC split for a given fee.
+    /// @notice Preview the 99%/1% USDC split for a given fee.
     function calculateSplit(uint256 fee) external pure
         returns (uint256 ownerPayment, uint256 royalty);
 }</code></pre>
