@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paying with Your Escrow Balance — Sertone Docs</title>
+  <meta name="description" content="How payments to services are taken from a small prepaid escrow balance: top-ups, vouchers, fees, pauses, withdrawals and what services must do to collect.">
+  <meta name="keywords" content="escrow balance, prepaid payments, payment voucher, USDC escrow, withdrawal delay">
+  <meta name="author" content="Sertone">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://sertone.net/docs/escrow">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sertone.net/docs/escrow">
+  <meta property="og:title" content="Paying with Your Escrow Balance — Sertone Docs">
+  <meta property="og:description" content="How payments to services are taken from a small prepaid escrow balance.">
+  <meta property="og:site_name" content="Sertone">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Paying with Your Escrow Balance — Sertone Docs">
+  <meta name="twitter:description" content="How payments to services are taken from a small prepaid escrow balance.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Funding & Withdrawing — Sertone",
+    "description": "Fund your Sertone wallet with USDC to pay for service calls, and withdraw your earnings at any time.",
+    "url": "https://sertone.net/docs/escrow",
+    "publisher": { "@type": "Organization", "name": "Sertone", "url": "https://sertone.net" }
+  }
+  </script>
+  <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+  <header class="docs-header">
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="docs-header-logo">Sertone<span>.</span></a>
+    <span class="docs-header-tag">Docs</span>
+    <nav class="docs-header-links">
+      <a href="/">Home</a>
+      <a href="/learn/">Learn</a>
+      <a href="/pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <div class="docs-layout">
+
+    <aside class="docs-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Getting Started</div>
+        <a href="/docs/" class="nav-link">Overview</a>
+        <a href="/docs/quick-start" class="nav-link">Quick Start</a>
+        <a href="/docs/installation" class="nav-link">Installation</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Publishing Services</div>
+        <a href="/docs/registering-apis" class="nav-link">Registering a Service</a>
+        <a href="/docs/pricing-apis" class="nav-link">Pricing</a>
+        <a href="/docs/demo-mode" class="nav-link">Demo Mode</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Using Services</div>
+        <a href="/docs/dashboard" class="nav-link">Dashboard</a>
+        <a href="/docs/browsing-apis" class="nav-link">Discovering Services</a>
+        <a href="/docs/calling-apis" class="nav-link">Calling Services</a>
+        <a href="/docs/sdks" class="nav-link">SDKs</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Reliability &amp; Access</div>
+        <a href="/docs/high-availability" class="nav-link">High Availability</a>
+        <a href="/docs/vpn" class="nav-link">VPN Server</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Account</div>
+        <a href="/docs/funding" class="nav-link">Funding &amp; Withdrawing</a>
+        <a href="/docs/escrow" class="nav-link active">Paying with Escrow</a>
+        <a href="/docs/settings" class="nav-link">Settings</a>
+        <a href="/docs/alerts" class="nav-link">Alerts</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Extend the Platform</div>
+        <a href="/docs/plugins" class="nav-link">Plugin System</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Tutorials</div>
+        <a href="/docs/tutorial-sell-api" class="nav-link">Sell a Service</a>
+        <a href="/docs/tutorial-consume-api" class="nav-link">Use Services</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Protocols</div>
+        <a href="/docs/a2a" class="nav-link">A2A Protocol</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Support</div>
+        <a href="/docs/faq" class="nav-link">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="docs-content">
+      <h1>Paying with Your Escrow Balance</h1>
+
+      <h2 id="what-it-is">What it is</h2>
+      <p>Your wrapper keeps a small prepaid balance (the escrow) in a public payment contract. Most payments to services &mdash; AI, apps, API calls, subscriptions &mdash; are taken from it instantly, without a blockchain transaction for each payment.</p>
+
+      <h2 id="how-a-payment-works">How a payment works</h2>
+      <ol>
+        <li>Your wrapper checks that your escrow balance covers the payment (it never lets you spend more than you have).</li>
+        <li>If it does not, it tops the balance up first from your wallet (one transaction), up to your chosen reserve (default 10 USDC; daily automatic limit default 50 USDC &mdash; both changeable in the console and <code>btw.yaml</code>).</li>
+        <li>It sends the service a signed promise to pay (a voucher). The service collects it on the blockchain, together with many others, in one transaction.</li>
+      </ol>
+
+      <h2 id="fees">Fees</h2>
+      <p>Every payment carries a 0.8% contract-owner fee, fixed in the contract, and the developer fee named by the software you use (0.2% in this software). There is no other fee on payments.</p>
+
+      <h2 id="transfers">Transfers between people</h2>
+      <p>Below 100 USD: a plain token transfer, free. From 100 USD: through the escrow, with the fees above. Maximum 5,000 USD per transfer.</p>
+
+      <h2 id="paused">If a service pauses you</h2>
+      <p>If a service could not collect what you owe (for example your balance ran out), it keeps your promise and pauses your access until it is paid; your console shows the amount due. As soon as your balance is topped up, your wrapper tells the service, it collects, and your access resumes automatically. A promise to pay never expires until it is paid.</p>
+
+      <h2 id="withdraw">Taking your balance back</h2>
+      <p>Withdrawing your escrow balance takes about one hour: your wrapper first asks every service you owe to collect, then the contract waits one hour so services can do so, then the rest returns to your wallet.</p>
+
+      <h2 id="for-services">For services (merchants)</h2>
+      <p>Keep your wrapper running 24/7. Collect small payments in batches (default: when worth at least 50&times; the collection cost, and at least once a day); amounts above 1 USDC are collected before you deliver. If a customer withdraws while your wrapper is offline for more than an hour, small amounts not yet collected are lost; your console warns you when this happens. Earnings go straight to your payout address (your wallet by default).</p>
+
+      <nav class="docs-page-nav">
+        <a href="/docs/funding" class="page-nav-link">
+          <span class="label">Previous</span>
+          <span class="title">Funding &amp; Withdrawing</span>
+        </a>
+        <a href="/docs/settings" class="page-nav-link next">
+          <span class="label">Next</span>
+          <span class="title">Settings</span>
+        </a>
+      </nav>
+    </main>
+
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <a href="#what-it-is" class="toc-link">What it is</a>
+      <a href="#how-a-payment-works" class="toc-link">How a payment works</a>
+      <a href="#fees" class="toc-link">Fees</a>
+      <a href="#transfers" class="toc-link">Transfers between people</a>
+      <a href="#paused" class="toc-link">If a service pauses you</a>
+      <a href="#withdraw" class="toc-link">Taking your balance back</a>
+      <a href="#for-services" class="toc-link">For services (merchants)</a>
+    </aside>
+
+  </div>
+
+  <script src="docs.js"></script>
+</body>
+</html>
